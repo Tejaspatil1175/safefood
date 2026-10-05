@@ -37,7 +37,7 @@ export async function seedRules() {
         isActive: true,
         rules: validated.rules,
       },
-      { upsert: true, new: true, setDefaultsOnInsert: true },
+      { upsert: true, returnDocument: 'after', setDefaultsOnInsert: true },
     );
 
     logger.info({ version: ruleSet.version, rulesCount: ruleSet.rules.length }, `Upserted rule set: ${ruleSet.version}`);

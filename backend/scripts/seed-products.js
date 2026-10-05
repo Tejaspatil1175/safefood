@@ -29,7 +29,7 @@ export async function seedProducts() {
     const doc = await Product.findOneAndUpdate(
       { barcode: item.barcode },
       item,
-      { upsert: true, new: true, setDefaultsOnInsert: true },
+      { upsert: true, returnDocument: 'after', setDefaultsOnInsert: true },
     );
 
     logger.info({ barcode: doc.barcode, name: doc.name }, `Upserted reference product: ${doc.name}`);
