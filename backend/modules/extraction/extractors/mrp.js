@@ -3,7 +3,7 @@
  */
 
 const MRP_REGEX = /(?:m\.?r\.?p\.?|max(?:imum)?\s*retail\s*price)?[:.]?\s*(?:rs\.?|inr|₹)?\s*([0-9]+(?:[.,][0-9]{1,2})?)\s*(?:\/-)?/i;
-const TAXES_REGEX = /incl(?:usive)?(?:\s*of)?\s*all\s*taxes/i;
+const TAXES_REGEX = /incl\.?(?:usive)?(?:\s*of)?\s*all\s*taxes/i;
 
 export function extractMrp(lines = []) {
   for (const line of lines) {

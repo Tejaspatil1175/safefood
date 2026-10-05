@@ -34,7 +34,7 @@ export function groupWordsIntoLines(words = []) {
     let lineCounter = 1;
 
     for (const word of sortedWords) {
-      const [x, y, w, h] = word.bbox || [0, 0, 0, 0];
+      const [, y, , h] = word.bbox || [0, 0, 0, 0];
       if (currentY === null) {
         currentY = y;
         currentH = h;
