@@ -5,7 +5,7 @@ import { getActiveRuleSet } from '../rules/rules.service.js';
 import { getProductByBarcode } from '../products/products.service.js';
 import { evaluateCompliance } from '../compliance/compliance.service.js';
 import { Scan } from './scans.model.js';
-import { QualityGateError, NotFoundError, ValidationError } from '../../lib/errors.js';
+import { QualityGateError, NotFoundError, ValidationError, ForbiddenError } from '../../lib/errors.js';
 import { isDbConnected } from '../../infra/db.js';
 import { logger } from '../../lib/logger.js';
 
@@ -130,7 +130,7 @@ export async function orchestrateScan({
   };
 }
 
-export async function getScanById(id) {
+export async function getScanById(id, { userId = null, role = 'user' } = {}) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     throw new ValidationError('Invalid scan ID format');
   }
@@ -140,19 +140,34 @@ export async function getScanById(id) {
     throw new NotFoundError(`Scan with id ${id} not found`);
   }
 
+  // Ownership check: If scan is associated with a specific user, ensure only owner or admin can view
+  if (scan.user && role !== 'admin' && (!userId || scan.user.toString() !== userId.toString())) {
+    throw new ForbiddenError('You do not have permission to view this scan record');
+  }
+
   return scan;
 }
 
 export async function listScans({
   userId = null,
+  role = 'user',
   page = 1,
   limit = 20,
   verdict = null,
 } = {}) {
   const query = {};
-  if (userId) {
+
+  if (role !== 'admin') {
+    if (userId) {
+      query.user = userId;
+    } else {
+      // Anonymous users only see anonymous scans
+      query.user = null;
+    }
+  } else if (userId) {
     query.user = userId;
   }
+
   if (verdict) {
     query.verdict = verdict;
   }
