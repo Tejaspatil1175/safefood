@@ -21,7 +21,7 @@ export function evaluateProductCrossCheck(fields = {}, product = null) {
         ruleId: 'product_reference.net_quantity_match',
         field: 'netQuantity',
         status: isQtyMatch ? COMPLIANCE_STATUS.PASS : COMPLIANCE_STATUS.FAIL,
-        mandatory: false,
+        mandatory: true,
         message: isQtyMatch
           ? `Net quantity matches verified reference record (${refVal} ${refUnit}).`
           : `Net quantity on pack (${labelVal} ${labelUnit}) does not match registered reference record (${refVal} ${refUnit}).`,
