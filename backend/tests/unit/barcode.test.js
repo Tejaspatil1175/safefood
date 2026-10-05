@@ -2,6 +2,17 @@ import { describe, it, expect } from 'vitest';
 import { validateBarcode, isValidEan, calculateEanCheckDigit } from '../../lib/barcode.js';
 
 describe('Barcode Checksum Validation', () => {
+  it('should calculate correct check digit for 12-digit payloads', () => {
+    // Parle-G 12 digits: '890171910103' -> check digit 8
+    expect(calculateEanCheckDigit('890171910103')).toBe(8);
+
+    // Maggi 12 digits: '890105885223' -> check digit 3
+    expect(calculateEanCheckDigit('890105885223')).toBe(3);
+
+    // EAN-8 7 digits: '9638507' -> check digit 4
+    expect(calculateEanCheckDigit('9638507')).toBe(4);
+  });
+
   it('should validate valid EAN-13 barcodes correctly', () => {
     // Parle-G 800g EAN-13
     const result1 = validateBarcode('8901719101038');
