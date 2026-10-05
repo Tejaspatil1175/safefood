@@ -1,4 +1,9 @@
-import { createComplaint, getComplaintById, listComplaints } from './complaints.service.js';
+import {
+  createComplaint,
+  getComplaintById,
+  listComplaints,
+  generateComplaintPdf,
+} from './complaints.service.js';
 
 export async function createComplaintHandler(req, res, next) {
   try {

@@ -148,6 +148,17 @@ export async function listComplaints({
     };
   }
 
+  return {
+    items: [],
+    pagination: {
+      total: 0,
+      page: pageNum,
+      limit: limitNum,
+      pages: 0,
+    },
+  };
+}
+
 export async function generateComplaintPdf(id, { userId, role = 'user' } = {}) {
   const complaint = await getComplaintById(id, { userId, role });
 
