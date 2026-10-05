@@ -43,3 +43,9 @@ docs/
 safefood/
 IMPLEMENTATION_GUIDE.md
 *IMPLEMENTATION_GUIDE*
+
+# Test UI & Single page client (ignored from git as requested)
+index.html
+backend/public/
+public/
+

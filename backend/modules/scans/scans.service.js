@@ -26,6 +26,7 @@ export async function orchestrateScan({
       analyzeImage(file.buffer, {
         mimeType: file.mimetype,
         filename: file.originalname,
+        fallbackOnOffline: true,
       }),
     ),
   );

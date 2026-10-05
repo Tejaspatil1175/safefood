@@ -1,3 +1,5 @@
+import fs from 'fs';
+import path from 'path';
 import express from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
@@ -13,7 +15,7 @@ export function createApp() {
   const app = express();
 
   // Security & Cross-Origin
-  app.use(helmet());
+  app.use(helmet({ contentSecurityPolicy: false }));
   app.use(cors());
 
   // Request tracing & logging
@@ -28,6 +30,21 @@ export function createApp() {
   // Body parsers
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
+
+  // Root & Static Test UI
+  app.use(express.static(path.resolve(process.cwd(), '..')));
+  app.use(express.static(process.cwd()));
+  app.get('/', (req, res) => {
+    const rootIndex = path.resolve(process.cwd(), '..', 'index.html');
+    const localIndex = path.resolve(process.cwd(), 'index.html');
+    if (fs.existsSync(rootIndex)) {
+      return res.sendFile(rootIndex);
+    }
+    if (fs.existsSync(localIndex)) {
+      return res.sendFile(localIndex);
+    }
+    return res.json({ status: 'ok', message: 'SafeFood API is operational. Upload scans at /api/v1/scans' });
+  });
 
   // API router
   const apiRouter = createRouter();
