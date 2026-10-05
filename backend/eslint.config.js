@@ -13,6 +13,11 @@ export default [
         clearTimeout: 'readonly',
         setInterval: 'readonly',
         clearInterval: 'readonly',
+        fetch: 'readonly',
+        FormData: 'readonly',
+        Blob: 'readonly',
+        AbortSignal: 'readonly',
+        Buffer: 'readonly',
       },
     },
     rules: {
