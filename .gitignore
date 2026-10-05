@@ -38,6 +38,8 @@ Thumbs.db
 .vscode/
 *.sw?
 
-# Documentation folder (ignored from git as requested)
+# Documentation files and folders (ignored from git as requested)
 docs/
 safefood/
+IMPLEMENTATION_GUIDE.md
+*IMPLEMENTATION_GUIDE*
