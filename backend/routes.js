@@ -4,6 +4,7 @@ import { rulesRouter } from './modules/rules/rules.routes.js';
 import { productsRouter } from './modules/products/products.routes.js';
 import { scansRouter } from './modules/scans/scans.routes.js';
 import { authRouter } from './modules/auth/auth.routes.js';
+import { complaintsRouter } from './modules/complaints/complaints.routes.js';
 
 export function createRouter() {
   const router = Router();
@@ -13,6 +14,7 @@ export function createRouter() {
   router.use('/products', productsRouter);
   router.use('/scans', scansRouter);
   router.use('/auth', authRouter);
+  router.use('/complaints', complaintsRouter);
 
   return router;
 }
