@@ -1,0 +1,170 @@
+{
+  "id": "pcr-2011-v1",
+  "name": "Legal Metrology (Packaged Commodities) Rules, 2011 - Mandatory Declarations",
+  "version": "pcr-2011.v1",
+  "source": "Ministry of Consumer Affairs, Food and Public Distribution, Government of India",
+  "effectiveFrom": "2011-04-01",
+  "rules": [
+    {
+      "id": "manufacturer.presence",
+      "field": "manufacturer",
+      "type": "presence",
+      "mandatory": true,
+      "sourceRef": "Rule 6(1)(a)",
+      "message": "Name and complete address of the manufacturer, packer, or importer must be declared on the package.",
+      "keywords": ["mfg by", "manufactured by", "packed by", "marketed by", "imported by", "mfd by", "pkd by"]
+    },
+    {
+      "id": "product_name.presence",
+      "field": "productName",
+      "type": "presence",
+      "mandatory": true,
+      "sourceRef": "Rule 6(1)(b)",
+      "message": "Common or generic name of the commodity contained in the package must be declared.",
+      "keywords": ["product", "commodity", "name"]
+    },
+    {
+      "id": "net_quantity.presence",
+      "field": "netQuantity",
+      "type": "presence",
+      "mandatory": true,
+      "sourceRef": "Rule 6(1)(c)",
+      "message": "Net quantity in terms of standard unit of weight or measure must be declared.",
+      "keywords": ["net wt", "net weight", "net qty", "net quantity", "net volume", "net contents"]
+    },
+    {
+      "id": "net_quantity.format",
+      "field": "netQuantity",
+      "type": "format",
+      "mandatory": true,
+      "sourceRef": "Rule 6(1)(c) & Rule 12",
+      "message": "Net quantity must be declared using standard metric units (g, kg, ml, l).",
+      "allowedUnits": ["g", "kg", "ml", "l", "units", "number"]
+    },
+    {
+      "id": "net_quantity.min_height",
+      "field": "netQuantity",
+      "type": "min_height",
+      "mandatory": true,
+      "sourceRef": "Rule 7 & First Schedule Table 1",
+      "message": "Numeral height for net quantity must comply with minimum height requirements based on package net content.",
+      "heightBands": [
+        {
+          "minQuantity": 0,
+          "maxQuantity": 50,
+          "unit": "g",
+          "minHeightMm": 1.0,
+          "sourceRef": "PCR 2011 Table 1 (Upto 50g)"
+        },
+        {
+          "minQuantity": 50.001,
+          "maxQuantity": 100,
+          "unit": "g",
+          "minHeightMm": 1.5,
+          "sourceRef": "PCR 2011 Table 1 (50g - 100g)"
+        },
+        {
+          "minQuantity": 100.001,
+          "maxQuantity": 200,
+          "unit": "g",
+          "minHeightMm": 2.0,
+          "sourceRef": "PCR 2011 Table 1 (100g - 200g)"
+        },
+        {
+          "minQuantity": 200.001,
+          "maxQuantity": 500,
+          "unit": "g",
+          "minHeightMm": 4.0,
+          "sourceRef": "PCR 2011 Table 1 (200g - 500g)"
+        },
+        {
+          "minQuantity": 500.001,
+          "maxQuantity": null,
+          "unit": "g",
+          "minHeightMm": 6.0,
+          "sourceRef": "PCR 2011 Table 1 (Above 500g)"
+        },
+        {
+          "minQuantity": 0,
+          "maxQuantity": 50,
+          "unit": "ml",
+          "minHeightMm": 1.0,
+          "sourceRef": "PCR 2011 Table 1 (Upto 50ml)"
+        },
+        {
+          "minQuantity": 50.001,
+          "maxQuantity": 100,
+          "unit": "ml",
+          "minHeightMm": 1.5,
+          "sourceRef": "PCR 2011 Table 1 (50ml - 100ml)"
+        },
+        {
+          "minQuantity": 100.001,
+          "maxQuantity": 200,
+          "unit": "ml",
+          "minHeightMm": 2.0,
+          "sourceRef": "PCR 2011 Table 1 (100ml - 200ml)"
+        },
+        {
+          "minQuantity": 200.001,
+          "maxQuantity": 500,
+          "unit": "ml",
+          "minHeightMm": 4.0,
+          "sourceRef": "PCR 2011 Table 1 (200ml - 500ml)"
+        },
+        {
+          "minQuantity": 500.001,
+          "maxQuantity": null,
+          "unit": "ml",
+          "minHeightMm": 6.0,
+          "sourceRef": "PCR 2011 Table 1 (Above 500ml)"
+        }
+      ]
+    },
+    {
+      "id": "mrp.presence",
+      "field": "mrp",
+      "type": "presence",
+      "mandatory": true,
+      "sourceRef": "Rule 6(1)(e)",
+      "message": "Maximum Retail Price (MRP) inclusive of all taxes must be declared on the package.",
+      "keywords": ["mrp", "max retail price", "maximum retail price", "incl. of all taxes", "inclusive of all taxes"]
+    },
+    {
+      "id": "date_of_manufacture.presence",
+      "field": "dateOfManufacture",
+      "type": "presence",
+      "mandatory": true,
+      "sourceRef": "Rule 6(1)(d)",
+      "message": "Month and year of manufacture, packing, or import must be declared on the package.",
+      "keywords": ["mfg date", "date of mfg", "pkd date", "date of packing", "packaged on", "manufactured on"]
+    },
+    {
+      "id": "customer_care.presence",
+      "field": "customerCare",
+      "type": "presence",
+      "mandatory": true,
+      "sourceRef": "Rule 6(1)(f)",
+      "message": "Name, address, telephone number, and email address of the consumer grievance redressal contact must be declared.",
+      "keywords": ["customer care", "consumer care", "feedback", "helpline", "toll free", "care@"]
+    },
+    {
+      "id": "country_of_origin.presence",
+      "field": "countryOfOrigin",
+      "type": "presence",
+      "mandatory": false,
+      "sourceRef": "Rule 6(10)",
+      "message": "Name of the country of origin or manufacture should be declared.",
+      "keywords": ["country of origin", "made in", "product of"]
+    },
+    {
+      "id": "fssai.presence",
+      "field": "fssai",
+      "type": "presence",
+      "mandatory": true,
+      "sourceRef": "FSS Act Sec 31",
+      "message": "14-digit FSSAI License number of the manufacturer or marketer must be displayed.",
+      "keywords": ["fssai", "lic no", "license no", "lic. no."]
+    }
+  ]
+}
