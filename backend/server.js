@@ -1,25 +1,22 @@
 import { createApp } from './app.js';
 import { env } from './config/env.js';
+import { logger } from './lib/logger.js';
 
 const app = createApp();
 
 const server = app.listen(env.PORT, () => {
-  // eslint-disable-next-line no-console
-  console.log(`SafeFood API listening on port ${env.PORT} in ${env.NODE_ENV} mode`);
+  logger.info({ port: env.PORT, env: env.NODE_ENV }, `SafeFood API listening on port ${env.PORT}`);
 });
 
 function gracefulShutdown(signal) {
-  // eslint-disable-next-line no-console
-  console.log(`Received ${signal}. Shutting down gracefully...`);
+  logger.info({ signal }, `Received ${signal}. Shutting down gracefully...`);
   server.close(() => {
-    // eslint-disable-next-line no-console
-    console.log('HTTP server closed.');
+    logger.info('HTTP server closed.');
     process.exit(0);
   });
 
   setTimeout(() => {
-    // eslint-disable-next-line no-console
-    console.error('Could not close connections in time, forcefully shutting down');
+    logger.error('Could not close connections in time, forcefully shutting down');
     process.exit(1);
   }, 10000).unref();
 }
