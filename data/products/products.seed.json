@@ -1,0 +1,65 @@
+[
+  {
+    "barcode": "8901719101038",
+    "name": "Parle-G Original Gluco Biscuits",
+    "brand": "Parle",
+    "variant": "Original Gluco",
+    "netQuantity": {
+      "value": 800,
+      "unit": "g"
+    },
+    "frontPanelMm": {
+      "width": 140,
+      "height": 95
+    },
+    "manufacturer": {
+      "name": "Parle Products Pvt. Ltd.",
+      "address": "North Level Crossing, Vile Parle East, Mumbai, Maharashtra 400057"
+    },
+    "fssaiNo": "10013022002253",
+    "sourceNote": "Read from physical pack in hand; panel dimensions measured with digital caliper",
+    "verifiedAt": "2024-01-15T10:00:00.000Z"
+  },
+  {
+    "barcode": "8901058852233",
+    "name": "Maggi 2-Minute Masala Noodles",
+    "brand": "Maggi",
+    "variant": "Masala",
+    "netQuantity": {
+      "value": 70,
+      "unit": "g"
+    },
+    "frontPanelMm": {
+      "width": 120,
+      "height": 145
+    },
+    "manufacturer": {
+      "name": "Nestlé India Limited",
+      "address": "100/101, World Trade Centre, Barakhamba Lane, New Delhi 110001"
+    },
+    "fssaiNo": "10012011000168",
+    "sourceNote": "Read from physical pack in hand; panel dimensions measured with digital caliper",
+    "verifiedAt": "2024-02-10T12:00:00.000Z"
+  },
+  {
+    "barcode": "8901063012226",
+    "name": "Britannia Good Day Butter Cookies",
+    "brand": "Britannia",
+    "variant": "Butter",
+    "netQuantity": {
+      "value": 60,
+      "unit": "g"
+    },
+    "frontPanelMm": {
+      "width": 115,
+      "height": 55
+    },
+    "manufacturer": {
+      "name": "Britannia Industries Limited",
+      "address": "5/1A Hungerford Street, Kolkata, West Bengal 700017"
+    },
+    "fssaiNo": "10015043001129",
+    "sourceNote": "Read from physical pack in hand; panel dimensions measured with ruler",
+    "verifiedAt": "2024-03-01T14:30:00.000Z"
+  }
+]
