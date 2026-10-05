@@ -35,3 +35,7 @@ jobs:
       - name: Evaluation Gate (False-FAIL rate check)
         working-directory: ./backend
         run: npm run eval:gate
+
+      - name: Validate Rule Set and Seed Data
+        working-directory: ./backend
+        run: node -e "import('./modules/rules/rules.service.js').then(m => m.getActiveRuleSet())"
