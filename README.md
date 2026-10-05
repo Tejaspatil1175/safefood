@@ -83,5 +83,24 @@ SafeFood continuously validates field extraction accuracy and compliance verdict
 
 CI automatically enforces that the False-FAIL rate does not exceed the statutory threshold via `npm run eval:gate`.
 
+## API Reference
+
+| Method | Endpoint | Auth | Purpose |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/api/v1/health` | None | Service liveness probe |
+| `GET` | `/api/v1/health/ready` | None | MongoDB readiness health probe |
+| `GET` | `/api/v1/rules/active` | None | Active PCR 2011 statutory rules |
+| `GET` | `/api/v1/products/:barcode` | None | Lookup verified product by EAN barcode |
+| `POST` | `/api/v1/scans` | Optional | Multi-image label compliance analysis |
+| `GET` | `/api/v1/scans` | Optional | Paginated user scans list |
+| `GET` | `/api/v1/scans/:id` | Optional | Get scan record and compliance report |
+| `POST` | `/api/v1/auth/google` | None | Mobile Google ID token login |
+| `POST` | `/api/v1/auth/refresh` | None | Refresh expired JWT access token |
+| `GET` | `/api/v1/auth/me` | Bearer | Get authenticated user profile |
+| `POST` | `/api/v1/complaints` | Bearer | File non-compliance complaint (FAIL scans only) |
+| `GET` | `/api/v1/complaints` | Bearer | List complaints for current user |
+| `GET` | `/api/v1/complaints/:id` | Bearer | Get complaint details |
+| `GET` | `/api/v1/complaints/:id/export` | Bearer | Export complaint evidence as PDF document |
+
 ## License
 MIT
