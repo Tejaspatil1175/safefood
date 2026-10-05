@@ -11,7 +11,7 @@ Mobile Client (React Native)
         │
         ▼ HTTP (multipart upload)
 ┌─────────────────────────────────┐        ┌─────────────────────────┐
-│ apps/api                        │  HTTP  │ services/vision         │
+│ backend                         │  HTTP  │ services/vision         │
 │ (Node.js + Express + MongoDB)   │ ─────> │ (Python + FastAPI)      │
 │                                 │        │                         │
 │ - Scans & Compliance Engine     │ <───── │ - Quality Gate & Filter │
@@ -21,7 +21,7 @@ Mobile Client (React Native)
 └─────────────────────────────────┘
 ```
 
-- **`apps/api` (Node.js / Express / Mongoose)**: Handles business logic, rule evaluations, product cross-referencing, scan records, user authentication, and complaint generation.
+- **`backend` (Node.js / Express / Mongoose)**: Handles business logic, rule evaluations, product cross-referencing, scan records, user authentication, and complaint generation.
 - **`services/vision` (Python / FastAPI / OpenCV / Tesseract)**: High-performance computer vision microservice responsible for image quality checks, text segmentation, word-level glyph height extraction (in pixels), barcode decoding, and pixel-to-millimeter scale estimation.
 - **`data/`**: Versioned, authoritative JSON datasets for legal rules, product references, and multilingual keywords.
 
@@ -36,8 +36,7 @@ Mobile Client (React Native)
 
 ```
 safefood/
-├── apps/
-│   └── api/                  # Express REST API
+├── backend/                  # Express REST API
 ├── services/
 │   └── vision/               # Computer vision & OCR service
 ├── data/
@@ -58,9 +57,9 @@ safefood/
 - MongoDB instance (Local or MongoDB Atlas URI)
 - Tesseract OCR (with `eng` and `hin` trained data)
 
-### API Setup (`apps/api`)
+### Backend API Setup (`backend`)
 ```bash
-cd apps/api
+cd backend
 npm install
 npm test
 npm run dev
