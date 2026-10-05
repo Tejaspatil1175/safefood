@@ -37,9 +37,16 @@ export function evaluateHeightCheck(
     };
   }
 
-  // 2. Find height band for the net quantity
-  const qtyVal = fieldData.value.value;
-  const qtyUnit = (fieldData.value.unit || 'g').toLowerCase();
+  // 2. Find height band for the net quantity (normalize kg -> g, l -> ml)
+  let qtyVal = fieldData.value.value;
+  let qtyUnit = (fieldData.value.unit || 'g').toLowerCase();
+  if (qtyUnit === 'kg') {
+    qtyVal *= 1000;
+    qtyUnit = 'g';
+  } else if (qtyUnit === 'l' || qtyUnit === 'litre' || qtyUnit === 'liter') {
+    qtyVal *= 1000;
+    qtyUnit = 'ml';
+  }
 
   const band = (rule.heightBands || []).find((b) => {
     const unitMatch = b.unit.toLowerCase() === qtyUnit;

@@ -25,4 +25,10 @@ export default [
       'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
     },
   },
+  {
+    files: ['scripts/**/*.js'],
+    rules: {
+      'no-console': 'off',
+    },
+  },
 ];
