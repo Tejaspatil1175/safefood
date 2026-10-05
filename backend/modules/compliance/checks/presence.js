@@ -40,14 +40,20 @@ export function evaluatePresenceCheck(rule, fields = {}, quality = { ok: true, i
   }
 
   // 2. Field is missing
-  // If image quality is poor, mark UNCERTAIN instead of FAIL
-  if (quality && quality.ok === false) {
+  // If image quality is poor or has degradation issues, mark UNCERTAIN instead of FAIL
+  const hasQualityIssues =
+    quality &&
+    (quality.ok === false ||
+      quality.pass === false ||
+      (Array.isArray(quality.issues) && quality.issues.length > 0));
+
+  if (hasQualityIssues) {
     return {
       ruleId: rule.id,
       field: rule.field,
       status: COMPLIANCE_STATUS.UNCERTAIN,
       mandatory: rule.mandatory,
-      message: `Mandatory declaration ${rule.field} was not clearly detected due to image quality issues: ${(quality.issues || []).join(', ')}`,
+      message: `Mandatory declaration ${rule.field} was not clearly detected due to image quality issues: ${(quality.issues || ['Degraded capture quality']).join(', ')}`,
       evidence: null,
       sourceRef: rule.sourceRef,
     };

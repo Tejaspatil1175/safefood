@@ -1,0 +1,20 @@
+{
+  "verdict": "PASS",
+  "barcode": "8901030000107",
+  "fields": {
+    "netQuantity": {
+      "value": 1,
+      "unit": "kg"
+    },
+    "mrp": {
+      "amount": 28,
+      "currency": "INR"
+    },
+    "countryOfOrigin": {
+      "country": "India"
+    },
+    "fssai": {
+      "licenseNumber": "10014022002759"
+    }
+  }
+}

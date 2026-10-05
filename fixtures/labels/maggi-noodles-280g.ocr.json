@@ -1,0 +1,137 @@
+{
+  "id": "maggi-noodles-280g",
+  "barcode": {
+    "format": "EAN_13",
+    "value": "8901058852894"
+  },
+  "scale": {
+    "pxPerMm": 4
+  },
+  "quality": {
+    "pass": true,
+    "issues": []
+  },
+  "words": [
+    {
+      "text": "MAGGI",
+      "bbox": [
+        10,
+        10,
+        70,
+        35
+      ],
+      "confidence": 0.98,
+      "lineId": 1
+    },
+    {
+      "text": "2-Minute",
+      "bbox": [
+        75,
+        10,
+        140,
+        35
+      ],
+      "confidence": 0.96,
+      "lineId": 1
+    },
+    {
+      "text": "Noodles",
+      "bbox": [
+        145,
+        10,
+        210,
+        35
+      ],
+      "confidence": 0.96,
+      "lineId": 1
+    },
+    {
+      "text": "Net Weight: 280 g",
+      "bbox": [
+        10,
+        50,
+        150,
+        72
+      ],
+      "confidence": 0.98,
+      "lineId": 2
+    },
+    {
+      "text": "MRP Rs 56.00 (Inclusive of all taxes)",
+      "bbox": [
+        10,
+        80,
+        280,
+        100
+      ],
+      "confidence": 0.96,
+      "lineId": 3
+    },
+    {
+      "text": "MFG: 02/2026",
+      "bbox": [
+        10,
+        110,
+        105,
+        130
+      ],
+      "confidence": 0.95,
+      "lineId": 4
+    },
+    {
+      "text": "Best Before 9 Months from manufacture",
+      "bbox": [
+        10,
+        140,
+        310,
+        160
+      ],
+      "confidence": 0.94,
+      "lineId": 5
+    },
+    {
+      "text": "Manufactured by Nestle India Limited, New Delhi",
+      "bbox": [
+        10,
+        170,
+        370,
+        190
+      ],
+      "confidence": 0.95,
+      "lineId": 6
+    },
+    {
+      "text": "Contact wecare@in.nestle.com 1800-103-1947",
+      "bbox": [
+        10,
+        200,
+        340,
+        220
+      ],
+      "confidence": 0.94,
+      "lineId": 7
+    },
+    {
+      "text": "Country of Origin: India",
+      "bbox": [
+        10,
+        230,
+        175,
+        250
+      ],
+      "confidence": 0.96,
+      "lineId": 8
+    },
+    {
+      "text": "FSSAI Lic. No. 10012011000168",
+      "bbox": [
+        10,
+        260,
+        245,
+        280
+      ],
+      "confidence": 0.97,
+      "lineId": 9
+    }
+  ]
+}

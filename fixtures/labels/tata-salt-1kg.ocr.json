@@ -1,0 +1,126 @@
+{
+  "id": "tata-salt-1kg",
+  "barcode": {
+    "format": "EAN_13",
+    "value": "8901030000107"
+  },
+  "scale": {
+    "pxPerMm": 4
+  },
+  "quality": {
+    "pass": true,
+    "issues": []
+  },
+  "words": [
+    {
+      "text": "Tata",
+      "bbox": [
+        10,
+        10,
+        50,
+        35
+      ],
+      "confidence": 0.98,
+      "lineId": 1
+    },
+    {
+      "text": "Salt",
+      "bbox": [
+        55,
+        10,
+        95,
+        35
+      ],
+      "confidence": 0.98,
+      "lineId": 1
+    },
+    {
+      "text": "Net Quantity: 1 kg",
+      "bbox": [
+        10,
+        50,
+        150,
+        72
+      ],
+      "confidence": 0.98,
+      "lineId": 2
+    },
+    {
+      "text": "MRP Rs. 28.00 (INCL. OF ALL TAXES)",
+      "bbox": [
+        10,
+        80,
+        290,
+        100
+      ],
+      "confidence": 0.96,
+      "lineId": 3
+    },
+    {
+      "text": "Packed: 01/2026",
+      "bbox": [
+        10,
+        110,
+        130,
+        130
+      ],
+      "confidence": 0.95,
+      "lineId": 4
+    },
+    {
+      "text": "Best Before 24 Months from PKD",
+      "bbox": [
+        10,
+        140,
+        270,
+        160
+      ],
+      "confidence": 0.94,
+      "lineId": 5
+    },
+    {
+      "text": "Mfg by Tata Consumer Products Ltd, Mumbai",
+      "bbox": [
+        10,
+        170,
+        360,
+        190
+      ],
+      "confidence": 0.95,
+      "lineId": 6
+    },
+    {
+      "text": "Customer Care: care@tataconsumer.com 1800-345-1720",
+      "bbox": [
+        10,
+        200,
+        420,
+        220
+      ],
+      "confidence": 0.94,
+      "lineId": 7
+    },
+    {
+      "text": "Country of Origin: India",
+      "bbox": [
+        10,
+        230,
+        180,
+        250
+      ],
+      "confidence": 0.96,
+      "lineId": 8
+    },
+    {
+      "text": "FSSAI Lic. No. 10014022002759",
+      "bbox": [
+        10,
+        260,
+        250,
+        280
+      ],
+      "confidence": 0.97,
+      "lineId": 9
+    }
+  ]
+}

@@ -1,0 +1,126 @@
+{
+  "id": "cadbury-dairy-milk-130g",
+  "barcode": {
+    "format": "EAN_13",
+    "value": "7622201745431"
+  },
+  "scale": {
+    "pxPerMm": 4
+  },
+  "quality": {
+    "pass": true,
+    "issues": []
+  },
+  "words": [
+    {
+      "text": "Cadbury",
+      "bbox": [
+        10,
+        10,
+        80,
+        35
+      ],
+      "confidence": 0.97,
+      "lineId": 1
+    },
+    {
+      "text": "Dairy",
+      "bbox": [
+        85,
+        10,
+        130,
+        35
+      ],
+      "confidence": 0.97,
+      "lineId": 1
+    },
+    {
+      "text": "Milk",
+      "bbox": [
+        135,
+        10,
+        175,
+        35
+      ],
+      "confidence": 0.97,
+      "lineId": 1
+    },
+    {
+      "text": "Net Quantity: 130 g",
+      "bbox": [
+        10,
+        50,
+        160,
+        72
+      ],
+      "confidence": 0.98,
+      "lineId": 2
+    },
+    {
+      "text": "MRP Rs 100.00 (Incl. of all taxes)",
+      "bbox": [
+        10,
+        80,
+        260,
+        100
+      ],
+      "confidence": 0.96,
+      "lineId": 3
+    },
+    {
+      "text": "Mfg: 01/2026",
+      "bbox": [
+        10,
+        110,
+        100,
+        130
+      ],
+      "confidence": 0.95,
+      "lineId": 4
+    },
+    {
+      "text": "Best Before 12 Months",
+      "bbox": [
+        10,
+        140,
+        180,
+        160
+      ],
+      "confidence": 0.94,
+      "lineId": 5
+    },
+    {
+      "text": "Mondelez India Foods Pvt Ltd, Mumbai 400018",
+      "bbox": [
+        10,
+        170,
+        360,
+        190
+      ],
+      "confidence": 0.95,
+      "lineId": 6
+    },
+    {
+      "text": "Country of Origin: India",
+      "bbox": [
+        10,
+        230,
+        180,
+        250
+      ],
+      "confidence": 0.96,
+      "lineId": 8
+    },
+    {
+      "text": "FSSAI Lic. No. 10014022002711",
+      "bbox": [
+        10,
+        260,
+        245,
+        280
+      ],
+      "confidence": 0.97,
+      "lineId": 9
+    }
+  ]
+}

@@ -13,7 +13,7 @@ export function extractDates(lines = []) {
     const text = line.text;
 
     // Check Date of Manufacture / Packing
-    const isMfg = /mfd|mfg|pkd|packed\s*on|manufactured|date\s*of\s*(?:mfg|pkd|packing)/i.test(text);
+    const isMfg = /mfd|mfg|pkd|packed|manufactured|date\s*of\s*(?:mfg|pkd|packing)/i.test(text);
     if (isMfg && !mfg) {
       // Find date string near manufacture keyword
       const match = text.match(DATE_REGEX);

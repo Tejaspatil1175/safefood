@@ -1,0 +1,5 @@
+{
+  "verdict": "FAIL",
+  "barcode": "8904004400018",
+  "failedRuleId": "net_quantity.presence"
+}

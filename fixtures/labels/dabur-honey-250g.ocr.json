@@ -1,0 +1,115 @@
+{
+  "id": "dabur-honey-250g",
+  "barcode": {
+    "format": "EAN_13",
+    "value": "8901207010482"
+  },
+  "scale": {
+    "pxPerMm": 10
+  },
+  "quality": {
+    "pass": true,
+    "issues": []
+  },
+  "words": [
+    {
+      "text": "Dabur Honey",
+      "bbox": [
+        10,
+        10,
+        100,
+        30
+      ],
+      "confidence": 0.97,
+      "lineId": 1
+    },
+    {
+      "text": "Net Quantity: 250 g",
+      "bbox": [
+        10,
+        40,
+        150,
+        48
+      ],
+      "confidence": 0.98,
+      "lineId": 2
+    },
+    {
+      "text": "MRP Rs. 140.00 (INCL. OF ALL TAXES)",
+      "bbox": [
+        10,
+        60,
+        280,
+        80
+      ],
+      "confidence": 0.96,
+      "lineId": 3
+    },
+    {
+      "text": "Mfg: 01/2026",
+      "bbox": [
+        10,
+        90,
+        100,
+        110
+      ],
+      "confidence": 0.95,
+      "lineId": 4
+    },
+    {
+      "text": "Best Before 24 Months",
+      "bbox": [
+        10,
+        120,
+        180,
+        140
+      ],
+      "confidence": 0.94,
+      "lineId": 5
+    },
+    {
+      "text": "Dabur India Ltd, Ghaziabad 201010",
+      "bbox": [
+        10,
+        150,
+        320,
+        170
+      ],
+      "confidence": 0.95,
+      "lineId": 6
+    },
+    {
+      "text": "Care: daburcares@dabur.com 1800-103-1644",
+      "bbox": [
+        10,
+        180,
+        350,
+        200
+      ],
+      "confidence": 0.94,
+      "lineId": 7
+    },
+    {
+      "text": "Country of Origin: India",
+      "bbox": [
+        10,
+        210,
+        180,
+        230
+      ],
+      "confidence": 0.96,
+      "lineId": 8
+    },
+    {
+      "text": "FSSAI Lic. No. 10012051000023",
+      "bbox": [
+        10,
+        240,
+        245,
+        260
+      ],
+      "confidence": 0.97,
+      "lineId": 9
+    }
+  ]
+}

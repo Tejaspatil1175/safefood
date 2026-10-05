@@ -1,0 +1,203 @@
+{
+  "id": "lays-classic-50g",
+  "barcode": {
+    "format": "EAN_13",
+    "value": "8901491101831"
+  },
+  "scale": {
+    "pxPerMm": 4
+  },
+  "quality": {
+    "pass": true,
+    "issues": []
+  },
+  "words": [
+    {
+      "text": "Lay's",
+      "bbox": [
+        10,
+        10,
+        80,
+        40
+      ],
+      "confidence": 0.97,
+      "lineId": 1
+    },
+    {
+      "text": "Classic",
+      "bbox": [
+        85,
+        10,
+        150,
+        40
+      ],
+      "confidence": 0.95,
+      "lineId": 1
+    },
+    {
+      "text": "Net",
+      "bbox": [
+        10,
+        50,
+        40,
+        68
+      ],
+      "confidence": 0.95,
+      "lineId": 2
+    },
+    {
+      "text": "Weight:",
+      "bbox": [
+        45,
+        50,
+        100,
+        68
+      ],
+      "confidence": 0.95,
+      "lineId": 2
+    },
+    {
+      "text": "50 g",
+      "bbox": [
+        105,
+        50,
+        145,
+        68
+      ],
+      "confidence": 0.98,
+      "lineId": 2
+    },
+    {
+      "text": "MRP",
+      "bbox": [
+        10,
+        80,
+        45,
+        98
+      ],
+      "confidence": 0.96,
+      "lineId": 3
+    },
+    {
+      "text": "Rs. 20.00",
+      "bbox": [
+        50,
+        80,
+        120,
+        98
+      ],
+      "confidence": 0.97,
+      "lineId": 3
+    },
+    {
+      "text": "(INCLUSIVE OF ALL TAXES)",
+      "bbox": [
+        125,
+        80,
+        310,
+        98
+      ],
+      "confidence": 0.93,
+      "lineId": 3
+    },
+    {
+      "text": "Packed:",
+      "bbox": [
+        10,
+        110,
+        65,
+        128
+      ],
+      "confidence": 0.94,
+      "lineId": 4
+    },
+    {
+      "text": "12/2025",
+      "bbox": [
+        70,
+        110,
+        130,
+        128
+      ],
+      "confidence": 0.96,
+      "lineId": 4
+    },
+    {
+      "text": "Best",
+      "bbox": [
+        10,
+        140,
+        45,
+        158
+      ],
+      "confidence": 0.95,
+      "lineId": 5
+    },
+    {
+      "text": "Before",
+      "bbox": [
+        50,
+        140,
+        95,
+        158
+      ],
+      "confidence": 0.95,
+      "lineId": 5
+    },
+    {
+      "text": "4 Months from Packaging",
+      "bbox": [
+        100,
+        140,
+        270,
+        158
+      ],
+      "confidence": 0.94,
+      "lineId": 5
+    },
+    {
+      "text": "Manufactured by PepsiCo India Holdings Pvt Ltd, Gurgaon",
+      "bbox": [
+        10,
+        170,
+        420,
+        188
+      ],
+      "confidence": 0.95,
+      "lineId": 6
+    },
+    {
+      "text": "Consumer care feedback at consumer.feedback@pepsico.com",
+      "bbox": [
+        10,
+        200,
+        410,
+        218
+      ],
+      "confidence": 0.94,
+      "lineId": 7
+    },
+    {
+      "text": "Country of Origin: India",
+      "bbox": [
+        10,
+        230,
+        180,
+        248
+      ],
+      "confidence": 0.96,
+      "lineId": 8
+    },
+    {
+      "text": "FSSAI Lic. No. 10014064000435",
+      "bbox": [
+        10,
+        260,
+        250,
+        278
+      ],
+      "confidence": 0.97,
+      "lineId": 9
+    }
+  ]
+}
