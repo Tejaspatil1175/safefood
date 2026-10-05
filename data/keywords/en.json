@@ -1,0 +1,91 @@
+{
+  "netQuantity": [
+    "net wt",
+    "net weight",
+    "net qty",
+    "net quantity",
+    "net volume",
+    "net contents",
+    "net mass",
+    "weight",
+    "quantity",
+    "contents"
+  ],
+  "mrp": [
+    "mrp",
+    "max retail price",
+    "maximum retail price",
+    "incl. of all taxes",
+    "inclusive of all taxes",
+    "incl all taxes",
+    "m.r.p.",
+    "m.r.p"
+  ],
+  "dateOfManufacture": [
+    "mfg date",
+    "date of mfg",
+    "pkd date",
+    "date of packing",
+    "date of pkd",
+    "packed on",
+    "mfd on",
+    "mfd",
+    "pkd",
+    "manufactured on",
+    "packing date"
+  ],
+  "expiryOrBestBefore": [
+    "best before",
+    "use by",
+    "expiry date",
+    "exp date",
+    "exp",
+    "use before",
+    "best before months from packaging",
+    "best before months from manufacture"
+  ],
+  "manufacturer": [
+    "mfg by",
+    "manufactured by",
+    "packed by",
+    "marketed by",
+    "imported by",
+    "mfd by",
+    "pkd by",
+    "mktd by",
+    "manufacturer",
+    "packer",
+    "marketer"
+  ],
+  "customerCare": [
+    "customer care",
+    "consumer care",
+    "feedback",
+    "grievance",
+    "helpline",
+    "toll free",
+    "contact us",
+    "write to",
+    "care@"
+  ],
+  "countryOfOrigin": [
+    "country of origin",
+    "made in",
+    "product of",
+    "origin"
+  ],
+  "fssai": [
+    "fssai",
+    "lic no",
+    "license no",
+    "lic. no.",
+    "licence no",
+    "fssai lic"
+  ],
+  "productName": [
+    "product",
+    "commodity",
+    "item",
+    "name"
+  ]
+}
