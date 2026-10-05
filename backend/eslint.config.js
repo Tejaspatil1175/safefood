@@ -31,4 +31,15 @@ export default [
       'no-console': 'off',
     },
   },
+  {
+    files: ['**/*.cjs'],
+    languageOptions: {
+      sourceType: 'commonjs',
+      globals: {
+        module: 'readonly',
+        exports: 'readonly',
+        require: 'readonly',
+      },
+    },
+  },
 ];

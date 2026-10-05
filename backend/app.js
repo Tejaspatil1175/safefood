@@ -6,6 +6,7 @@ import { logger } from './lib/logger.js';
 import { requestIdMiddleware } from './middlewares/requestId.js';
 import { notFoundMiddleware } from './middlewares/notFound.js';
 import { errorHandler } from './middlewares/errorHandler.js';
+import { apiLimiter } from './middlewares/rateLimit.js';
 import { createRouter } from './routes.js';
 
 export function createApp() {
@@ -30,7 +31,7 @@ export function createApp() {
 
   // API router
   const apiRouter = createRouter();
-  app.use('/api/v1', apiRouter);
+  app.use('/api/v1', apiLimiter, apiRouter);
 
   // 404 handler
   app.use(notFoundMiddleware);

@@ -83,5 +83,55 @@ SafeFood continuously validates field extraction accuracy and compliance verdict
 
 CI automatically enforces that the False-FAIL rate does not exceed the statutory threshold via `npm run eval:gate`.
 
+## API Reference
+
+| Method | Endpoint | Auth | Purpose |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/api/v1/health` | None | Service liveness probe |
+| `GET` | `/api/v1/health/ready` | None | MongoDB readiness health probe |
+| `GET` | `/api/v1/rules/active` | None | Active PCR 2011 statutory rules |
+| `GET` | `/api/v1/products/:barcode` | None | Lookup verified product by EAN barcode |
+| `POST` | `/api/v1/scans` | Optional | Multi-image label compliance analysis |
+| `GET` | `/api/v1/scans` | Optional | Paginated user scans list |
+| `GET` | `/api/v1/scans/:id` | Optional | Get scan record and compliance report |
+| `POST` | `/api/v1/auth/google` | None | Mobile Google ID token login |
+| `POST` | `/api/v1/auth/refresh` | None | Refresh expired JWT access token |
+| `GET` | `/api/v1/auth/me` | Bearer | Get authenticated user profile |
+| `POST` | `/api/v1/complaints` | Bearer | File non-compliance complaint (FAIL scans only) |
+| `GET` | `/api/v1/complaints` | Bearer | List complaints for current user |
+| `GET` | `/api/v1/complaints/:id` | Bearer | Get complaint details |
+| `GET` | `/api/v1/complaints/:id/export` | Bearer | Export complaint evidence as PDF document |
+
+## Production Deployment Guide (Native PM2 & MongoDB Atlas)
+
+SafeFood backend is designed for high-availability native execution without requiring Docker:
+
+### 1. MongoDB Atlas Configuration
+Create a MongoDB Atlas cluster and set `MONGO_URI` in `.env`:
+```env
+MONGO_URI=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/safefood?retryWrites=true&w=majority
+```
+
+### 2. Seed Initial Rules & Verified Products
+```bash
+cd backend
+node scripts/seed-rules.js
+node scripts/seed-products.js
+```
+
+### 3. Start Clustered Process with PM2
+```bash
+npm install -g pm2
+cd backend
+npm run start:pm2
+pm2 save
+pm2 startup
+```
+
+### 4. Continuous Healthcheck Monitoring
+```bash
+npm run healthcheck
+```
+
 ## License
 MIT
