@@ -64,8 +64,24 @@ safefood/
 cd backend
 npm install
 npm test
+npm run eval
 npm run dev
 ```
+
+## Evaluation & Accuracy Baseline
+
+SafeFood continuously validates field extraction accuracy and compliance verdicts against labeled ground-truth label fixtures (`npm run eval`):
+
+| Metric | Target | Baseline Result |
+| :--- | :--- | :--- |
+| **Verdict Agreement** | $\ge 90\%$ | **100.0%** (10/10) |
+| **False-FAIL Rate** | $\le 5\%$ (Gate) | **0.0%** (0/7) |
+| **Net Quantity Extraction** | $\ge 95\%$ | **100.0%** |
+| **MRP Extraction** | $\ge 95\%$ | **100.0%** |
+| **Country of Origin Extraction** | $\ge 90\%$ | **100.0%** |
+| **FSSAI License Extraction** | $\ge 90\%$ | **100.0%** |
+
+CI automatically enforces that the False-FAIL rate does not exceed the statutory threshold via `npm run eval:gate`.
 
 ## License
 MIT
