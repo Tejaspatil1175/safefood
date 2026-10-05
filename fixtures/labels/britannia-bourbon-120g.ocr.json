@@ -1,0 +1,126 @@
+{
+  "id": "britannia-bourbon-120g",
+  "barcode": {
+    "format": "EAN_13",
+    "value": "8901063012627"
+  },
+  "scale": {
+    "pxPerMm": 4
+  },
+  "quality": {
+    "pass": true,
+    "issues": []
+  },
+  "words": [
+    {
+      "text": "Britannia",
+      "bbox": [
+        10,
+        10,
+        90,
+        35
+      ],
+      "confidence": 0.97,
+      "lineId": 1
+    },
+    {
+      "text": "Bourbon",
+      "bbox": [
+        95,
+        10,
+        170,
+        35
+      ],
+      "confidence": 0.96,
+      "lineId": 1
+    },
+    {
+      "text": "Net Quantity: 120 g",
+      "bbox": [
+        10,
+        50,
+        160,
+        70
+      ],
+      "confidence": 0.98,
+      "lineId": 2
+    },
+    {
+      "text": "MRP ₹ 35.00 (INCL. OF ALL TAXES)",
+      "bbox": [
+        10,
+        80,
+        270,
+        100
+      ],
+      "confidence": 0.96,
+      "lineId": 3
+    },
+    {
+      "text": "Mfg Date: 02/2026",
+      "bbox": [
+        10,
+        110,
+        140,
+        130
+      ],
+      "confidence": 0.95,
+      "lineId": 4
+    },
+    {
+      "text": "Use By: 08/2026",
+      "bbox": [
+        10,
+        140,
+        125,
+        160
+      ],
+      "confidence": 0.95,
+      "lineId": 5
+    },
+    {
+      "text": "Mfg by Britannia Industries Ltd, Kolkata 700017",
+      "bbox": [
+        10,
+        170,
+        370,
+        190
+      ],
+      "confidence": 0.95,
+      "lineId": 6
+    },
+    {
+      "text": "Consumer care: 1800-425-4449 feedback@britindia.com",
+      "bbox": [
+        10,
+        200,
+        390,
+        220
+      ],
+      "confidence": 0.94,
+      "lineId": 7
+    },
+    {
+      "text": "Made in India",
+      "bbox": [
+        10,
+        230,
+        110,
+        250
+      ],
+      "confidence": 0.95,
+      "lineId": 8
+    },
+    {
+      "text": "fssai Lic. No. 10015043001129",
+      "bbox": [
+        10,
+        260,
+        240,
+        280
+      ],
+      "confidence": 0.97,
+      "lineId": 9
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "verdict": "PASS",
+  "barcode": "8901719101038",
+  "fields": {
+    "netQuantity": {
+      "value": 800,
+      "unit": "g"
+    },
+    "mrp": {
+      "amount": 85,
+      "currency": "INR"
+    },
+    "dateOfManufacture": {
+      "rawText": "01/2026"
+    },
+    "expiryOrBestBefore": {
+      "rawText": "07/2026"
+    },
+    "countryOfOrigin": {
+      "country": "India"
+    },
+    "fssai": {
+      "licenseNumber": "10012022000123"
+    }
+  }
+}

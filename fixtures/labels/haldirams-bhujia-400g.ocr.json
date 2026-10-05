@@ -1,0 +1,126 @@
+{
+  "id": "haldirams-bhujia-400g",
+  "barcode": {
+    "format": "EAN_13",
+    "value": "8904004400018"
+  },
+  "scale": {
+    "pxPerMm": 4
+  },
+  "quality": {
+    "pass": true,
+    "issues": []
+  },
+  "words": [
+    {
+      "text": "Haldiram's",
+      "bbox": [
+        10,
+        10,
+        100,
+        35
+      ],
+      "confidence": 0.97,
+      "lineId": 1
+    },
+    {
+      "text": "Bhujia",
+      "bbox": [
+        105,
+        10,
+        160,
+        35
+      ],
+      "confidence": 0.97,
+      "lineId": 1
+    },
+    {
+      "text": "Net Qty: 400 pieces",
+      "bbox": [
+        10,
+        50,
+        160,
+        72
+      ],
+      "confidence": 0.98,
+      "lineId": 2
+    },
+    {
+      "text": "MRP Rs. 120.00 (INCL. OF ALL TAXES)",
+      "bbox": [
+        10,
+        80,
+        280,
+        100
+      ],
+      "confidence": 0.96,
+      "lineId": 3
+    },
+    {
+      "text": "PKD: 01/2026",
+      "bbox": [
+        10,
+        110,
+        110,
+        130
+      ],
+      "confidence": 0.95,
+      "lineId": 4
+    },
+    {
+      "text": "Best Before 6 Months",
+      "bbox": [
+        10,
+        140,
+        170,
+        160
+      ],
+      "confidence": 0.94,
+      "lineId": 5
+    },
+    {
+      "text": "Haldiram Snacks Pvt Ltd, Noida 201307",
+      "bbox": [
+        10,
+        170,
+        330,
+        190
+      ],
+      "confidence": 0.95,
+      "lineId": 6
+    },
+    {
+      "text": "Customer care: feedback@haldirams.com 0120-2400123",
+      "bbox": [
+        10,
+        200,
+        410,
+        220
+      ],
+      "confidence": 0.94,
+      "lineId": 7
+    },
+    {
+      "text": "Country of Origin: India",
+      "bbox": [
+        10,
+        230,
+        180,
+        250
+      ],
+      "confidence": 0.96,
+      "lineId": 8
+    },
+    {
+      "text": "FSSAI Lic. No. 10012051000096",
+      "bbox": [
+        10,
+        260,
+        245,
+        280
+      ],
+      "confidence": 0.97,
+      "lineId": 9
+    }
+  ]
+}
