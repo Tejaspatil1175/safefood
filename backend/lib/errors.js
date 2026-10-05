@@ -39,6 +39,12 @@ export class UpstreamError extends AppError {
   }
 }
 
+export class QualityGateError extends AppError {
+  constructor(message = 'Image quality check failed', details = []) {
+    super(message, 422, 'QUALITY_GATE_FAILED', details);
+  }
+}
+
 export default {
   AppError,
   ValidationError,
@@ -46,4 +52,5 @@ export default {
   UnauthorizedError,
   ForbiddenError,
   UpstreamError,
+  QualityGateError,
 };
