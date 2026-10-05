@@ -1,4 +1,6 @@
 import express from 'express';
+import helmet from 'helmet';
+import cors from 'cors';
 import pinoHttp from 'pino-http';
 import { logger } from './lib/logger.js';
 import { requestIdMiddleware } from './middlewares/requestId.js';
@@ -9,6 +11,11 @@ import { createRouter } from './routes.js';
 export function createApp() {
   const app = express();
 
+  // Security & Cross-Origin
+  app.use(helmet());
+  app.use(cors());
+
+  // Request tracing & logging
   app.use(requestIdMiddleware);
   app.use(
     pinoHttp({
@@ -17,9 +24,11 @@ export function createApp() {
     }),
   );
 
+  // Body parsers
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
 
+  // API router
   const apiRouter = createRouter();
   app.use('/api/v1', apiRouter);
 
