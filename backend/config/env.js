@@ -12,6 +12,8 @@ export const envSchema = z.object({
   JWT_REFRESH_SECRET: z.string().default('default-dev-jwt-refresh-secret-key-32chars'),
   GOOGLE_CLIENT_ID: z.string().optional().default(''),
   MAX_UPLOAD_MB: z.coerce.number().positive().default(8),
+  GEMINI_API_KEY: z.string().optional().default(''),
+  GEMINI_MODEL: z.string().optional().default('gemini-2.5-flash'),
 });
 
 export function parseEnv(source = process.env) {

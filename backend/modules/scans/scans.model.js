@@ -41,6 +41,10 @@ const scanSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.Mixed,
     default: null,
   },
+  geminiAudit: {
+    type: mongoose.Schema.Types.Mixed,
+    default: null,
+  },
 });
 
 scanSchema.plugin(applyJsonTransform);

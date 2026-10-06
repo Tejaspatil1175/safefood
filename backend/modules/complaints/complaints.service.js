@@ -48,6 +48,23 @@ export async function createComplaint({
     sourceRef: c.sourceRef,
   }));
 
+  // Integrate Gemini AI statutory audit violations if available
+  const geminiViolations = scan.geminiAudit?.violations || scan.report?.aiViolations || [];
+  if (Array.isArray(geminiViolations)) {
+    for (const gv of geminiViolations) {
+      if (!violations.some((v) => v.ruleId === gv.rule || v.message?.includes(gv.title))) {
+        violations.push({
+          ruleId: gv.rule || 'PCR 2011 Rule 6',
+          field: gv.title || 'Declaration Violation',
+          message: `${gv.title}: ${gv.description}`,
+          evidence: { text: gv.evidence },
+          sourceRef: gv.legalConsequence,
+          severity: gv.severity,
+        });
+      }
+    }
+  }
+
   // Store evidence files in GridFS if provided
   const evidenceFileIds = [];
   if (Array.isArray(files) && files.length > 0 && isDbConnected()) {
@@ -207,6 +224,22 @@ export async function generateComplaintPdf(id, { userId, role = 'user' } = {}) {
       });
     }
 
+    // AI Legal Metrology Audit Summary if available
+    const aiSummary = complaint.scan?.geminiAudit?.executiveSummary || complaint.scan?.report?.geminiAudit?.executiveSummary;
+    const aiAdvice = complaint.scan?.geminiAudit?.actionableAdvice || complaint.scan?.report?.geminiAudit?.actionableAdvice;
+
+    if (aiSummary) {
+      doc.moveDown();
+      doc.fontSize(14).text('AI Statutory Legal Audit Summary', { underline: true });
+      doc.fontSize(10).text(aiSummary);
+    }
+
+    if (aiAdvice) {
+      doc.moveDown(0.5);
+      doc.fontSize(11).text('Consumer Actionable Guidance:', { bold: true });
+      doc.fontSize(10).text(aiAdvice);
+    }
+
     // Consumer Statement
     if (complaint.userNote) {
       doc.moveDown();
@@ -216,7 +249,7 @@ export async function generateComplaintPdf(id, { userId, role = 'user' } = {}) {
 
     doc.moveDown(2);
     doc.fontSize(9).text(
-      'This report was compiled using automated legal metrology inspection by SafeFood in compliance with the Legal Metrology (Packaged Commodities) Rules, 2011.',
+      'This report was compiled using automated legal metrology inspection by SafeFood with Google Gemini AI in compliance with the Legal Metrology (Packaged Commodities) Rules, 2011 and FSSAI regulations.',
       { align: 'center' },
     );
 

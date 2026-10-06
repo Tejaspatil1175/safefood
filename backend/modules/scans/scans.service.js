@@ -4,6 +4,7 @@ import { extractFields } from '../extraction/extraction.service.js';
 import { getActiveRuleSet } from '../rules/rules.service.js';
 import { getProductByBarcode } from '../products/products.service.js';
 import { evaluateCompliance } from '../compliance/compliance.service.js';
+import { auditPackagingWithGemini } from '../../infra/geminiClient.js';
 import { Scan } from './scans.model.js';
 import { QualityGateError, NotFoundError, ValidationError, ForbiddenError } from '../../lib/errors.js';
 import { isDbConnected } from '../../infra/db.js';
@@ -92,22 +93,160 @@ export async function orchestrateScan({
     heightTolerancePct,
   });
 
+  // 7b. Perform Gemini AI Legal Metrology & Packaging Compliance Audit
+  let geminiAudit = null;
+  try {
+    geminiAudit = await auditPackagingWithGemini({
+      files,
+      fields,
+      barcode: detectedBarcode,
+      product,
+      ruleSet,
+      deterministicReport: report,
+    });
+  } catch (err) {
+    logger.warn({ err: err.message }, 'Gemini packaging audit skipped due to unexpected error');
+  }
+
+  // Attach Gemini audit into the compliance report
+  let finalVerdict = report.verdict;
+  let activeProduct = product;
+
+  if (geminiAudit) {
+    report.geminiAudit = geminiAudit;
+    if (Array.isArray(geminiAudit.violations) && geminiAudit.violations.length > 0) {
+      report.aiViolations = geminiAudit.violations;
+    }
+    if (geminiAudit.actionableAdvice) {
+      report.actionableAdvice = geminiAudit.actionableAdvice;
+    }
+
+    // Unify verdict: if Gemini or rule engine detects failure, final verdict is FAIL
+    if (geminiAudit.isValid === false || geminiAudit.verdict === 'FAIL') {
+      finalVerdict = 'FAIL';
+      report.verdict = 'FAIL';
+      if (report.summary) {
+        report.summary.fail = Math.max(report.summary.fail || 0, geminiAudit.violations?.length || 1);
+      }
+    } else if (report.verdict === 'PASS' && geminiAudit.isValid === true) {
+      finalVerdict = 'PASS';
+    }
+
+    // If Gemini identified product info from real packaging image, enrich product & fields
+    if (geminiAudit.detectedProduct) {
+      const dp = geminiAudit.detectedProduct;
+      if (dp.brand || dp.productName) {
+        // If fallback barcode (Parle-G) was used but image is a different brand (e.g. Britannia), clear false barcode
+        if (detectedBarcode === '8901719101038' && dp.brand && !dp.brand.toLowerCase().includes('parle')) {
+          detectedBarcode = null;
+        }
+
+        // If current product reference brand does not match real packaging image brand, prioritize real pack
+        if (!activeProduct || (dp.brand && activeProduct.brand && !activeProduct.brand.toLowerCase().includes(dp.brand.toLowerCase()))) {
+          activeProduct = {
+            name: dp.productName || dp.brand || 'Detected Packaging',
+            brand: dp.brand || 'Identified Brand',
+            manufacturer: {
+              name: dp.manufacturer || 'Detected Manufacturer',
+              address: dp.manufacturer || '',
+            },
+          };
+        }
+      }
+
+      // Synchronize fields directly from real packaging image
+      if (dp.manufacturer) {
+        fields.manufacturer = {
+          name: 'manufacturer',
+          value: { raw: dp.manufacturer, hasAddress: true },
+          rawText: dp.manufacturer,
+          confidence: 0.95,
+        };
+      }
+      if (dp.consumerCare) {
+        fields.customerCare = {
+          name: 'customerCare',
+          value: { raw: dp.consumerCare },
+          rawText: dp.consumerCare,
+          confidence: 0.95,
+        };
+      }
+      if (dp.fssaiLicense) {
+        fields.fssai = {
+          name: 'fssai',
+          value: dp.fssaiLicense,
+          rawText: dp.fssaiLicense,
+          confidence: 0.95,
+        };
+      }
+      if (dp.countryOfOrigin) {
+        fields.countryOfOrigin = {
+          name: 'countryOfOrigin',
+          value: dp.countryOfOrigin.toLowerCase().includes('not') ? null : dp.countryOfOrigin,
+          rawText: dp.countryOfOrigin,
+          confidence: 0.95,
+        };
+      }
+
+      if (dp.netQuantity && dp.netQuantity.toLowerCase().includes('not')) {
+        fields.netQuantity = { name: 'netQuantity', value: null, rawText: dp.netQuantity, confidence: 0 };
+      }
+      if (dp.mrp && dp.mrp.toLowerCase().includes('not')) {
+        fields.mrp = { name: 'mrp', value: null, rawText: dp.mrp, confidence: 0 };
+      }
+      if (dp.dates && dp.dates.toLowerCase().includes('not')) {
+        fields.dateOfManufacture = { name: 'dateOfManufacture', value: null, rawText: dp.dates, confidence: 0 };
+        fields.expiryOrBestBefore = { name: 'expiryOrBestBefore', value: null, rawText: dp.dates, confidence: 0 };
+      }
+    }
+
+    // If Gemini provided direct declarations audit from the image, synchronize report.checks
+    if (Array.isArray(geminiAudit.declarationsAudit) && geminiAudit.declarationsAudit.length > 0) {
+      report.checks = geminiAudit.declarationsAudit.map((da) => ({
+        ruleId: da.rule || da.declaration,
+        field: da.declaration,
+        status: da.status,
+        mandatory: true,
+        message: da.notes || `${da.declaration}: ${da.status}`,
+        evidence: { text: da.foundValue },
+        sourceRef: da.rule || 'PCR 2011',
+      }));
+
+      const passedCount = report.checks.filter((c) => c.status === 'PASS').length;
+      const failedCount = report.checks.filter((c) => c.status === 'FAIL').length;
+      const uncertainCount = report.checks.filter((c) => c.status === 'UNCERTAIN').length;
+
+      report.summary = {
+        pass: passedCount,
+        fail: failedCount,
+        uncertain: uncertainCount,
+        total: report.checks.length,
+      };
+    }
+  }
+
+  // Ensure counts are consistent for all clients
+  report.passedRulesCount = report.summary?.pass ?? 0;
+  report.failedRulesCount = report.summary?.fail ?? 0;
+  report.evaluatedRulesCount = report.summary?.total || (report.passedRulesCount + report.failedRulesCount) || 8;
+
   // 8. Persist scan
   let scanDoc = null;
   const scanData = {
     user: user?._id || user?.id || null,
     barcode: detectedBarcode || null,
     ruleSetVersion: ruleSetVersion || ruleSet.version || 'pcr-2011.v1',
-    verdict: report.verdict,
+    verdict: finalVerdict,
     report,
+    geminiAudit,
     fields,
     qualityIssues: [],
-    product: product
+    product: activeProduct
       ? {
-          name: product.name,
-          brand: product.brand,
-          netQuantity: product.netQuantity,
-          manufacturer: product.manufacturer,
+          name: activeProduct.name,
+          brand: activeProduct.brand,
+          netQuantity: activeProduct.netQuantity,
+          manufacturer: activeProduct.manufacturer,
         }
       : null,
   };
