@@ -104,7 +104,7 @@ describe('Complaints API Integration Tests', () => {
 
     expect(res.status).toBe(201);
     expect(res.body).toHaveProperty('id');
-    expect(res.body.status).toBe('SUBMITTED');
+    expect(res.body.status).toBe('IN_REVIEW');
     expect(res.body.violations).toHaveLength(1);
     expect(res.body.violations[0].ruleId).toBe('customer_care.presence');
   });

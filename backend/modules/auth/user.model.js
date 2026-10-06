@@ -1,6 +1,13 @@
 import mongoose from 'mongoose';
 import { applyJsonTransform } from '../../infra/schemaPlugin.js';
 
+export const USER_ROLES = Object.freeze({
+  SUPERADMIN: 'admin',
+  DISTRICT_ADMIN: 'district_admin',
+  OFFICER: 'officer',
+  CITIZEN: 'user',
+});
+
 const userSchema = new mongoose.Schema({
   googleId: {
     type: String,
@@ -17,6 +24,10 @@ const userSchema = new mongoose.Schema({
     trim: true,
     index: true,
   },
+  passwordHash: {
+    type: String,
+    default: null,
+  },
   name: {
     type: String,
     required: true,
@@ -28,8 +39,49 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['user', 'admin'],
-    default: 'user',
+    enum: Object.values(USER_ROLES),
+    default: USER_ROLES.CITIZEN,
+    index: true,
+  },
+  district: {
+    type: String,
+    default: null,
+    trim: true,
+    index: true,
+  },
+  address: {
+    type: String,
+    default: '',
+    trim: true,
+  },
+  state: {
+    type: String,
+    default: 'Maharashtra',
+    trim: true,
+  },
+  pincode: {
+    type: String,
+    default: '',
+    trim: true,
+  },
+  phoneNumber: {
+    type: String,
+    default: '',
+    trim: true,
+  },
+  badgeNumber: {
+    type: String,
+    default: null,
+    trim: true,
+  },
+  createdBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    default: null,
+  },
+  isActive: {
+    type: Boolean,
+    default: true,
   },
 });
 

@@ -4,6 +4,11 @@ import { applyJsonTransform } from '../../infra/schemaPlugin.js';
 export const COMPLAINT_STATUS = Object.freeze({
   DRAFT: 'DRAFT',
   SUBMITTED: 'SUBMITTED',
+  IN_REVIEW: 'IN_REVIEW',
+  VERIFIED: 'VERIFIED',
+  VALID: 'VALID',
+  ACTION_TAKEN: 'ACTION_TAKEN',
+  REJECTED: 'REJECTED',
 });
 
 const violationSchema = new mongoose.Schema(
@@ -30,6 +35,23 @@ const complaintSchema = new mongoose.Schema({
     required: true,
     index: true,
   },
+  district: {
+    type: String,
+    default: null,
+    trim: true,
+    index: true,
+  },
+  address: {
+    type: String,
+    default: '',
+    trim: true,
+  },
+  submittedByRole: {
+    type: String,
+    enum: ['user', 'officer', 'admin', 'district_admin'],
+    default: 'user',
+    index: true,
+  },
   violations: {
     type: [violationSchema],
     default: [],
@@ -43,10 +65,24 @@ const complaintSchema = new mongoose.Schema({
     default: '',
     trim: true,
   },
+  officerNotes: {
+    type: String,
+    default: '',
+    trim: true,
+  },
+  reviewedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    default: null,
+  },
+  reviewedAt: {
+    type: Date,
+    default: null,
+  },
   status: {
     type: String,
-    enum: [COMPLAINT_STATUS.DRAFT, COMPLAINT_STATUS.SUBMITTED],
-    default: COMPLAINT_STATUS.SUBMITTED,
+    enum: Object.values(COMPLAINT_STATUS),
+    default: COMPLAINT_STATUS.IN_REVIEW,
     index: true,
   },
 });

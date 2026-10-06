@@ -7,12 +7,15 @@ import {
 
 export async function createComplaintHandler(req, res, next) {
   try {
-    const { scanId, confirmed, userNote } = req.body || {};
+    const { scanId, confirmed, userNote, district, address } = req.body || {};
     const complaint = await createComplaint({
       scanId,
       confirmed: confirmed === true || confirmed === 'true',
       userNote,
       userId: req.user.sub,
+      userRole: req.user.role,
+      district: district || req.user.district,
+      address: address || req.user.address,
       files: req.files,
     });
 
@@ -27,6 +30,7 @@ export async function getComplaintHandler(req, res, next) {
     const complaint = await getComplaintById(req.params.id, {
       userId: req.user.sub,
       role: req.user.role,
+      district: req.user.district,
     });
 
     return res.status(200).json(complaint);
@@ -37,10 +41,11 @@ export async function getComplaintHandler(req, res, next) {
 
 export async function listComplaintsHandler(req, res, next) {
   try {
-    const { page, limit, status } = req.query;
+    const { page, limit, status, district } = req.query;
     const result = await listComplaints({
       userId: req.user.sub,
       role: req.user.role,
+      district: req.user.district || district,
       page,
       limit,
       status,

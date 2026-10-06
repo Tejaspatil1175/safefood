@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import PDFDocument from 'pdfkit';
 import { Complaint, COMPLAINT_STATUS } from './complaints.model.js';
+import { User } from '../auth/user.model.js';
 import { Scan } from '../scans/scans.model.js';
 import { uploadEvidenceBuffer } from '../../infra/gridfs.js';
 import { ValidationError, NotFoundError, ForbiddenError } from '../../lib/errors.js';
@@ -11,6 +12,9 @@ export async function createComplaint({
   confirmed,
   userNote = '',
   userId,
+  userRole = 'user',
+  district = null,
+  address = '',
   files = [],
 }) {
   if (!confirmed) {
@@ -36,6 +40,27 @@ export async function createComplaint({
       `Complaints can only be filed for non-compliant products with a FAIL verdict (current verdict: ${scan.verdict})`,
     );
   }
+
+  // Resolve district and address from params or user profile
+  let resolvedDistrict = district ? district.trim().toUpperCase() : null;
+  let resolvedAddress = address ? address.trim() : '';
+
+  if ((!resolvedDistrict || !resolvedAddress) && isDbConnected()) {
+    const userDoc = await User.findById(userId).lean();
+    if (userDoc) {
+      if (!resolvedDistrict && userDoc.district) {
+        resolvedDistrict = userDoc.district.trim().toUpperCase();
+      }
+      if (!resolvedAddress && userDoc.address) {
+        resolvedAddress = userDoc.address.trim();
+      }
+    }
+  }
+
+  // Common citizen submissions start IN_REVIEW. Officer and Admin submissions are marked VERIFIED automatically.
+  const status = (userRole === 'officer' || userRole === 'admin')
+    ? COMPLAINT_STATUS.VERIFIED
+    : COMPLAINT_STATUS.IN_REVIEW;
 
   // Collect violations from failed checks
   const checks = scan.report?.checks || [];
@@ -85,10 +110,13 @@ export async function createComplaint({
   const complaintData = {
     scan: new mongoose.Types.ObjectId(scanId),
     user: new mongoose.Types.ObjectId(userId),
+    district: resolvedDistrict,
+    address: resolvedAddress,
+    submittedByRole: userRole || 'user',
     violations,
     evidenceFileIds,
     userNote,
-    status: COMPLAINT_STATUS.SUBMITTED,
+    status,
   };
 
   if (isDbConnected()) {
@@ -104,7 +132,7 @@ export async function createComplaint({
   };
 }
 
-export async function getComplaintById(id, { userId, role = 'user' } = {}) {
+export async function getComplaintById(id, { userId, role = 'user', district = null } = {}) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     throw new ValidationError('Invalid complaint ID format');
   }
@@ -114,9 +142,24 @@ export async function getComplaintById(id, { userId, role = 'user' } = {}) {
     throw new NotFoundError(`Complaint with id ${id} not found`);
   }
 
-  // Ownership check
+  // Scoped authorization check
   const complaintUserId = complaint.user?.id || complaint.user?._id?.toString() || complaint.user?.toString();
-  if (role !== 'admin' && complaintUserId !== userId?.toString()) {
+  const complaintDistrict = complaint.district ? complaint.district.trim().toUpperCase() : null;
+  const userDistrict = district ? district.trim().toUpperCase() : null;
+
+  if (role === 'admin') {
+    // Superadmin has universal read access
+  } else if (role === 'district_admin') {
+    // District Admin can view complaints belonging to their district
+    if (!complaintDistrict || complaintDistrict !== userDistrict) {
+      throw new ForbiddenError('You do not have permission to view complaints outside your assigned district');
+    }
+  } else if (role === 'officer') {
+    // Officer can view complaints in their district or their own submissions
+    if (complaintUserId !== userId?.toString() && (!complaintDistrict || complaintDistrict !== userDistrict)) {
+      throw new ForbiddenError('You do not have permission to view this complaint');
+    }
+  } else if (complaintUserId !== userId?.toString()) {
     throw new ForbiddenError('You do not have permission to view this complaint');
   }
 
@@ -126,14 +169,32 @@ export async function getComplaintById(id, { userId, role = 'user' } = {}) {
 export async function listComplaints({
   userId,
   role = 'user',
+  district = null,
   page = 1,
   limit = 20,
   status = null,
 } = {}) {
   const query = {};
 
-  // Standard users only see their own complaints; admins can see all
-  if (role !== 'admin') {
+  if (role === 'admin') {
+    // Admin can view all or filter by district
+    if (district) {
+      query.district = district.trim().toUpperCase();
+    }
+  } else if (role === 'district_admin') {
+    // District Admin ONLY views complaints in their district
+    const normDistrict = district ? district.trim().toUpperCase() : null;
+    query.district = normDistrict;
+  } else if (role === 'officer') {
+    // Officer sees complaints in their district
+    const normDistrict = district ? district.trim().toUpperCase() : null;
+    if (normDistrict) {
+      query.district = normDistrict;
+    } else {
+      query.user = new mongoose.Types.ObjectId(userId);
+    }
+  } else {
+    // Standard citizen only sees their own complaints
     if (!userId) {
       return { items: [], pagination: { total: 0, page: 1, limit, pages: 0 } };
     }

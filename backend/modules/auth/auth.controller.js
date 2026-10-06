@@ -1,4 +1,10 @@
-import { loginWithGoogle, refreshUserTokens } from './auth.service.js';
+import {
+  loginWithGoogle,
+  registerCitizen,
+  loginWithPassword,
+  updateUserProfile,
+  refreshUserTokens,
+} from './auth.service.js';
 import { User } from './user.model.js';
 import { ValidationError, NotFoundError } from '../../lib/errors.js';
 import { isDbConnected } from '../../infra/db.js';
@@ -12,6 +18,46 @@ export async function googleLogin(req, res, next) {
 
     const result = await loginWithGoogle(idToken);
     return res.status(200).json(result);
+  } catch (err) {
+    return next(err);
+  }
+}
+
+export async function register(req, res, next) {
+  try {
+    const { email, password, name, district, address, state, pincode, phoneNumber } = req.body || {};
+    const result = await registerCitizen({
+      email,
+      password,
+      name,
+      district,
+      address,
+      state,
+      pincode,
+      phoneNumber,
+    });
+    return res.status(201).json(result);
+  } catch (err) {
+    return next(err);
+  }
+}
+
+export async function login(req, res, next) {
+  try {
+    const { email, password } = req.body || {};
+    const result = await loginWithPassword({ email, password });
+    return res.status(200).json(result);
+  } catch (err) {
+    return next(err);
+  }
+}
+
+export async function updateProfile(req, res, next) {
+  try {
+    const userId = req.user?.sub;
+    const { district, address, state, pincode, phoneNumber, name } = req.body || {};
+    const user = await updateUserProfile(userId, { district, address, state, pincode, phoneNumber, name });
+    return res.status(200).json(user);
   } catch (err) {
     return next(err);
   }
@@ -48,6 +94,7 @@ export async function getMe(req, res, next) {
       email: req.user.email,
       name: req.user.name,
       role: req.user.role,
+      district: req.user.district,
     });
   } catch (err) {
     return next(err);
@@ -56,6 +103,9 @@ export async function getMe(req, res, next) {
 
 export default {
   googleLogin,
+  register,
+  login,
+  updateProfile,
   refreshToken,
   getMe,
 };

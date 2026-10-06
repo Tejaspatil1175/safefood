@@ -1,8 +1,9 @@
 import jwt from 'jsonwebtoken';
 import { env } from '../../config/env.js';
-import { User } from './user.model.js';
+import { User, USER_ROLES } from './user.model.js';
 import { verifyGoogleIdToken } from './googleAuth.js';
-import { UnauthorizedError } from '../../lib/errors.js';
+import { hashPassword, verifyPassword } from '../../lib/password.js';
+import { UnauthorizedError, ValidationError, NotFoundError } from '../../lib/errors.js';
 
 const ACCESS_TOKEN_EXPIRES_IN = '1h';
 const REFRESH_TOKEN_EXPIRES_IN = '7d';
@@ -14,7 +15,8 @@ export function issueTokens(user) {
     sub: userId,
     email: user.email,
     name: user.name,
-    role: user.role || 'user',
+    role: user.role || USER_ROLES.CITIZEN,
+    district: user.district ? user.district.trim().toUpperCase() : null,
   };
 
   const refreshPayload = {
@@ -70,7 +72,7 @@ export async function loginWithGoogle(idToken) {
       email: googleData.email,
       name: googleData.name,
       avatar: googleData.avatar,
-      role: 'user',
+      role: USER_ROLES.CITIZEN,
     });
   } else if (!user.googleId) {
     user.googleId = googleData.googleId;
@@ -86,6 +88,90 @@ export async function loginWithGoogle(idToken) {
     user,
     ...tokens,
   };
+}
+
+export async function registerCitizen({
+  email,
+  password,
+  name,
+  district = '',
+  address = '',
+  state = 'Maharashtra',
+  pincode = '',
+  phoneNumber = '',
+}) {
+  if (!email || !password || !name) {
+    throw new ValidationError('Name, email, and password are required');
+  }
+
+  const cleanEmail = email.toLowerCase().trim();
+  const existing = await User.findOne({ email: cleanEmail });
+  if (existing) {
+    throw new ValidationError('An account with this email address already exists');
+  }
+
+  const passwordHash = hashPassword(password);
+  const user = await User.create({
+    email: cleanEmail,
+    passwordHash,
+    name: name.trim(),
+    role: USER_ROLES.CITIZEN,
+    district: district ? district.trim().toUpperCase() : null,
+    address: address.trim(),
+    state: state.trim(),
+    pincode: pincode.trim(),
+    phoneNumber: phoneNumber.trim(),
+  });
+
+  const tokens = issueTokens(user);
+  return {
+    user,
+    ...tokens,
+  };
+}
+
+export async function loginWithPassword({ email, password }) {
+  if (!email || !password) {
+    throw new ValidationError('Email and password are required');
+  }
+
+  const cleanEmail = email.toLowerCase().trim();
+  const user = await User.findOne({ email: cleanEmail });
+  if (!user || !user.passwordHash) {
+    throw new UnauthorizedError('Invalid email or password');
+  }
+
+  if (!user.isActive) {
+    throw new UnauthorizedError('Account is deactivated. Please contact your administrator.');
+  }
+
+  const isMatch = verifyPassword(password, user.passwordHash);
+  if (!isMatch) {
+    throw new UnauthorizedError('Invalid email or password');
+  }
+
+  const tokens = issueTokens(user);
+  return {
+    user,
+    ...tokens,
+  };
+}
+
+export async function updateUserProfile(userId, { district, address, state, pincode, phoneNumber, name }) {
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new NotFoundError('User not found');
+  }
+
+  if (name !== undefined) user.name = name.trim();
+  if (district !== undefined) user.district = district ? district.trim().toUpperCase() : null;
+  if (address !== undefined) user.address = address.trim();
+  if (state !== undefined) user.state = state.trim();
+  if (pincode !== undefined) user.pincode = pincode.trim();
+  if (phoneNumber !== undefined) user.phoneNumber = phoneNumber.trim();
+
+  await user.save();
+  return user;
 }
 
 export async function refreshUserTokens(refreshToken) {
@@ -113,5 +199,8 @@ export default {
   verifyAccessToken,
   verifyRefreshToken,
   loginWithGoogle,
+  registerCitizen,
+  loginWithPassword,
+  updateUserProfile,
   refreshUserTokens,
 };
