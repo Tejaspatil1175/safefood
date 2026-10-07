@@ -60,4 +60,26 @@ export const SkeletonTable = ({ rows = 5, cols = 4, className = '' }) => {
   );
 };
 
+export const SkeletonList = ({ count = 3, className = '' }) => {
+  return (
+    <div className={`space-y-3 ${className}`} aria-hidden="true">
+      {Array.from({ length: count }).map((_, i) => (
+        <div
+          key={i}
+          className="p-4 rounded-xl border border-border bg-surface-subtle flex items-center justify-between gap-4"
+        >
+          <div className="flex items-center gap-3 flex-1">
+            <Skeleton className="h-10 w-10 rounded-lg shrink-0" />
+            <div className="space-y-1.5 flex-1">
+              <Skeleton className="h-4 w-2/5" />
+              <Skeleton className="h-3 w-3/5" />
+            </div>
+          </div>
+          <Skeleton className="h-6 w-20 rounded-full shrink-0" />
+        </div>
+      ))}
+    </div>
+  );
+};
+
 export default Skeleton;

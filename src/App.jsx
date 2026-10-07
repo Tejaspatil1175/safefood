@@ -16,6 +16,8 @@ import {
   UserHistoryPage,
   UserReportPage,
   UserComplaintsPage,
+  UserComplaintNewPage,
+  UserComplaintDetailPage,
   UserSettingsPage,
 } from './pages/user';
 
@@ -62,6 +64,8 @@ function App() {
                   <Route path="history" element={<UserHistoryPage />} />
                   <Route path="report/:id" element={<UserReportPage />} />
                   <Route path="complaints" element={<UserComplaintsPage />} />
+                  <Route path="complaints/new" element={<UserComplaintNewPage />} />
+                  <Route path="complaints/:id" element={<UserComplaintDetailPage />} />
                   <Route path="settings" element={<UserSettingsPage />} />
                 </Route>
               </Route>
