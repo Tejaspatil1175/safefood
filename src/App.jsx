@@ -14,6 +14,7 @@ import {
   UserDashboardPage,
   UserScanPage,
   UserHistoryPage,
+  UserReportPage,
   UserComplaintsPage,
   UserSettingsPage,
 } from './pages/user';
@@ -59,6 +60,7 @@ function App() {
                   <Route path="dashboard" element={<UserDashboardPage />} />
                   <Route path="scan" element={<UserScanPage />} />
                   <Route path="history" element={<UserHistoryPage />} />
+                  <Route path="report/:id" element={<UserReportPage />} />
                   <Route path="complaints" element={<UserComplaintsPage />} />
                   <Route path="settings" element={<UserSettingsPage />} />
                 </Route>
