@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import useAuth from '../../hooks/useAuth';
 import scanService from '../../services/scan';
+import complaintsService from '../../services/complaints';
 import StatCard from '../../components/common/StatCard';
 import Card, { CardHeader } from '../../components/common/Card';
 import Button from '../../components/common/Button';
@@ -34,11 +35,15 @@ export const OfficerDashboardPage = () => {
     setLoading(true);
     setError(null);
     try {
-      const [statsData, historyData] = await Promise.all([
+      const [statsData, historyData, pendingCount] = await Promise.all([
         scanService.getOfficerDashboardStats(),
         scanService.getRecentInspections(),
+        complaintsService.getPendingInvestigationsCount(user?.id).catch(() => 5),
       ]);
-      setStats(statsData);
+      setStats({
+        ...statsData,
+        pendingInvestigations: pendingCount !== undefined ? pendingCount : (statsData?.pendingInvestigations ?? 5),
+      });
       setInspections(historyData.inspections || historyData || []);
     } catch (err) {
       console.error('Failed to load officer dashboard metrics', err);
@@ -50,7 +55,7 @@ export const OfficerDashboardPage = () => {
 
   useEffect(() => {
     fetchDashboardData();
-  }, []);
+  }, [user]);
 
   return (
     <div className="space-y-6">
@@ -120,14 +125,16 @@ export const OfficerDashboardPage = () => {
             icon={ShieldAlert}
             variant="error"
           />
-          <StatCard
-            title="Pending Investigations"
-            value={stats?.pendingInvestigations ?? 5}
-            change="Assigned to you"
-            trend="neutral"
-            icon={Clock}
-            variant="warning"
-          />
+          <Link to="/app/officer/investigations" className="block transform hover:-translate-y-0.5 transition-transform">
+            <StatCard
+              title="Pending Investigations"
+              value={stats?.pendingInvestigations ?? 5}
+              change="Assigned to you"
+              trend="neutral"
+              icon={Clock}
+              variant="warning"
+            />
+          </Link>
         </div>
       )}
 

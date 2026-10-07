@@ -25,6 +25,7 @@ import {
   OfficerHistoryPage,
   OfficerReportPage,
   OfficerInvestigationsPage,
+  OfficerInvestigationDetailPage,
   OfficerSettingsPage,
 } from './pages/officer';
 
@@ -72,6 +73,7 @@ function App() {
                   <Route path="history" element={<OfficerHistoryPage />} />
                   <Route path="report/:id" element={<OfficerReportPage />} />
                   <Route path="investigations" element={<OfficerInvestigationsPage />} />
+                  <Route path="investigations/:id" element={<OfficerInvestigationDetailPage />} />
                   <Route path="settings" element={<OfficerSettingsPage />} />
                 </Route>
               </Route>
