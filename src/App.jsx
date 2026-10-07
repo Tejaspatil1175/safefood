@@ -38,6 +38,7 @@ import {
   AdminUsersPage,
   AdminOfficersPage,
   AdminComplaintsPage,
+  AdminComplaintDetailPage,
   AdminSettingsPage,
 } from './pages/admin';
 
@@ -92,6 +93,7 @@ function App() {
                   <Route path="users" element={<AdminUsersPage />} />
                   <Route path="officers" element={<AdminOfficersPage />} />
                   <Route path="complaints" element={<AdminComplaintsPage />} />
+                  <Route path="complaints/:id" element={<AdminComplaintDetailPage />} />
                   <Route path="settings" element={<AdminSettingsPage />} />
                 </Route>
               </Route>
