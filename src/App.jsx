@@ -23,6 +23,7 @@ import {
   OfficerDashboardPage,
   OfficerScanPage,
   OfficerHistoryPage,
+  OfficerReportPage,
   OfficerInvestigationsPage,
   OfficerSettingsPage,
 } from './pages/officer';
@@ -69,6 +70,7 @@ function App() {
                   <Route path="dashboard" element={<OfficerDashboardPage />} />
                   <Route path="scan" element={<OfficerScanPage />} />
                   <Route path="history" element={<OfficerHistoryPage />} />
+                  <Route path="report/:id" element={<OfficerReportPage />} />
                   <Route path="investigations" element={<OfficerInvestigationsPage />} />
                   <Route path="settings" element={<OfficerSettingsPage />} />
                 </Route>
