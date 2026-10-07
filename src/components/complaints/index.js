@@ -1,0 +1,2 @@
+// Complaints component exports
+export {};

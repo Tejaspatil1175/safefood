@@ -21,31 +21,26 @@ ENV/
 
 # Build and test output
 dist/
+dist-ssr/
 build/
 coverage/
 *.lcov
 .nyc_output
 
-# Uploads and temporary files
+# Uploads, logs and temporary files
 uploads/
 tmp/
 temp/
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
 # System and IDE files
 .DS_Store
 Thumbs.db
 .idea/
-.vscode/
+.vscode/*
+!.vscode/extensions.json
 *.sw?
-
-# Documentation files and folders (ignored from git as requested)
-docs/
-safefood/
-IMPLEMENTATION_GUIDE.md
-*IMPLEMENTATION_GUIDE*
-
-# Test UI & Single page client (ignored from git as requested)
-index.html
-backend/public/
-public/
-

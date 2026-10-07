@@ -1,0 +1,110 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Primary Brand: Deep Indigo / Trust Blue */
+    --color-primary-50: 238 242 255;
+    --color-primary-100: 224 231 255;
+    --color-primary-200: 199 210 254;
+    --color-primary-300: 165 180 252;
+    --color-primary-400: 129 140 248;
+    --color-primary-500: 99 102 241;
+    --color-primary-600: 79 70 229;   /* #4F46E5 Brand Main */
+    --color-primary-700: 67 56 202;   /* Deep Blue/Indigo */
+    --color-primary-800: 55 48 163;
+    --color-primary-900: 49 46 129;   /* #312E81 Midnight Trust */
+    --color-primary-950: 30 27 75;
+    --color-primary-foreground: 255 255 255;
+
+    /* Semantic Feedback Colors */
+    --color-success-50: 240 253 244;
+    --color-success-500: 34 197 94;
+    --color-success-600: 22 163 74;
+    --color-success-700: 21 128 61;
+
+    --color-warning-50: 255 251 235;
+    --color-warning-500: 245 158 11;
+    --color-warning-600: 217 119 6;
+    --color-warning-700: 180 83 9;
+
+    --color-error-50: 254 242 242;
+    --color-error-500: 239 68 68;
+    --color-error-600: 220 38 38;
+    --color-error-700: 185 28 28;
+
+    /* Surface & Background */
+    --color-background: 248 250 252;     /* Slate 50 clean SaaS bg */
+    --color-surface: 255 255 255;        /* Pure white cards */
+    --color-surface-muted: 241 245 249;  /* Slate 100 */
+    --color-surface-subtle: 248 250 252; /* Slate 50 */
+    --color-border: 226 232 240;         /* Slate 200 */
+  }
+
+  .dark {
+    /* Future-ready Dark Mode Tokens */
+    --color-primary-50: 30 27 75;
+    --color-primary-100: 49 46 129;
+    --color-primary-200: 55 48 163;
+    --color-primary-300: 67 56 202;
+    --color-primary-400: 79 70 229;
+    --color-primary-500: 99 102 241;
+    --color-primary-600: 129 140 248;
+    --color-primary-700: 165 180 252;
+    --color-primary-800: 199 210 254;
+    --color-primary-900: 224 231 255;
+    --color-primary-950: 238 242 255;
+    --color-primary-foreground: 15 23 42;
+
+    --color-background: 15 23 42;        /* Slate 900 */
+    --color-surface: 30 41 59;           /* Slate 800 */
+    --color-surface-muted: 51 65 85;     /* Slate 700 */
+    --color-surface-subtle: 15 23 42;    /* Slate 900 */
+    --color-border: 51 65 85;            /* Slate 700 */
+  }
+
+  body {
+    @apply bg-background text-neutral-800 font-sans antialiased;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  }
+}
+
+@layer components {
+  /* Reusable SaaS UI Utilities */
+  .card-saas {
+    @apply bg-surface border border-border rounded-xl shadow-card transition-all duration-200;
+  }
+  
+  .card-saas-hover {
+    @apply card-saas hover:shadow-card-hover hover:border-neutral-300;
+  }
+
+  .badge-saas {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium tracking-wide;
+  }
+
+  .badge-primary {
+    @apply badge-saas bg-primary-50 text-primary-700 border border-primary-100;
+  }
+
+  .badge-success {
+    @apply badge-saas bg-success-50 text-success-700 border border-success-500/20;
+  }
+
+  .badge-warning {
+    @apply badge-saas bg-warning-50 text-warning-700 border border-warning-500/20;
+  }
+
+  .badge-error {
+    @apply badge-saas bg-error-50 text-error-700 border border-error-500/20;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center font-medium rounded-lg px-4 py-2.5 bg-primary-600 text-white hover:bg-primary-700 active:bg-primary-800 shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center font-medium rounded-lg px-4 py-2.5 bg-surface text-neutral-700 border border-border hover:bg-surface-muted active:bg-neutral-200 transition-all focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+}
