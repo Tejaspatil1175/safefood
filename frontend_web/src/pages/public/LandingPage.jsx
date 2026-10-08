@@ -52,7 +52,7 @@ export const LandingPage = () => {
           <div className="hidden sm:block">
             <Link
               to="/login"
-              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#F5C518] hover:bg-[#e6b800] text-[#1a1a1a] text-sm font-bold transition-colors"
+              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#28B463] hover:bg-[#22994F] text-white text-sm font-bold shadow-md shadow-[#28B463]/30 transition-all hover:scale-105 active:scale-95"
             >
               Download App
             </Link>
@@ -83,7 +83,7 @@ export const LandingPage = () => {
               <Link
                 to="/login"
                 onClick={() => setMobileMenuOpen(false)}
-                className="w-full py-3 rounded-full bg-[#F5C518] text-[#1a1a1a] font-bold text-sm text-center"
+                className="w-full py-3 rounded-full bg-[#28B463] text-white font-bold text-sm text-center shadow-md shadow-[#28B463]/30"
               >
                 Download App
               </Link>
@@ -102,22 +102,28 @@ export const LandingPage = () => {
       {/* ══════════════════════════════════════════════════════ */}
       {/*  HERO SECTION                                         */}
       {/* ══════════════════════════════════════════════════════ */}
-      <section className="relative bg-[#0B3D2B] overflow-hidden">
-        {/* Orange circle blob — bottom right like the photo */}
-        <div className="absolute bottom-[-120px] right-[-80px] w-[480px] h-[480px] rounded-full bg-[#E8632B] opacity-90 pointer-events-none" />
+      <section className="relative bg-[#072418] overflow-hidden">
+        {/* Top-Right Emerald Organic Wave/Blob */}
+        <div className="absolute -top-24 right-[-40px] w-[540px] h-[540px] rounded-full bg-[#0E7A4E] opacity-90 blur-sm pointer-events-none" />
+
+        {/* Bottom-Right Warm Orange Organic Wave/Blob */}
+        <div className="absolute bottom-[-100px] right-[-60px] w-[460px] h-[460px] rounded-full bg-[#E8632B] opacity-95 pointer-events-none" />
+
+        {/* Ambient Center Glow */}
+        <div className="absolute top-1/2 right-[18%] -translate-y-1/2 w-[380px] h-[380px] rounded-full bg-[#22C55E]/15 blur-3xl pointer-events-none" />
 
         <div className="max-w-[1320px] mx-auto px-5 sm:px-8 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-6 items-center py-12 lg:py-16">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-8 items-center py-12 lg:py-16">
 
             {/* ── Left Column: Copy ── */}
             <div className="space-y-6 text-center lg:text-left max-w-[580px] mx-auto lg:mx-0">
-              <h1 className="text-[38px] sm:text-[46px] lg:text-[52px] font-extrabold text-white leading-[1.12] tracking-tight">
+              <h1 className="text-[38px] sm:text-[46px] lg:text-[54px] font-extrabold text-white leading-[1.12] tracking-tight">
                 Is Your Food Pack<br />
                 Genuine, Safe &amp; Legal?<br />
                 &amp; Find Out Instantly.
               </h1>
 
-              <p className="text-[15px] sm:text-[16px] text-[#B0CCBA] leading-relaxed max-w-[520px] mx-auto lg:mx-0">
+              <p className="text-[15px] sm:text-[16px] text-[#A7C8B6] leading-relaxed max-w-[520px] mx-auto lg:mx-0">
                 SafeFood uses advanced AI to scan packaged foods, instantly
                 checking for hidden details, illegal tiny fonts, missing Govt
                 mandatory info, and fake products, along with new features like
@@ -125,14 +131,14 @@ export const LandingPage = () => {
               </p>
 
               {/* Buttons Row */}
-              <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 pt-1">
+              <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3.5 pt-1">
                 {/* Get the Free App button */}
-                <button
-                  type="button"
-                  className="flex items-center gap-3 px-6 py-3 rounded-full bg-[#28B463] hover:bg-[#22994F] text-white font-bold text-[15px] transition-colors cursor-pointer"
+                <Link
+                  to="/login"
+                  className="flex items-center gap-3 px-6 py-3 rounded-full bg-[#28B463] hover:bg-[#22994F] text-white font-bold text-[15px] shadow-lg shadow-[#28B463]/30 transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
                 >
                   <span>Get the Free App</span>
-                  <div className="flex items-center gap-1.5 pl-3 border-l border-white/30">
+                  <div className="flex items-center gap-2 pl-3 border-l border-white/30">
                     {/* Apple icon */}
                     <svg className="h-4 w-4 fill-white" viewBox="0 0 170 170">
                       <path d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.19-2.12-9.97-3.17-14.34-3.17-4.58 0-9.49 1.05-14.75 3.17-5.26 2.13-9.5 3.24-12.74 3.35-5.35.22-10.33-1.93-14.94-6.46-3.35-3.17-7.2-7.91-11.56-14.22-5.74-8.37-10.35-17.96-13.82-28.77-3.48-10.81-5.21-21.36-5.21-31.65 0-14.89 3.83-27.18 11.49-36.88 7.66-9.7 17.1-14.65 28.32-14.86 4.93 0 10.38 1.25 16.36 3.75 5.98 2.5 9.87 3.81 11.66 3.93 1.57-.12 5.69-1.54 12.37-4.25 6.68-2.72 12.31-3.9 16.89-3.55 12.7.99 22.78 5.76 30.23 14.32-11.05 6.74-16.47 16.03-16.27 27.88.2 9.27 3.86 17.06 10.98 23.36 7.12 6.3 15.35 9.77 24.68 10.42-2.12 6.32-4.78 12.63-7.98 18.94zM119.22 33.15c0-7.23 2.65-13.97 7.95-20.21 5.3-6.24 11.83-10.15 19.59-11.74.85 7.12-1.39 13.89-6.72 20.3-5.33 6.41-11.97 10.46-19.92 12.16-.3-.18-.6-.35-.9-.51z" />
@@ -142,12 +148,12 @@ export const LandingPage = () => {
                       <path d="M325.3 234.3L104.6 13l280.8 161.2-60.1 60.1zM47 0C34 6.8 25.3 19.2 25.3 35.3v441.3c0 16.1 8.7 28.5 21.7 35.3l256.6-256L47 0zm425.2 225.6l-58.9-34.1-65.7 64.5 65.7 64.5 60.1-34.1c18-14.3 18-46.5-1.2-60.8zM104.6 499l280.8-161.2-60.1-60.1L104.6 499z" />
                     </svg>
                   </div>
-                </button>
+                </Link>
 
                 {/* See How It Works button */}
                 <a
                   href="#how-it-works"
-                  className="px-6 py-3 rounded-full border-2 border-white/50 hover:border-white text-white font-semibold text-[15px] transition-colors"
+                  className="px-6 py-3 rounded-full border-2 border-white/50 hover:border-white text-white font-semibold text-[15px] transition-all hover:bg-white/10"
                 >
                   See How It Works
                 </a>
@@ -156,33 +162,37 @@ export const LandingPage = () => {
               {/* Trust Emblems Row */}
               <div className="pt-6 space-y-2.5">
                 <div className="flex items-center justify-center lg:justify-start gap-3">
-                  {/* 5 circular white badges with simple icons */}
-                  {[
-                    { label: '★', bg: '#FFF8E1', color: '#B8860B' },
-                    { label: 'fssai', bg: '#FFFFFF', color: '#006B3F', isText: true },
-                    { label: '✓', bg: '#E8F5E9', color: '#2E7D32' },
-                    { label: 'fssai', bg: '#FFFFFF', color: '#006B3F', isText: true, italic: true },
-                    { label: '🌿', bg: '#E8F5E9', color: '#388E3C' },
-                  ].map((badge, i) => (
-                    <div
-                      key={i}
-                      className="h-12 w-12 rounded-full flex items-center justify-center border-2 border-white/20"
-                      style={{ backgroundColor: badge.bg }}
-                    >
-                      {badge.isText ? (
-                        <span
-                          className="font-black text-[11px] tracking-tighter"
-                          style={{ color: badge.color, fontStyle: badge.italic ? 'italic' : 'normal' }}
-                        >
-                          {badge.label}
-                        </span>
-                      ) : (
-                        <span className="text-lg" style={{ color: badge.color }}>
-                          {badge.label}
-                        </span>
-                      )}
-                    </div>
-                  ))}
+                  {/* Emblem 1: Ashoka Emblem (Govt of India) */}
+                  <div className="h-12 w-12 rounded-full bg-white flex items-center justify-center border-2 border-white/30 shadow-md">
+                    <svg className="h-7 w-7 text-[#996515]" viewBox="0 0 24 24" fill="currentColor">
+                      <circle cx="12" cy="18" r="3" fill="#000080" />
+                      <path d="M12 2l2 4h-4l2-4zm-5 5l2 3h-4l2-3zm10 0l2 3h-4l2-3zm-5 4l1.5 3h-3l1.5-3zm-6 2l1.5 2h-3l1.5-2zm12 0l1.5 2h-3l1.5-2z" />
+                    </svg>
+                  </div>
+
+                  {/* Emblem 2: FSSAI Official */}
+                  <div className="h-12 w-12 rounded-full bg-white flex items-center justify-center border-2 border-white/30 shadow-md">
+                    <span className="font-black text-[13px] tracking-tight text-[#006B3F] font-sans">fssai</span>
+                  </div>
+
+                  {/* Emblem 3: Consumer Affairs / Legal Metrology */}
+                  <div className="h-12 w-12 rounded-full bg-white flex items-center justify-center border-2 border-white/30 shadow-md">
+                    <svg className="h-6 w-6 text-[#1E3A8A]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                      <path d="M12 3v18M6 8l6-2 6 2M6 8v3a3 3 0 006 0V8M18 8v3a3 3 0 01-6 0V8" />
+                    </svg>
+                  </div>
+
+                  {/* Emblem 4: FSSAI Certified Seal */}
+                  <div className="h-12 w-12 rounded-full bg-white flex items-center justify-center border-2 border-white/30 shadow-md">
+                    <span className="font-extrabold text-[12px] italic tracking-tighter text-[#006B3F]">fssai</span>
+                  </div>
+
+                  {/* Emblem 5: Jaivik Bharat (Organic Leaf) */}
+                  <div className="h-12 w-12 rounded-full bg-white flex items-center justify-center border-2 border-white/30 shadow-md">
+                    <svg className="h-6 w-6 text-[#15803D]" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M17 8C8 10 5.9 16.17 3.82 21.34l1.89.66.95-2.3c.48.17.98.3 1.34.3C19 20 22 3 22 3c-1 2-8 2.25-13 3.25S2 11.5 2 13.5c0 3.5 3 6.5 7 6.5" />
+                    </svg>
+                  </div>
                 </div>
                 <p className="text-[13px] text-[#8FB89C] font-medium">
                   Scanned 5M+ packets &bull; Trusted by families &amp; retailers
@@ -190,143 +200,196 @@ export const LandingPage = () => {
               </div>
             </div>
 
-            {/* ── Right Column: Phone Mockup with AR Badges ── */}
-            <div className="relative flex justify-center lg:justify-end">
-              <div className="relative w-[320px] sm:w-[360px]">
+            {/* ── Right Column: 3D Angled Phone Mockup with AR HUD Badges ── */}
+            <div className="relative flex justify-center lg:justify-end perspective-1200 py-6">
+              <div className="relative w-[320px] sm:w-[350px]">
 
                 {/* ─ Floating Badge: MRP & Expiry (top-left) ─ */}
-                <div className="absolute -top-2 -left-8 sm:-left-16 z-20 flex items-center gap-1.5 bg-[#145A38] border border-[#28B463]/50 rounded-full px-3 py-1.5">
+                <div className="absolute -top-3 -left-8 sm:-left-16 z-30 flex items-center gap-1.5 bg-[#E8F8EE] border border-[#28B463]/40 rounded-full px-3.5 py-1.5 shadow-[0_10px_25px_rgba(0,0,0,0.3)] animate-float-gentle">
                   <div className="h-5 w-5 rounded-full bg-[#28B463] flex items-center justify-center">
                     <Check className="h-3 w-3 text-white stroke-[3]" />
                   </div>
-                  <span className="text-[12px] font-bold text-white whitespace-nowrap">MRP &amp; Expiry</span>
+                  <span className="text-[12px] font-bold text-[#0E5E36] whitespace-nowrap">MRP &amp; Expiry</span>
                 </div>
 
                 {/* ─ Floating Badge: Missing Manufacturer (top-right) ─ */}
-                <div className="absolute top-4 -right-4 sm:-right-12 z-20 bg-[#F9D4C4] rounded-xl px-3 py-2 max-w-[130px]">
-                  <span className="text-[12px] font-bold text-[#1a1a1a] leading-tight block">
+                <div className="absolute top-4 -right-4 sm:-right-14 z-30 flex items-start gap-1.5 bg-[#FFE5DC] border border-[#FDBA74]/50 rounded-2xl px-3.5 py-2.5 shadow-[0_10px_25px_rgba(0,0,0,0.3)] animate-float-gentle">
+                  <div className="h-4 w-4 rounded-full bg-[#EA580C] text-white flex items-center justify-center shrink-0 mt-0.5">
+                    <AlertTriangle className="h-2.5 w-2.5 stroke-[3]" />
+                  </div>
+                  <span className="text-[12px] font-bold text-[#1A1A1A] leading-tight block">
                     Missing<br />Manufacturer
                   </span>
                 </div>
 
-                {/* ─ Floating Badge: Font Size < 1.5mm (Illegal) (mid-left) ─ */}
-                <div className="absolute top-[26%] -left-8 sm:-left-20 z-20 flex items-center gap-2 bg-[#FDE8D0] border border-[#E8A050]/40 rounded-xl px-3 py-2">
-                  <div className="h-5 w-5 rounded-full bg-[#E8A050] flex items-center justify-center shrink-0">
-                    <AlertTriangle className="h-3 w-3 text-white stroke-[3]" />
+                {/* ─ Floating Badge: Font Size < 1.5mm (Illegal) (mid-left) WITH NEON GLOW ─ */}
+                <div className="absolute top-[24%] -left-8 sm:-left-22 z-30 flex items-center gap-2.5 bg-[#FFECE8] border-2 border-[#FCA5A5] rounded-2xl px-3.5 py-2.5 shadow-[0_12px_30px_rgba(239,68,68,0.5),0_0_20px_rgba(249,115,22,0.4)] animate-neon-glow">
+                  <div className="h-6 w-6 rounded-full bg-[#EF4444] flex items-center justify-center shrink-0 shadow-sm">
+                    <AlertTriangle className="h-3.5 w-3.5 text-white stroke-[2.5]" />
                   </div>
                   <div>
-                    <span className="text-[12px] font-bold text-[#1a1a1a] block leading-tight">Font Size &lt; 1.5mm</span>
-                    <span className="text-[11px] font-bold text-[#7D5A2F] block">(Illegal)</span>
+                    <span className="text-[12px] font-extrabold text-[#1A1A1A] block leading-tight">Font Size &lt; 1.5mm</span>
+                    <span className="text-[11px] font-extrabold text-[#DC2626] block">(Illegal)</span>
                   </div>
                 </div>
 
                 {/* ─ Floating Badge: Allergens Found (mid-right) ─ */}
-                <div className="absolute top-[42%] -right-4 sm:-right-12 z-20 bg-[#D4F0D9] rounded-xl px-3 py-2">
-                  <span className="text-[12px] font-bold text-[#1a1a1a]">Allergens Found</span>
+                <div className="absolute top-[42%] -right-4 sm:-right-12 z-30 flex items-center gap-1.5 bg-[#FEF3C7] border border-[#FCD34D] rounded-full px-3.5 py-2 shadow-[0_10px_25px_rgba(0,0,0,0.3)] animate-float-opposite">
+                  <div className="h-4 w-4 rounded-full bg-[#D97706] text-white flex items-center justify-center shrink-0">
+                    <AlertTriangle className="h-2.5 w-2.5 stroke-[3]" />
+                  </div>
+                  <span className="text-[12px] font-bold text-[#78350F] whitespace-nowrap">Allergens Found</span>
                 </div>
 
                 {/* ─ Floating Badge: MRP & Expiry (bottom-left) ─ */}
-                <div className="absolute bottom-[28%] -left-6 sm:-left-12 z-20 flex items-center gap-1.5 bg-[#145A38] border border-[#28B463]/50 rounded-full px-3 py-1.5">
+                <div className="absolute bottom-[28%] -left-6 sm:-left-12 z-30 flex items-center gap-1.5 bg-[#E8F8EE] border border-[#28B463]/40 rounded-full px-3.5 py-1.5 shadow-[0_10px_25px_rgba(0,0,0,0.3)] animate-float-opposite">
                   <div className="h-5 w-5 rounded-full bg-[#28B463] flex items-center justify-center">
                     <Check className="h-3 w-3 text-white stroke-[3]" />
                   </div>
-                  <span className="text-[12px] font-bold text-white whitespace-nowrap">MRP &amp; Expiry</span>
+                  <span className="text-[12px] font-bold text-[#0E5E36] whitespace-nowrap">MRP &amp; Expiry</span>
                 </div>
 
-                {/* ── Phone Frame ── */}
-                <div className="relative rounded-[44px] bg-[#1a1a1a] p-[10px] shadow-[0_30px_60px_rgba(0,0,0,0.5)]">
-                  <div className="relative rounded-[36px] overflow-hidden bg-[#111]">
-                    {/* Dynamic Island */}
-                    <div className="absolute top-3 left-1/2 -translate-x-1/2 z-30 h-[22px] w-[90px] bg-black rounded-full" />
+                {/* ── 3D Realistic iPhone Chassis ── */}
+                <div className="phone-3d-tilted relative rounded-[48px] bg-gradient-to-b from-[#38423C] via-[#1D2520] to-[#121815] p-[5px] shadow-[0_35px_70px_-15px_rgba(0,0,0,0.85),0_15px_30px_rgba(0,0,0,0.6),-15px_15px_35px_rgba(0,0,0,0.5)]">
+                  {/* Outer Titanium Rim Highlight */}
+                  <div className="relative rounded-[45px] p-[5px] bg-[#0A0D0B] border border-white/10">
+                    
+                    {/* Side Hardware Buttons */}
+                    <div className="absolute -left-[7px] top-[95px] w-[3px] h-[32px] bg-[#4B5850] rounded-l-sm" />
+                    <div className="absolute -left-[7px] top-[140px] w-[3px] h-[45px] bg-[#4B5850] rounded-l-sm" />
+                    <div className="absolute -left-[7px] top-[195px] w-[3px] h-[45px] bg-[#4B5850] rounded-l-sm" />
+                    <div className="absolute -right-[7px] top-[130px] w-[3px] h-[55px] bg-[#4B5850] rounded-r-sm" />
 
-                    {/* Camera Screen Content */}
-                    <div className="relative h-[520px] sm:h-[560px] w-full bg-[#0c120e] flex flex-col p-4">
+                    {/* Screen Container */}
+                    <div className="relative rounded-[38px] overflow-hidden bg-[#0A120D] h-[540px] sm:h-[570px] flex flex-col justify-between">
+                      
+                      {/* Glass Sheen Reflection Overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.07] to-transparent pointer-events-none z-30" />
 
-                      {/* Viewfinder top bar */}
-                      <div className="pt-8 flex items-center justify-between text-white/70 text-xs z-10">
-                        <span>⚡</span>
-                        <span className="text-[10px] font-mono tracking-wider text-[#4ADE80] bg-black/50 px-2 py-0.5 rounded-full">
-                          Scanning
-                        </span>
-                        <span>↻</span>
+                      {/* Dynamic Island */}
+                      <div className="absolute top-2.5 left-1/2 -translate-x-1/2 z-40 h-[22px] w-[90px] bg-black rounded-full flex items-center justify-between px-2.5">
+                        <div className="h-2.5 w-2.5 rounded-full bg-[#111] border border-[#222] relative">
+                          <div className="h-1 w-1 rounded-full bg-[#1e2a4a] absolute inset-0.5" />
+                        </div>
+                        <div className="h-2 w-2 rounded-full bg-[#151515]" />
                       </div>
 
-                      {/* Center: Snack Package */}
-                      <div className="flex-1 flex items-center justify-center relative my-4">
-                        {/* Package illustration */}
-                        <div className="relative w-[180px] sm:w-[200px] h-[260px] sm:h-[280px] rounded-xl bg-gradient-to-b from-[#D4690A] via-[#E07A1A] to-[#B85507] flex flex-col justify-between p-3 border border-white/15">
+                      {/* Top Viewfinder Controls */}
+                      <div className="pt-8 px-4 flex items-center justify-between text-white/70 text-xs z-10">
+                        <span className="text-sm">⚡</span>
+                        <div className="flex items-center gap-1.5 bg-black/60 backdrop-blur-md px-2.5 py-0.5 rounded-full border border-white/10">
+                          <span className="h-1.5 w-1.5 rounded-full bg-[#4ADE80] animate-pulse" />
+                          <span className="text-[10px] font-mono tracking-wider text-[#4ADE80]">Scanning</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm">↻</span>
+                          <span className="text-xs opacity-60">⚙</span>
+                        </div>
+                      </div>
 
-                          {/* Scan line */}
-                          <div className="absolute left-0 right-0 h-[2px] bg-[#4ADE80]/80 animate-scan-line z-20 pointer-events-none" />
+                      {/* Center: Realistic Snack Pack ("Spack") with AR Overlays */}
+                      <div className="flex-1 flex items-center justify-center relative my-2 px-6">
+                        
+                        {/* Corner AR Target Reticles */}
+                        <div className="absolute w-[210px] sm:w-[230px] h-[290px] sm:h-[310px] pointer-events-none z-20">
+                          <div className="absolute top-0 left-0 w-5 h-5 border-t-2 border-l-2 border-[#4ADE80]" />
+                          <div className="absolute top-0 right-0 w-5 h-5 border-t-2 border-r-2 border-[#4ADE80]" />
+                          <div className="absolute bottom-0 left-0 w-5 h-5 border-b-2 border-l-2 border-[#4ADE80]" />
+                          <div className="absolute bottom-0 right-0 w-5 h-5 border-b-2 border-r-2 border-[#4ADE80]" />
+                        </div>
 
-                          {/* Brand name */}
-                          <div className="flex items-center justify-between">
-                            <span className="text-[18px] font-black text-white drop-shadow-sm tracking-tight" style={{ fontFamily: 'serif' }}>
+                        {/* Laser Scan Beam */}
+                        <div className="absolute left-6 right-6 h-[2px] bg-[#4ADE80] shadow-[0_0_12px_#4ADE80] animate-scan-line z-20 pointer-events-none" />
+
+                        {/* Realistic Food Pouch */}
+                        <div className="relative w-[180px] sm:w-[200px] rounded-2xl bg-gradient-to-b from-[#EA580C] via-[#F97316] to-[#C2410C] flex flex-col justify-between p-3.5 shadow-2xl border border-white/20 overflow-hidden">
+                          
+                          {/* Top Foil Crimp Effect */}
+                          <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-orange-600 via-orange-400 to-orange-700 opacity-70 flex justify-between px-1">
+                            {[...Array(16)].map((_, i) => (
+                              <div key={i} className="w-[1px] h-full bg-black/20" />
+                            ))}
+                          </div>
+
+                          {/* Diagonal Foil Glare */}
+                          <div className="absolute -inset-full bg-gradient-to-tr from-transparent via-white/20 to-transparent rotate-45 pointer-events-none" />
+
+                          {/* Brand name & Category Tag */}
+                          <div className="flex items-center justify-between pt-1 relative z-10">
+                            <span className="text-[20px] font-black text-white tracking-tight drop-shadow-md">
                               Spack
                             </span>
-                            <span className="text-[8px] font-bold bg-white/90 text-[#D4690A] px-1.5 py-0.5 rounded uppercase">
-                              Snack
+                            <span className="text-[8px] font-extrabold bg-white text-[#EA580C] px-2 py-0.5 rounded-full uppercase shadow-sm">
+                              SNACK
                             </span>
                           </div>
 
-                          {/* Product visual area */}
-                          <div className="flex-1 flex flex-col justify-center gap-2 my-2">
-                            {/* Cheese visual */}
-                            <div className="text-center">
-                              <div className="text-[11px] font-bold text-yellow-100 uppercase tracking-wide">
-                                Pure Cheez
-                              </div>
-                              <div className="text-[9px] text-white/80">Crispy Cheese Puffs</div>
+                          {/* Middle: Product Title & Net Weight */}
+                          <div className="flex flex-col items-center justify-center my-2 text-center relative z-10">
+                            <div className="text-[13px] font-black text-yellow-200 tracking-wider uppercase drop-shadow-sm">
+                              PURE CHEEZ
+                            </div>
+                            <div className="text-[9px] text-white/90 font-medium">
+                              Crispy Cheese Puffs
                             </div>
 
-                            {/* Expiry line */}
-                            <div className="bg-black/40 rounded px-2 py-1 text-center">
-                              <span className="text-[10px] font-mono font-bold text-white">EXP: 12/29</span>
+                            {/* Expiry Capsule */}
+                            <div className="mt-2 bg-black/50 border border-white/10 rounded-md px-3 py-1">
+                              <span className="text-[10px] font-mono font-bold text-white tracking-wider">EXP: 12/29</span>
                             </div>
+                          </div>
 
-                            {/* Ingredients tiny text panel */}
-                            <div className="bg-white/90 rounded p-1.5 text-[6.5px] text-neutral-700 leading-tight">
-                              <span className="font-bold text-[7px] text-neutral-900 block mb-0.5">Ingredients</span>
-                              <p className="text-neutral-500 line-clamp-2">
-                                Corn grits, palm oil, cheese powder (milk), seasoning, edible salt, spice extracts...
-                              </p>
+                          {/* Ingredients Box (With AR Alert Outline) */}
+                          <div className="relative bg-white/95 rounded-lg p-2 text-[7px] text-neutral-800 shadow-inner border border-amber-400/80 my-1 z-10">
+                            <div className="flex items-center justify-between mb-0.5">
+                              <span className="font-bold text-[7.5px] text-neutral-900">Ingredients</span>
+                              <span className="text-[6px] font-mono text-amber-700 bg-amber-100 px-1 rounded">Net: 45g</span>
                             </div>
+                            <p className="text-neutral-600 leading-[1.2] line-clamp-2">
+                              Corn grits, edible vegetable oil, cheese powder (milk solids), seasoning, edible common salt, spices...
+                            </p>
                           </div>
 
                           {/* Barcode */}
-                          <div className="h-4 bg-white/90 rounded flex items-center justify-center px-2">
-                            <div className="flex items-center gap-[1.5px] h-2.5">
-                              {[...Array(28)].map((_, i) => (
-                                <div key={i} className={`h-full bg-neutral-900 ${i % 3 === 0 ? 'w-[1.5px]' : 'w-[1px]'}`} />
+                          <div className="h-5 bg-white rounded-md flex items-center justify-center px-2 mt-1 z-10 shadow-sm">
+                            <div className="flex items-center gap-[1.5px] h-3">
+                              {[...Array(30)].map((_, i) => (
+                                <div
+                                  key={i}
+                                  className={`h-full bg-neutral-900 ${i % 4 === 0 ? 'w-[2px]' : i % 2 === 0 ? 'w-[1px]' : 'w-[1.5px]'}`}
+                                />
                               ))}
                             </div>
                           </div>
-                        </div>
 
-                        {/* Dashed scan border around package */}
-                        <div className="absolute inset-0 m-3 border-2 border-dashed border-[#4ADE80]/30 rounded-2xl pointer-events-none" />
+                          {/* Bottom Foil Crimp Effect */}
+                          <div className="absolute bottom-0 left-0 right-0 h-2 bg-gradient-to-r from-orange-700 via-orange-400 to-orange-800 opacity-70 flex justify-between px-1">
+                            {[...Array(16)].map((_, i) => (
+                              <div key={i} className="w-[1px] h-full bg-black/20" />
+                            ))}
+                          </div>
+                        </div>
                       </div>
 
-                      {/* Camera bottom controls */}
-                      <div className="z-10 flex flex-col items-center gap-3 pb-1">
-                        {/* Scanning indicator */}
-                        <div className="flex items-center gap-1.5 bg-black/50 px-3 py-1 rounded-full">
+                      {/* Bottom Camera Controls */}
+                      <div className="z-10 flex flex-col items-center gap-3 pb-3 px-4">
+                        <div className="flex items-center gap-1.5 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full border border-white/10">
                           <span className="h-2 w-2 rounded-full bg-[#4ADE80] animate-pulse" />
                           <span className="text-[11px] text-[#4ADE80] font-medium">Scanning</span>
                         </div>
 
                         {/* Shutter row */}
-                        <div className="flex items-center justify-around w-full">
-                          <div className="h-8 w-8 rounded-lg bg-white/10 flex items-center justify-center text-white/60">
+                        <div className="flex items-center justify-around w-full pt-1">
+                          <div className="h-9 w-9 rounded-xl bg-white/10 flex items-center justify-center text-white/70 border border-white/10">
                             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                               <rect x="3" y="3" width="18" height="18" rx="2" />
                               <circle cx="12" cy="12" r="3" />
                             </svg>
                           </div>
-                          <div className="h-[56px] w-[56px] rounded-full border-[3px] border-white/70 p-[3px]">
-                            <div className="h-full w-full rounded-full bg-white" />
+                          <div className="h-[58px] w-[58px] rounded-full border-[3px] border-white/80 p-[3px] shadow-lg">
+                            <div className="h-full w-full rounded-full bg-white active:scale-95 transition-transform" />
                           </div>
-                          <div className="h-8 w-8 rounded-lg bg-white/10 flex items-center justify-center text-white/60">
+                          <div className="h-9 w-9 rounded-xl bg-white/10 flex items-center justify-center text-white/70 border border-white/10">
                             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                               <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z" />
                               <circle cx="12" cy="13" r="4" />
@@ -334,24 +397,25 @@ export const LandingPage = () => {
                           </div>
                         </div>
                       </div>
+
                     </div>
                   </div>
                 </div>
 
                 {/* ─ Floating Card: SafeFood Report (bottom-right) ─ */}
-                <div className="absolute -bottom-6 -right-4 sm:-right-14 z-30 bg-white rounded-2xl p-4 shadow-xl w-[210px] sm:w-[230px]">
+                <div className="absolute -bottom-6 -right-4 sm:-right-14 z-40 bg-white rounded-2xl p-4 shadow-[0_20px_50px_rgba(0,0,0,0.35)] border border-gray-100 w-[215px] sm:w-[235px]">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="font-extrabold text-[13px] text-[#1a1a1a]">SafeFood Report</span>
+                    <span className="font-extrabold text-[13px] text-[#1A1A1A]">SafeFood Report</span>
                     <span className="inline-flex items-center gap-0.5 px-2 py-0.5 rounded bg-[#FEE2E2] text-[#DC2626] text-[10px] font-extrabold uppercase tracking-wide">
-                      FAILED
+                      ✕ FAILED
                     </span>
                   </div>
                   <ul className="space-y-1.5">
-                    <li className="flex items-start gap-1.5 text-[11px] text-[#444]">
+                    <li className="flex items-start gap-1.5 text-[11px] text-[#374151]">
                       <span className="h-1.5 w-1.5 rounded-full bg-[#EF4444] mt-1.5 shrink-0" />
                       <span>Non-compliant tiny text font</span>
                     </li>
-                    <li className="flex items-start gap-1.5 text-[11px] text-[#444]">
+                    <li className="flex items-start gap-1.5 text-[11px] text-[#374151]">
                       <span className="h-1.5 w-1.5 rounded-full bg-[#EF4444] mt-1.5 shrink-0" />
                       <span>Missing details and missing details</span>
                     </li>
@@ -370,18 +434,17 @@ export const LandingPage = () => {
       {/* ══════════════════════════════════════════════════════ */}
       <section id="features" className="py-16 sm:py-20 bg-white">
         <div className="max-w-[1320px] mx-auto px-5 sm:px-8">
-          <h2 className="text-center text-[28px] sm:text-[34px] font-extrabold text-[#1a1a1a] tracking-tight mb-12">
+          <h2 className="text-center text-[28px] sm:text-[34px] font-extrabold text-[#111827] tracking-tight mb-12">
             How SafeFood Protects You
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
 
             {/* Card 1 – Detect Missing Details */}
-            <div className="bg-white rounded-2xl border border-[#E5E7EB] p-5 flex flex-col shadow-sm hover:shadow-md transition-shadow">
-              {/* Icon */}
-              <div className="h-14 w-14 rounded-xl bg-[#EBF5EE] flex items-center justify-center mb-4">
+            <div className="bg-[#0B3524] rounded-2xl border border-[#185338] hover:border-[#22C55E]/50 p-5 flex flex-col shadow-sm transition-all duration-200">
+              <div className="h-14 w-14 rounded-xl bg-[#124230] flex items-center justify-center mb-4">
                 <div className="relative">
-                  <div className="w-7 h-8 bg-[#F97316] rounded-sm flex flex-col justify-between p-0.5">
+                  <div className="w-7 h-8 bg-[#F97316] rounded-sm flex flex-col justify-between p-0.5 shadow-sm">
                     <div className="h-[3px] bg-white/70 rounded-full w-3" />
                     <div className="h-[3px] bg-white/70 rounded-full w-4" />
                     <div className="h-[3px] bg-white/70 rounded-full w-2.5" />
@@ -389,100 +452,100 @@ export const LandingPage = () => {
                   <Search className="h-4 w-4 text-[#28B463] absolute -bottom-1 -right-1.5 stroke-[2.5]" />
                 </div>
               </div>
-              <h3 className="text-[15px] font-bold text-[#1a1a1a] mb-1.5">
+              <h3 className="text-[15px] font-bold text-white mb-1.5 leading-snug">
                 Detect Missing<br />Details
               </h3>
-              <p className="text-[12px] text-[#6B7280] leading-relaxed">
+              <p className="text-[12px] text-[#8FB89C] leading-relaxed">
                 Checking MRP, expiry, weight, snack, and manufacturer.
               </p>
             </div>
 
             {/* Card 2 – Measure Text Readability */}
-            <div className="bg-white rounded-2xl border border-[#E5E7EB] p-5 flex flex-col shadow-sm hover:shadow-md transition-shadow">
-              <div className="h-14 w-14 rounded-xl bg-[#EBF5EE] flex items-center justify-center mb-4">
+            <div className="bg-[#0B3524] rounded-2xl border border-[#185338] hover:border-[#22C55E]/50 p-5 flex flex-col shadow-sm transition-all duration-200">
+              <div className="h-14 w-14 rounded-xl bg-[#124230] flex items-center justify-center mb-4">
                 <div className="relative">
-                  <div className="w-7 h-9 bg-white border border-[#D1D5DB] rounded-sm p-1 flex flex-col gap-0.5">
-                    <span className="text-[7px] font-black text-[#1a1a1a] block">AI</span>
-                    <div className="h-[2px] bg-[#D1D5DB] rounded-full w-full" />
-                    <div className="h-[2px] bg-[#D1D5DB] rounded-full w-3/4" />
-                    <div className="h-[2px] bg-[#D1D5DB] rounded-full w-full" />
+                  <div className="w-7 h-9 bg-[#1E5C41] border border-[#2EB875] rounded-sm p-1 flex flex-col gap-0.5 shadow-sm">
+                    <span className="text-[7px] font-black text-[#4ADE80] block">AI</span>
+                    <div className="h-[2px] bg-white/80 rounded-full w-full" />
+                    <div className="h-[2px] bg-white/80 rounded-full w-3/4" />
+                    <div className="h-[2px] bg-white/80 rounded-full w-full" />
                   </div>
-                  <Search className="h-4 w-4 text-[#28B463] absolute -bottom-1 -right-1.5 stroke-[2.5]" />
+                  <Search className="h-4 w-4 text-[#4ADE80] absolute -bottom-1 -right-1.5 stroke-[2.5]" />
                 </div>
               </div>
-              <h3 className="text-[15px] font-bold text-[#1a1a1a] mb-1.5">
+              <h3 className="text-[15px] font-bold text-white mb-1.5 leading-snug">
                 Measure Text<br />Readability
               </h3>
-              <p className="text-[12px] text-[#6B7280] leading-relaxed">
+              <p className="text-[12px] text-[#8FB89C] leading-relaxed">
                 AI scan detects illegal font text used to hide info access folxuce.
               </p>
             </div>
 
             {/* Card 3 – Verify Authenticity */}
-            <div className="bg-white rounded-2xl border border-[#E5E7EB] p-5 flex flex-col shadow-sm hover:shadow-md transition-shadow">
-              <div className="h-14 w-14 rounded-xl bg-[#EBF5EE] flex items-center justify-center mb-4">
+            <div className="bg-[#0B3524] rounded-2xl border border-[#185338] hover:border-[#22C55E]/50 p-5 flex flex-col shadow-sm transition-all duration-200">
+              <div className="h-14 w-14 rounded-xl bg-[#124230] flex items-center justify-center mb-4">
                 <div className="relative">
-                  <div className="w-7 h-9 bg-white border border-[#D1D5DB] rounded-sm p-1 flex flex-col justify-between">
-                    <div className="h-[3px] bg-[#28B463] rounded-full w-3" />
+                  <div className="w-7 h-9 bg-[#1E5C41] border border-[#2EB875] rounded-sm p-1 flex flex-col justify-between shadow-sm">
+                    <div className="h-[3px] bg-[#4ADE80] rounded-full w-3" />
                     <div className="space-y-0.5">
-                      <div className="h-[2px] bg-[#D1D5DB] rounded-full w-full" />
-                      <div className="h-[2px] bg-[#D1D5DB] rounded-full w-3/4" />
+                      <div className="h-[2px] bg-white/80 rounded-full w-full" />
+                      <div className="h-[2px] bg-white/80 rounded-full w-3/4" />
                     </div>
-                    <CheckCircle2 className="h-3 w-3 text-[#28B463] self-end" />
+                    <CheckCircle2 className="h-3 w-3 text-[#4ADE80] self-end" />
                   </div>
                 </div>
               </div>
-              <h3 className="text-[15px] font-bold text-[#1a1a1a] mb-1.5">
+              <h3 className="text-[15px] font-bold text-white mb-1.5 leading-snug">
                 Verify<br />Authenticity
               </h3>
-              <p className="text-[12px] text-[#6B7280] leading-relaxed">
+              <p className="text-[12px] text-[#8FB89C] leading-relaxed">
                 Matches with official databases to spot fake/misleading.
               </p>
             </div>
 
             {/* Card 4 – Allergen & Nutrition Decoder (NEW) */}
-            <div className="bg-white rounded-2xl border border-[#E5E7EB] p-5 flex flex-col shadow-sm hover:shadow-md transition-shadow relative">
-              <div className="absolute top-3 right-3 px-2 py-0.5 rounded-md bg-[#E8632B] text-white text-[10px] font-bold uppercase tracking-wide">
+            <div className="bg-[#0B3524] rounded-2xl border border-[#185338] hover:border-[#22C55E]/50 p-5 flex flex-col shadow-sm transition-all duration-200 relative">
+              <div className="absolute top-3 right-3 px-2 py-0.5 rounded-md bg-[#E8632B] text-white text-[10px] font-bold uppercase tracking-wide shadow-sm">
                 NEW
               </div>
-              <div className="h-14 w-14 rounded-xl bg-[#FFF3E0] flex items-center justify-center mb-4">
+              <div className="h-14 w-14 rounded-xl bg-[#124230] flex items-center justify-center mb-4">
                 <div className="relative">
-                  <div className="w-7 h-9 bg-white border border-[#D1D5DB] rounded-sm p-1 flex flex-col justify-between">
+                  <div className="w-7 h-9 bg-[#1E5C41] border border-[#2EB875] rounded-sm p-1 flex flex-col justify-between shadow-sm">
                     <div className="h-[3px] bg-[#F97316] rounded-full w-3" />
                     <div className="space-y-0.5">
-                      <div className="h-[2px] bg-[#D1D5DB] rounded-full w-full" />
+                      <div className="h-[2px] bg-white/80 rounded-full w-full" />
                       <div className="h-[2px] bg-[#FBBF24] rounded-full w-3/4" />
                     </div>
                     <AlertTriangle className="h-3 w-3 text-[#F97316] self-end" />
                   </div>
                 </div>
               </div>
-              <h3 className="text-[15px] font-bold text-[#1a1a1a] mb-1.5">
+              <h3 className="text-[15px] font-bold text-white mb-1.5 leading-snug">
                 Allergen &amp;<br />Nutrition Decoder
               </h3>
-              <p className="text-[12px] text-[#6B7280] leading-relaxed">
+              <p className="text-[12px] text-[#8FB89C] leading-relaxed">
                 Flags allergens and hidden ingredients.
               </p>
             </div>
 
             {/* Card 5 – FSSAI License Validator (NEW) */}
-            <div className="bg-white rounded-2xl border border-[#E5E7EB] p-5 flex flex-col shadow-sm hover:shadow-md transition-shadow relative">
-              <div className="absolute top-3 right-3 px-2 py-0.5 rounded-md bg-[#E8632B] text-white text-[10px] font-bold uppercase tracking-wide">
+            <div className="bg-[#0B3524] rounded-2xl border border-[#185338] hover:border-[#22C55E]/50 p-5 flex flex-col shadow-sm transition-all duration-200 relative">
+              <div className="absolute top-3 right-3 px-2 py-0.5 rounded-md bg-[#E8632B] text-white text-[10px] font-bold uppercase tracking-wide shadow-sm">
                 NEW
               </div>
-              <div className="h-14 w-14 rounded-xl bg-[#FFF3E0] flex items-center justify-center mb-4">
+              <div className="h-14 w-14 rounded-xl bg-[#124230] flex items-center justify-center mb-4">
                 <div className="relative">
-                  <div className="w-7 h-9 bg-white border border-[#D1D5DB] rounded-sm p-1 flex flex-col justify-between">
-                    <span className="text-[6px] font-black text-[#006B3F] font-mono leading-none">fssai</span>
-                    <div className="h-[3px] bg-[#28B463] rounded-full w-3" />
-                    <Check className="h-3 w-3 text-[#28B463] self-end stroke-[3]" />
+                  <div className="w-7 h-9 bg-[#1E5C41] border border-[#2EB875] rounded-sm p-1 flex flex-col justify-between shadow-sm">
+                    <span className="text-[6px] font-black text-white font-mono leading-none">fssai</span>
+                    <div className="h-[3px] bg-[#4ADE80] rounded-full w-3" />
+                    <Check className="h-3 w-3 text-[#4ADE80] self-end stroke-[3]" />
                   </div>
                 </div>
               </div>
-              <h3 className="text-[15px] font-bold text-[#1a1a1a] mb-1.5">
+              <h3 className="text-[15px] font-bold text-white mb-1.5 leading-snug">
                 FSSAI License<br />Validator
               </h3>
-              <p className="text-[12px] text-[#6B7280] leading-relaxed">
+              <p className="text-[12px] text-[#8FB89C] leading-relaxed">
                 Scans and validates government licenses.
               </p>
             </div>
