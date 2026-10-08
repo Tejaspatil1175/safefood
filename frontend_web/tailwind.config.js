@@ -8,6 +8,22 @@ export default {
   theme: {
     extend: {
       colors: {
+        // SafeFood Brand Palette (Forest Green, Mint, Coral)
+        safefood: {
+          dark: '#052415',
+          darker: '#03170d',
+          forest: '#082f1d',
+          card: '#0c3823',
+          cardBorder: '#165335',
+          mint: '#28DF7E',
+          mintLight: '#4EFA9C',
+          mintBg: '#0f3b26',
+          coral: '#FF7043',
+          coralBg: '#3d1b1b',
+          amber: '#F59E0B',
+          amberBg: '#3a2a14',
+          sage: '#A3C6B5',
+        },
         // Deep Indigo / Trust Blue Design Tokens
         primary: {
           50: 'rgb(var(--color-primary-50) / <alpha-value>)',
@@ -72,7 +88,7 @@ export default {
         sans: ['Plus Jakarta Sans', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
       },
       borderRadius: {
-        'card': '0.75rem', // rounded-xl feel
+        'card': '0.75rem',
         'card-lg': '1rem',
       },
       boxShadow: {
@@ -80,6 +96,8 @@ export default {
         'card': '0 1px 3px 0 rgb(0 0 0 / 0.06), 0 1px 2px -1px rgb(0 0 0 / 0.06)',
         'card-hover': '0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.04)',
         'float': '0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)',
+        'mint-glow': '0 0 25px rgba(40, 223, 126, 0.45)',
+        'coral-glow': '0 0 20px rgba(255, 112, 67, 0.45)',
       }
     },
   },
