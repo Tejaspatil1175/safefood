@@ -86,6 +86,7 @@ export default {
       },
       fontFamily: {
         sans: ['Plus Jakarta Sans', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        caveat: ['Caveat', 'cursive'],
       },
       borderRadius: {
         'card': '0.75rem',
