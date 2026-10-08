@@ -199,3 +199,25 @@
   font-family: 'Caveat', cursive, sans-serif;
 }
 
+@keyframes scanBeam {
+  0% {
+    top: 5%;
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    top: 92%;
+    opacity: 0;
+  }
+}
+
+.animate-scan-beam {
+  position: absolute;
+  animation: scanBeam 2.8s ease-in-out infinite alternate;
+}
+
