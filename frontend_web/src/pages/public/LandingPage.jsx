@@ -238,16 +238,16 @@ export const LandingPage = () => {
               </div>
             </div>
 
-            {/* ── Right Column: Single 3D Perspective iPhone + AR Badges ── */}
-            <div className="lg:col-span-6 relative flex justify-center lg:justify-end items-center py-6">
-              <div className="relative select-none" style={{ width: '480px', height: '560px', maxWidth: '100%' }}>
+            {/* ── Right Column: Single 3D Perspective iPhone (/mobile.png) + AR Badges ── */}
+            <div className="lg:col-span-6 relative flex justify-center lg:justify-end items-center py-4">
+              <div className="relative select-none w-full max-w-[480px] flex justify-center items-center">
 
-                {/* ── Floating AR Badge 1: MRP & Expiry (Top Left above Phone) ── */}
+                {/* ── Floating AR Badge 1: MRP & Expiry (Top Left) ── */}
                 <div
-                  className="absolute z-40 flex items-center gap-2 rounded-full shadow-lg animate-float-gentle"
+                  className="absolute z-30 flex items-center gap-2 rounded-full shadow-lg animate-float-gentle"
                   style={{
-                    top: '25px',
-                    left: '50px',
+                    top: '2%',
+                    left: '8%',
                     background: '#0D3823',
                     border: '1.5px solid #28DF7E',
                     padding: '6px 14px 6px 8px',
@@ -263,13 +263,13 @@ export const LandingPage = () => {
 
                 {/* ── Floating AR Badge 2: Font Size < 1.5mm (Illegal) (Mid Left, glowing coral/peach) ── */}
                 <div
-                  className="absolute z-40 flex items-center gap-2 rounded-2xl animate-float-gentle"
+                  className="absolute z-30 flex items-center gap-2 rounded-2xl animate-float-gentle"
                   style={{
-                    top: '120px',
-                    left: '10px',
+                    top: '24%',
+                    left: '-2%',
                     background: '#FFEFEA',
                     border: '2px solid #F97316',
-                    boxShadow: '0 0 20px rgba(249, 115, 22, 0.4), 0 10px 25px rgba(0, 0, 0, 0.4)',
+                    boxShadow: '0 0 22px rgba(249, 115, 22, 0.45), 0 10px 25px rgba(0, 0, 0, 0.4)',
                     padding: '8px 14px 8px 10px',
                   }}
                 >
@@ -284,10 +284,10 @@ export const LandingPage = () => {
 
                 {/* ── Floating AR Badge 3: MRP & Expiry (Bottom Left) ── */}
                 <div
-                  className="absolute z-40 flex items-center gap-2 rounded-full shadow-lg animate-float-opposite"
+                  className="absolute z-30 flex items-center gap-2 rounded-full shadow-lg animate-float-opposite"
                   style={{
-                    bottom: '150px',
-                    left: '15px',
+                    bottom: '22%',
+                    left: '0%',
                     background: '#0D3823',
                     border: '1.5px solid #28DF7E',
                     padding: '6px 14px 6px 8px',
@@ -303,10 +303,10 @@ export const LandingPage = () => {
 
                 {/* ── Floating AR Badge 4: Missing Manufacturer (Top Right) ── */}
                 <div
-                  className="absolute z-40 flex items-center gap-2 rounded-2xl shadow-xl animate-float-gentle"
+                  className="absolute z-30 flex items-center gap-2 rounded-2xl shadow-xl animate-float-gentle"
                   style={{
-                    top: '50px',
-                    right: '10px',
+                    top: '8%',
+                    right: '2%',
                     background: '#FFEFEA',
                     border: '1.5px solid #FDBA74',
                     padding: '8px 14px 8px 10px',
@@ -322,10 +322,10 @@ export const LandingPage = () => {
 
                 {/* ── Floating AR Badge 5: Allergens Found (Mid Right) ── */}
                 <div
-                  className="absolute z-40 flex items-center gap-2 rounded-full shadow-xl animate-float-opposite"
+                  className="absolute z-30 flex items-center gap-2 rounded-full shadow-xl animate-float-opposite"
                   style={{
-                    top: '190px',
-                    right: '15px',
+                    top: '38%',
+                    right: '-2%',
                     background: '#FFF4ED',
                     border: '1.5px solid #FB923C',
                     padding: '6px 14px 6px 8px',
@@ -339,128 +339,21 @@ export const LandingPage = () => {
                   </span>
                 </div>
 
-                {/* ════ SINGLE TILTED IPHONE MOCKUP ════ */}
-                <div
-                  className="absolute z-20"
-                  style={{
-                    top: '10px',
-                    left: '110px',
-                    width: '270px',
-                    height: '525px',
-                    transform: 'rotate(-3.5deg)',
-                    transformOrigin: 'center center',
-                  }}
-                >
-                  {/* Phone Chassis */}
-                  <div className="w-full h-full rounded-[44px] bg-[#1C1C1E] p-[5px] shadow-[0_30px_70px_rgba(0,0,0,0.85)] border border-neutral-700/70">
-                    <div className="relative w-full h-full rounded-[39px] overflow-hidden bg-[#07130C] flex flex-col justify-between">
-
-                      {/* Top Bar: Flashlight, Dynamic Island, Settings */}
-                      <div className="pt-2 px-4 flex items-center justify-between text-white/70 text-[9px] font-medium shrink-0">
-                        <span className="text-white/60 text-[10px]">⚡</span>
-                        {/* Dynamic Island */}
-                        <div className="h-[16px] w-[62px] bg-black rounded-full flex items-center justify-end pr-2">
-                          <div className="h-2 w-2 rounded-full bg-[#112419] border border-white/20" />
-                        </div>
-                        <span className="text-white/60 text-[10px]">⚙️</span>
-                      </div>
-
-                      {/* Scanner Camera Viewfinder Area */}
-                      <div className="relative flex-1 flex flex-col items-center justify-center px-3 my-1">
-                        
-                        {/* Food Package: "Spack" Chips/Snack Pouch */}
-                        <div
-                          className="w-[185px] rounded-2xl p-3 flex flex-col justify-between shadow-2xl relative"
-                          style={{
-                            background: 'linear-gradient(145deg, #F97316 0%, #EA580C 50%, #C2410C 100%)',
-                            border: '1.5px solid rgba(254, 215, 170, 0.4)',
-                          }}
-                        >
-                          {/* Spack Brand Logo Badge */}
-                          <div className="flex items-center justify-between mb-1">
-                            <span className="bg-[#1C1917] text-white text-[12px] font-black px-2 py-0.5 rounded-md tracking-wider">
-                              Spack
-                            </span>
-                            <span className="text-[7.5px] font-black text-amber-200 bg-black/30 px-1.5 py-0.5 rounded">
-                              EXP: 12/29
-                            </span>
-                          </div>
-
-                          {/* Nutrition Table simulation */}
-                          <div className="bg-white/95 rounded-lg p-1.5 my-1 text-[6.5px] text-gray-800 shadow-xs">
-                            <div className="font-black border-b border-gray-300 pb-0.5 text-[7px]">Nutrition Facts</div>
-                            <div className="flex justify-between py-0.5 border-b border-gray-200 font-medium">
-                              <span>Energy</span>
-                              <span>210 kcal</span>
-                            </div>
-                            <div className="flex justify-between py-0.5 font-medium">
-                              <span>Total Fat</span>
-                              <span>9.2g</span>
-                            </div>
-                          </div>
-
-                          {/* Ingredients & Targeting Box */}
-                          <div className="relative mt-0.5">
-                            {/* Scanning Targeting Bracket */}
-                            <div className="absolute -inset-1 border-2 border-[#28DF7E] rounded-md pointer-events-none shadow-[0_0_8px_#28DF7E]" />
-                            <div className="bg-white/90 rounded p-1 text-[6px] text-gray-800">
-                              <span className="font-bold block text-[6.5px] text-emerald-900">Ingredients</span>
-                              <p className="leading-tight text-[5.5px] text-gray-700">Refined wheat, edible veg oil, spices...</p>
-                            </div>
-                          </div>
-
-                          {/* Barcode Strip */}
-                          <div className="bg-white rounded p-1 mt-1.5 flex flex-col items-center">
-                            <div className="flex items-center gap-[1px] h-3.5 w-full justify-center">
-                              {[2,1,3,1,2,1,1,3,2,1,2,3,1,2,1,3,1,2,1].map((w, i) => (
-                                <div key={i} className="h-full bg-black" style={{ width: `${w * 0.75}px` }} />
-                              ))}
-                            </div>
-                            <span className="text-[5.5px] font-mono font-bold text-gray-800 tracking-wider mt-0.5">
-                              8 906123 456789
-                            </span>
-                          </div>
-                        </div>
-
-                      </div>
-
-                      {/* Bottom Shutter & Camera Controls */}
-                      <div className="pb-3 px-5 flex items-center justify-between shrink-0">
-                        {/* Gallery Thumbnail */}
-                        <div className="h-8 w-8 rounded-lg bg-neutral-800 border border-white/20 flex items-center justify-center text-xs">
-                          🖼️
-                        </div>
-
-                        {/* Center Shutter Button & Status */}
-                        <div className="flex flex-col items-center gap-1">
-                          {/* Scanning Pill */}
-                          <div className="flex items-center gap-1 bg-[#0F3520] px-2.5 py-0.5 rounded-full border border-[#28DF7E]/50">
-                            <span className="h-1.5 w-1.5 rounded-full bg-[#28DF7E] animate-pulse" />
-                            <span className="text-[8.5px] text-[#4ADE80] font-semibold">Scanning</span>
-                          </div>
-
-                          {/* Circular Shutter Button */}
-                          <div className="h-12 w-12 rounded-full border-2 border-white flex items-center justify-center p-0.5">
-                            <div className="h-full w-full rounded-full bg-white transition-transform active:scale-95" />
-                          </div>
-                        </div>
-
-                        {/* Flip Camera Button */}
-                        <div className="h-8 w-8 rounded-full bg-neutral-800 border border-white/20 flex items-center justify-center text-white/80 text-xs">
-                          🔄
-                        </div>
-                      </div>
-
-                    </div>
-                  </div>
+                {/* ════ 3D MOBILE MOCKUP IMAGE (/mobile.png) ════ */}
+                <div className="relative z-10 w-full flex justify-center items-center py-2">
+                  <img
+                    src="/mobile.png"
+                    alt="SafeFood Mobile Scanner"
+                    className="w-full max-w-[420px] sm:max-w-[450px] h-auto object-contain drop-shadow-[0_25px_50px_rgba(0,0,0,0.85)] filter pointer-events-none select-none"
+                  />
                 </div>
 
                 {/* ── Floating Report Card (Overlapping Phone on Bottom Right) ── */}
                 <div
-                  className="absolute z-35 bg-white rounded-2xl p-3.5 shadow-2xl border border-gray-200/80"
+                  className="absolute z-30 bg-white rounded-2xl p-3.5 shadow-2xl border border-gray-200/90"
                   style={{
-                    bottom: '30px',
-                    right: '15px',
+                    bottom: '8%',
+                    right: '4%',
                     width: '185px',
                   }}
                 >
