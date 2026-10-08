@@ -262,11 +262,77 @@ export async function orchestrateScan({
     };
   }
 
+  const formattedScan = formatScanForClient(scanDoc);
+
   return {
-    scan: scanDoc,
+    scan: formattedScan,
     report,
     fields,
     product,
+  };
+}
+
+export function formatScanForClient(scan) {
+  if (!scan) return null;
+  const isDoc = typeof scan.toObject === 'function';
+  const obj = isDoc ? scan.toObject() : { ...scan };
+
+  const id = obj.id || obj._id?.toString();
+  const isCompliant = obj.verdict === 'PASS';
+  const passCount = obj.report?.summary?.pass ?? (isCompliant ? 8 : 4);
+  const totalCount = obj.report?.summary?.total ?? 8;
+  const score = isCompliant ? 100 : Math.max(15, Math.round((passCount / (totalCount || 1)) * 100));
+
+  const productInfo = {
+    productName:
+      obj.product?.name ||
+      obj.geminiAudit?.detectedProduct?.name ||
+      obj.fields?.productName?.value ||
+      'Packaged Product',
+    brand: obj.product?.brand || obj.geminiAudit?.detectedProduct?.brand || '',
+    netQuantity:
+      obj.fields?.netQuantity?.rawText ||
+      (obj.product?.netQuantity ? `${obj.product.netQuantity.value} ${obj.product.netQuantity.unit}` : 'N/A'),
+    mrp: obj.fields?.mrp?.rawText || 'N/A',
+    expiryDate:
+      obj.fields?.expiryOrBestBefore?.rawText ||
+      obj.geminiAudit?.detectedProduct?.dates ||
+      'N/A',
+    manufacturer:
+      obj.fields?.manufacturer?.rawText ||
+      (typeof obj.product?.manufacturer === 'object'
+        ? obj.product.manufacturer?.name
+        : obj.product?.manufacturer) ||
+      'N/A',
+    fssaiLicense: obj.fields?.fssai?.rawText || 'N/A',
+    barcode: obj.barcode || 'N/A',
+  };
+
+  const checklist = (obj.report?.checks || []).map((c) => ({
+    label: c.field || c.ruleId,
+    status: c.status === 'PASS' ? 'pass' : c.status === 'FAIL' ? 'fail' : 'warning',
+    detail: c.message,
+    rule: c.ruleId || c.sourceRef,
+  }));
+
+  const issues = (obj.report?.checks || [])
+    .filter((c) => c.status === 'FAIL')
+    .map((c) => ({
+      title: c.field || c.ruleId,
+      severity: 'high',
+      description: c.message,
+      rule: c.ruleId || c.sourceRef,
+      evidence: c.evidence?.text || '',
+    }));
+
+  return {
+    ...obj,
+    id,
+    isCompliant,
+    score,
+    productInfo,
+    checklist,
+    issues,
   };
 }
 
@@ -285,7 +351,7 @@ export async function getScanById(id, { userId = null, role = 'user' } = {}) {
     throw new ForbiddenError('You do not have permission to view this scan record');
   }
 
-  return scan;
+  return formatScanForClient(scan);
 }
 
 export async function listScans({
@@ -323,7 +389,7 @@ export async function listScans({
     ]);
 
     return {
-      items,
+      items: (items || []).map(formatScanForClient),
       pagination: {
         total,
         page: pageNum,

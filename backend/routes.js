@@ -6,6 +6,7 @@ import { scansRouter } from './modules/scans/scans.routes.js';
 import { authRouter } from './modules/auth/auth.routes.js';
 import { complaintsRouter } from './modules/complaints/complaints.routes.js';
 import { districtsRouter } from './modules/districts/districts.routes.js';
+import { officerRouter } from './modules/officer/officer.routes.js';
 
 export function createRouter() {
   const router = Router();
@@ -13,10 +14,11 @@ export function createRouter() {
   router.use('/health', healthRouter);
   router.use('/rules', rulesRouter);
   router.use('/products', productsRouter);
-  router.use('/scans', scansRouter);
+  router.use(['/scans', '/scan'], scansRouter);
   router.use('/auth', authRouter);
   router.use('/complaints', complaintsRouter);
   router.use('/districts', districtsRouter);
+  router.use('/officer', officerRouter);
 
   return router;
 }

@@ -26,12 +26,72 @@ import {
 
 /* ─────────────────────────────────────────────────────────── */
 /*  SafeFood Landing Page – Interactive Hero Canvas with      */
-/*  full-bleed seamless background and smart sticky navbar.   */
+/*  pure DOM verification card, sample switcher, and live API */
 /* ─────────────────────────────────────────────────────────── */
+
+const SAMPLE_INSPECTIONS = [
+  {
+    id: 'SF-2026-89410',
+    title: 'Parle-G Gluco Biscuits',
+    barcode: '8901719101038',
+    status: 'PASSED',
+    statusColor: '#28DF7E',
+    statusBg: 'bg-[#28DF7E]/20',
+    statusBorder: 'border-[#28DF7E]/40',
+    statusText: 'text-[#28DF7E]',
+    pulseBg: 'bg-[#28DF7E]',
+    checks: [
+      { label: 'Product Authenticity', value: 'Genuine & Verified Reference', status: 'pass' },
+      { label: 'Mandatory Declarations', value: 'All 10 Met (Rule 6 PCR 2011)', status: 'pass' },
+      { label: 'Numeral Height (Net Qty)', value: '4.0mm (Compliant for 800g band)', status: 'pass' },
+      { label: 'MRP & Expiry Date', value: '₹85.00 • Best Before 07/2026', status: 'pass' },
+      { label: 'FSSAI License', value: '10013022002253 (Active & Valid)', status: 'pass' },
+    ],
+  },
+  {
+    id: 'SF-2026-89411',
+    title: 'Healthy Bites Oats & Almonds',
+    barcode: '8906123456789',
+    status: 'PASSED',
+    statusColor: '#28DF7E',
+    statusBg: 'bg-[#28DF7E]/20',
+    statusBorder: 'border-[#28DF7E]/40',
+    statusText: 'text-[#28DF7E]',
+    pulseBg: 'bg-[#28DF7E]',
+    checks: [
+      { label: 'Product Authenticity', value: 'Genuine & Verified', status: 'pass' },
+      { label: 'Mandatory Declarations', value: 'All 9 Present', status: 'pass' },
+      { label: 'MRP & Expiry Date', value: 'Valid • Best Before Dec 2026', status: 'pass' },
+      { label: 'FSSAI License', value: 'Active & Compliant', status: 'pass' },
+      { label: 'Allergen Warning', value: 'Contains Almonds & Gluten', status: 'warning' },
+    ],
+  },
+  {
+    id: 'SF-2026-89412',
+    title: 'Counterfeit Juice Pack',
+    barcode: '8909876543210',
+    status: 'FLAGGED',
+    statusColor: '#EF4444',
+    statusBg: 'bg-[#EF4444]/20',
+    statusBorder: 'border-[#EF4444]/40',
+    statusText: 'text-[#EF4444]',
+    pulseBg: 'bg-[#EF4444]',
+    checks: [
+      { label: 'Product Authenticity', value: 'Unregistered Batch Code', status: 'fail' },
+      { label: 'Character Height', value: '1.2mm (< 2.5mm statutory min)', status: 'fail' },
+      { label: 'Unit Sale Price', value: 'MISSING (Rule 6(1)(e) Violation)', status: 'fail' },
+      { label: 'FSSAI License Format', value: 'Invalid 10-digit format (14 req)', status: 'fail' },
+      { label: 'Consumer Redressal', value: 'Eligible for Legal Notice filing', status: 'warning' },
+    ],
+  },
+];
 
 export const LandingPage = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [activeSampleIndex, setActiveSampleIndex] = useState(0);
+
+  const currentSample = SAMPLE_INSPECTIONS[activeSampleIndex];
 
   useEffect(() => {
     const onScroll = () => {
@@ -42,22 +102,18 @@ export const LandingPage = () => {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col font-sans antialiased bg-[#062E1E]">
+    <div className="min-h-screen flex flex-col font-sans antialiased bg-white">
       {/* ══════════════════════════════════════════════════════ */}
-      {/*  SMART STICKY NAVBAR (Appears when scrolled)           */}
+      {/*  NAVBAR                                               */}
       {/* ══════════════════════════════════════════════════════ */}
-      <header
-        className={`fixed top-0 left-0 right-0 z-50 bg-[#072418]/95 backdrop-blur-md border-b border-white/10 transition-all duration-300 ${
-          scrolled ? 'translate-y-0 shadow-xl opacity-100' : '-translate-y-full opacity-0 pointer-events-none'
-        }`}
-      >
-        <div className="max-w-[1320px] mx-auto px-5 sm:px-8 h-[68px] flex items-center justify-between">
+      <header className="sticky top-0 z-50 bg-[#072418] border-b border-white/10">
+        <div className="max-w-[1320px] mx-auto px-5 sm:px-8 h-[72px] flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2.5">
-            <div className="h-8 w-8 rounded-lg bg-[#28DF7E] flex items-center justify-center shadow-sm">
+            <div className="h-9 w-9 rounded-lg bg-[#28DF7E] flex items-center justify-center shadow-sm">
               <ShieldCheck className="h-5 w-5 text-[#072418] stroke-[2.5]" />
             </div>
-            <span className="font-extrabold text-[20px] tracking-tight text-white">
+            <span className="font-extrabold text-[22px] tracking-tight text-white">
               Safe<span className="text-[#28DF7E]">Food</span>
             </span>
           </Link>
@@ -71,11 +127,11 @@ export const LandingPage = () => {
             <a href="#contact" className="hover:text-white transition-colors">Contact</a>
           </nav>
 
-          {/* Download App Button (Vibrant Yellow) */}
+          {/* Download App Button (Vibrant Yellow as in reference) */}
           <div className="hidden sm:block">
             <Link
               to="/login"
-              className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[#FFBA08] hover:bg-[#E5A807] text-[#1A1A1A] text-xs font-extrabold shadow-sm transition-all hover:scale-105 active:scale-95"
+              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#FFBA08] hover:bg-[#E5A807] text-[#1A1A1A] text-sm font-extrabold shadow-sm transition-all hover:scale-105 active:scale-95"
             >
               Download App
             </Link>
@@ -106,7 +162,7 @@ export const LandingPage = () => {
               <Link
                 to="/login"
                 onClick={() => setMobileMenuOpen(false)}
-                className="w-full py-2.5 rounded-full bg-[#FFBA08] text-[#1A1A1A] font-extrabold text-sm text-center shadow-sm"
+                className="w-full py-3 rounded-full bg-[#FFBA08] text-[#1A1A1A] font-extrabold text-sm text-center shadow-sm"
               >
                 Download App
               </Link>
@@ -116,206 +172,422 @@ export const LandingPage = () => {
       </header>
 
       {/* ══════════════════════════════════════════════════════ */}
-      {/*  HERO & FEATURES INTERACTIVE CANVAS (/hero.png)        */}
+      {/*  HERO SECTION                                         */}
       {/* ══════════════════════════════════════════════════════ */}
-      <section className="relative w-full bg-[#062E1E] overflow-hidden select-none">
-        {/* Seamless edge blending gradients for ultra-wide monitors */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 left-0 w-1/5 h-full bg-gradient-to-r from-[#062E1E] to-transparent z-10 opacity-60" />
-          <div className="absolute top-0 right-0 w-1/5 h-full bg-gradient-to-l from-[#062E1E] to-transparent z-10 opacity-60" />
-          <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-[#28DF7E]/10 rounded-full blur-3xl pointer-events-none" />
-        </div>
+      <section className="relative bg-[#072418] overflow-hidden pt-6 pb-20 lg:pb-28">
+        {/* Subtle Ambient Radial Glows */}
+        <div className="absolute top-1/4 right-1/4 w-[500px] h-[500px] bg-[#28DF7E]/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-10 right-10 w-[350px] h-[350px] bg-[#F97316]/10 rounded-full blur-3xl pointer-events-none" />
 
-        {/* Scaled Responsive Container */}
-        <div className="relative w-full max-w-[1672px] mx-auto">
-          
-          {/* Main Visual Image - Non-draggable, Non-selectable so it feels like native DOM UI */}
-          <img
-            src="/hero.png"
-            alt="SafeFood AI Packaging Scanner & Compliance Platform"
-            className="w-full h-auto block select-none pointer-events-none"
-            draggable="false"
-            style={{ userSelect: 'none', WebkitUserDrag: 'none' }}
-          />
+        <div className="max-w-[1320px] mx-auto px-5 sm:px-8 relative z-20">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-6 items-center">
 
-          {/* ════════════════════════════════════════════════════════════════ */}
-          {/*  INTERACTIVE OVERLAYS LAYER (Real links, hover effects & tooltips) */}
-          {/* ════════════════════════════════════════════════════════════════ */}
-          <div className="absolute inset-0 z-20">
+            {/* ── Left Column: Copy & Actions ── */}
+            <div className="lg:col-span-6 space-y-5 text-center lg:text-left max-w-[560px] mx-auto lg:mx-0">
+              
+              {/* AI-Powered Food Safety Pill Badge */}
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0E3D27] border border-[#28DF7E]/40 text-[#28DF7E] text-[13px] font-semibold">
+                <span className="h-4 w-4 rounded-full bg-[#28DF7E] flex items-center justify-center text-[#072418]">
+                  <Check className="h-2.5 w-2.5 stroke-[3.5]" />
+                </span>
+                <span>AI-Powered Food Safety</span>
+              </div>
 
-            {/* ── Navbar: SafeFood Logo ── */}
-            <Link
-              to="/"
-              className="absolute rounded-lg hover:ring-2 hover:ring-[#28DF7E]/30 transition-all cursor-pointer"
-              style={{ left: '8.4%', top: '1.8%', width: '12.5%', height: '5.2%' }}
-              title="SafeFood Home"
-            />
+              {/* Main Headline */}
+              <h1 className="text-[40px] sm:text-[48px] lg:text-[54px] font-black text-white leading-[1.12] tracking-tight">
+                Is Your Food Pack<br />
+                Genuine, Safe &amp; Legal?<br />
+                Find Out <span className="text-[#28DF7E]">Instantly.</span>
+              </h1>
 
-            {/* ── Navbar: Navigation Links ── */}
-            <a
-              href="#how-it-works"
-              className="absolute rounded-full hover:bg-white/10 transition-colors cursor-pointer"
-              style={{ left: '30.2%', top: '2.5%', width: '7.4%', height: '4.0%' }}
-              title="How It Works"
-            />
-            <a
-              href="#features"
-              className="absolute rounded-full hover:bg-white/10 transition-colors cursor-pointer"
-              style={{ left: '38.2%', top: '2.5%', width: '7.4%', height: '4.0%' }}
-              title="App Features"
-            />
-            <a
-              href="#api"
-              className="absolute rounded-full hover:bg-white/10 transition-colors cursor-pointer"
-              style={{ left: '46.2%', top: '2.5%', width: '8.4%', height: '4.0%' }}
-              title="API / Businesses"
-            />
-            <a
-              href="#stories"
-              className="absolute rounded-full hover:bg-white/10 transition-colors cursor-pointer"
-              style={{ left: '55.2%', top: '2.5%', width: '8.4%', height: '4.0%' }}
-              title="Success Stories"
-            />
-            <a
-              href="#contact"
-              className="absolute rounded-full hover:bg-white/10 transition-colors cursor-pointer"
-              style={{ left: '64.5%', top: '2.5%', width: '5.5%', height: '4.0%' }}
-              title="Contact"
-            />
+              {/* Subhead Paragraph */}
+              <p className="text-[14.5px] sm:text-[15.5px] text-[#A7C8B6] leading-relaxed max-w-[500px] mx-auto lg:mx-0">
+                SafeFood uses advanced AI to scan packaged foods instantly,
+                checking for hidden details, illegal tiny fonts, missing Govt mandatory
+                info, and fake products, along with new features like allergens,
+                nutrition, and licenses.
+              </p>
 
-            {/* ── Navbar: Download App Button (Yellow with active ripple) ── */}
-            <Link
-              to="/login"
-              className="absolute rounded-full hover:ring-4 hover:ring-[#FFBA08]/40 hover:brightness-110 active:scale-95 transition-all cursor-pointer shadow-lg"
-              style={{ left: '82.2%', top: '2.0%', width: '9.2%', height: '4.4%' }}
-              title="Download SafeFood App"
-            />
+              {/* Action Buttons Row */}
+              <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3.5 pt-1">
+                {/* Get the Free App button */}
+                <Link
+                  to="/login"
+                  className="flex items-center gap-2.5 px-6 py-3 rounded-full bg-[#28DF7E] hover:bg-[#22C55E] text-[#072418] font-black text-[14px] shadow-lg shadow-[#28DF7E]/30 transition-all hover:scale-105 active:scale-95 cursor-pointer"
+                >
+                  <span>Get the Free App</span>
+                  <div className="flex items-center gap-1.5 pl-2.5 border-l border-[#072418]/30">
+                    <svg className="h-3.5 w-3.5 fill-[#072418]" viewBox="0 0 170 170">
+                      <path d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.19-2.12-9.97-3.17-14.34-3.17-4.58 0-9.49 1.05-14.75 3.17-5.26 2.13-9.5 3.24-12.74 3.35-5.35.22-10.33-1.93-14.94-6.46-3.35-3.17-7.2-7.91-11.56-14.22-5.74-8.37-10.35-17.96-13.82-28.77-3.48-10.81-5.21-21.36-5.21-31.65 0-14.89 3.83-27.18 11.49-36.88 7.66-9.7 17.1-14.65 28.32-14.86 4.93 0 10.38 1.25 16.36 3.75 5.98 2.5 9.87 3.81 11.66 3.93 1.57-.12 5.69-1.54 12.37-4.25 6.68-2.72 12.31-3.9 16.89-3.55 12.7.99 22.78 5.76 30.23 14.32-11.05 6.74-16.47 16.03-16.27 27.88.2 9.27 3.86 17.06 10.98 23.36 7.12 6.3 15.35 9.77 24.68 10.42-2.12 6.32-4.78 12.63-7.98 18.94zM119.22 33.15c0-7.23 2.65-13.97 7.95-20.21 5.3-6.24 11.83-10.15 19.59-11.74.85 7.12-1.39 13.89-6.72 20.3-5.33 6.41-11.97 10.46-19.92 12.16-.3-.18-.6-.35-.9-.51z" />
+                    </svg>
+                    <svg className="h-3 w-3 fill-[#072418]" viewBox="0 0 512 512">
+                      <path d="M325.3 234.3L104.6 13l280.8 161.2-60.1 60.1zM47 0C34 6.8 25.3 19.2 25.3 35.3v441.3c0 16.1 8.7 28.5 21.7 35.3l256.6-256L47 0zm425.2 225.6l-58.9-34.1-65.7 64.5 65.7 64.5 60.1-34.1c18-14.3 18-46.5-1.2-60.8zM104.6 499l280.8-161.2-60.1-60.1L104.6 499z" />
+                    </svg>
+                  </div>
+                </Link>
 
-            {/* ── Hero CTA 1: Get the Free App (Green Pill) ── */}
-            <Link
-              to="/login"
-              className="absolute rounded-full hover:ring-4 hover:ring-[#28DF7E]/40 hover:brightness-110 active:scale-95 transition-all cursor-pointer shadow-xl"
-              style={{ left: '8.8%', top: '48.6%', width: '15.8%', height: '5.2%' }}
-              title="Get the Free SafeFood App"
-            />
+                {/* See How It Works button */}
+                <a
+                  href="#how-it-works"
+                  className="flex items-center gap-2 px-6 py-3 rounded-full bg-transparent border border-white/35 hover:border-white text-white font-semibold text-[14px] transition-all hover:bg-white/10 active:scale-95"
+                >
+                  <Play className="h-3.5 w-3.5 fill-[#28DF7E] text-[#28DF7E]" />
+                  <span>See How It Works</span>
+                </a>
+              </div>
 
-            {/* ── Hero CTA 2: See How It Works (Outline Pill) ── */}
-            <a
-              href="#how-it-works"
-              className="absolute rounded-full hover:bg-white/15 hover:ring-2 hover:ring-white/40 active:scale-95 transition-all cursor-pointer"
-              style={{ left: '25.3%', top: '48.6%', width: '13.7%', height: '5.2%' }}
-              title="See How It Works"
-            />
+              {/* 4 Circular Trust Badges with 2-line labels below */}
+              <div className="pt-4 grid grid-cols-4 gap-3 max-w-[460px] mx-auto lg:mx-0">
+                {/* Badge 1: Scanned 5M+ packets */}
+                <div className="flex flex-col items-center lg:items-start text-center lg:text-left">
+                  <div className="h-9 w-9 rounded-full bg-white flex items-center justify-center shadow-md mb-2">
+                    <Star className="h-4 w-4 fill-[#F59E0B] text-[#F59E0B]" />
+                  </div>
+                  <span className="text-[11.5px] font-semibold text-white leading-tight">Scanned</span>
+                  <span className="text-[11px] text-[#A7C8B6] leading-tight">5M+ packets</span>
+                </div>
 
-            {/* ── 4 Circular Trust Badges with informative tooltips ── */}
-            <div
-              className="absolute rounded-full hover:bg-white/10 transition-all cursor-pointer"
-              style={{ left: '8.5%', top: '56.8%', width: '6.5%', height: '9.2%' }}
-              title="Scanned: 5M+ packaged food products"
-            />
-            <div
-              className="absolute rounded-full hover:bg-white/10 transition-all cursor-pointer"
-              style={{ left: '15.8%', top: '56.8%', width: '7.2%', height: '9.2%' }}
-              title="Trusted by families & retailers across India"
-            />
-            <div
-              className="absolute rounded-full hover:bg-white/10 transition-all cursor-pointer"
-              style={{ left: '23.8%', top: '56.8%', width: '6.5%', height: '9.2%' }}
-              title="Verified by food safety & legal experts"
-            />
-            <div
-              className="absolute rounded-full hover:bg-white/10 transition-all cursor-pointer"
-              style={{ left: '30.5%', top: '56.8%', width: '6.5%', height: '9.2%' }}
-              title="Real-time AI Metrology & Allergen Checks"
-            />
+                {/* Badge 2: Trusted by families & retailers */}
+                <div className="flex flex-col items-center lg:items-start text-center lg:text-left">
+                  <div className="h-9 w-9 rounded-full bg-white flex items-center justify-center shadow-md mb-2">
+                    <ShieldCheck className="h-4 w-4 text-[#16A34A] stroke-[2.5]" />
+                  </div>
+                  <span className="text-[11.5px] font-semibold text-white leading-tight">Trusted by</span>
+                  <span className="text-[11px] text-[#A7C8B6] leading-tight">families &amp; retailers</span>
+                </div>
 
-            {/* ── Active AI Scanner Laser Beam (Animates continuously across camera viewfinder) ── */}
-            <div
-              className="absolute pointer-events-none overflow-hidden rounded-xl"
-              style={{ left: '59.8%', top: '30.8%', width: '10.5%', height: '21.5%' }}
-            >
-              <div className="w-full h-1 bg-gradient-to-r from-transparent via-[#28DF7E] to-transparent shadow-[0_0_14px_#28DF7E] animate-scan-beam" />
+                {/* Badge 3: Verified by experts */}
+                <div className="flex flex-col items-center lg:items-start text-center lg:text-left">
+                  <div className="h-9 w-9 rounded-full bg-white flex items-center justify-center shadow-md mb-2">
+                    <Leaf className="h-4 w-4 text-[#16A34A] fill-[#16A34A]" />
+                  </div>
+                  <span className="text-[11.5px] font-semibold text-white leading-tight">Verified</span>
+                  <span className="text-[11px] text-[#A7C8B6] leading-tight">by experts</span>
+                </div>
+
+                {/* Badge 4: Real-time AI checks */}
+                <div className="flex flex-col items-center lg:items-start text-center lg:text-left">
+                  <div className="h-9 w-9 rounded-full bg-white flex items-center justify-center shadow-md mb-2">
+                    <Clock className="h-4 w-4 text-[#16A34A] stroke-[2.5]" />
+                  </div>
+                  <span className="text-[11.5px] font-semibold text-white leading-tight">Real-time</span>
+                  <span className="text-[11px] text-[#A7C8B6] leading-tight">AI checks</span>
+                </div>
+              </div>
             </div>
 
-            {/* ── Floating AR Badges: Interactive Hover Responses ── */}
-            <div
-              className="absolute rounded-full hover:ring-2 hover:ring-[#28DF7E] hover:scale-105 transition-transform cursor-pointer"
-              style={{ left: '52.0%', top: '13.2%', width: '9.8%', height: '4.4%' }}
-              title="MRP & Expiry Verification: Valid & clearly mentioned"
-            />
-            <div
-              className="absolute rounded-2xl hover:ring-2 hover:ring-[#EA580C] hover:scale-105 transition-transform cursor-pointer"
-              style={{ left: '84.6%', top: '16.8%', width: '9.2%', height: '6.5%' }}
-              title="Legal Metrology Alert: Missing Manufacturer Details"
-            />
-            <div
-              className="absolute rounded-full hover:ring-2 hover:ring-[#28DF7E] hover:scale-105 transition-transform cursor-pointer"
-              style={{ left: '51.3%', top: '57.0%', width: '9.8%', height: '4.4%' }}
-              title="MRP & Expiry Verified"
-            />
-            <div
-              className="absolute rounded-full hover:ring-2 hover:ring-[#22C55E] hover:scale-105 transition-transform cursor-pointer"
-              style={{ left: '84.5%', top: '38.0%', width: '10.2%', height: '4.6%' }}
-              title="Allergens Found: Tree nuts & dairy"
-            />
+            {/* ── Right Column: Interactive Pure DOM Verification Card (No images, no mobile mockups) ── */}
+            <div className="lg:col-span-6 w-full max-w-[520px] mx-auto lg:mx-0 lg:ml-auto">
+              
+              {/* Sample Selector Tabs */}
+              <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-[#0E3D27]/90 border border-white/10 mb-3.5 backdrop-blur-md">
+                {SAMPLE_INSPECTIONS.map((sample, idx) => (
+                  <button
+                    key={sample.id}
+                    type="button"
+                    onClick={() => setActiveSampleIndex(idx)}
+                    className={`flex-1 py-1.5 px-2.5 rounded-xl text-xs font-bold transition-all text-center cursor-pointer ${
+                      activeSampleIndex === idx
+                        ? 'bg-[#28DF7E] text-[#072418] shadow-md shadow-[#28DF7E]/20 scale-100 font-black'
+                        : 'text-[#A7C8B6] hover:text-white hover:bg-white/5'
+                    }`}
+                  >
+                    {idx === 0 ? 'Parle-G (Verified)' : idx === 1 ? 'Healthy Oats' : 'Flagged Pack'}
+                  </button>
+                ))}
+              </div>
 
-            {/* ── 5 Key Feature Cards: Interactive Click & Hover ── */}
-            <a
-              href="#how-it-works"
-              className="absolute rounded-2xl hover:ring-2 hover:ring-[#22C55E]/50 hover:bg-[#22C55E]/[0.03] transition-all cursor-pointer"
-              style={{ left: '8.6%', top: '79.0%', width: '15.8%', height: '12.6%' }}
-              title="Hidden Details Scan: Detects tiny fonts, missing info, wrong labels"
-            />
-            <a
-              href="#compliance"
-              className="absolute rounded-2xl hover:ring-2 hover:ring-[#22C55E]/50 hover:bg-[#22C55E]/[0.03] transition-all cursor-pointer"
-              style={{ left: '25.3%', top: '79.0%', width: '15.8%', height: '12.6%' }}
-              title="Genuine & Legal Check: Verifies Govt mandatory info & licenses"
-            />
-            <a
-              href="#features"
-              className="absolute rounded-2xl hover:ring-2 hover:ring-[#22C55E]/50 hover:bg-[#22C55E]/[0.03] transition-all cursor-pointer"
-              style={{ left: '42.0%', top: '79.0%', width: '15.8%', height: '12.6%' }}
-              title="Allergens & Nutrition: Know what's inside before you eat"
-            />
-            <a
-              href="#features"
-              className="absolute rounded-2xl hover:ring-2 hover:ring-[#22C55E]/50 hover:bg-[#22C55E]/[0.03] transition-all cursor-pointer"
-              style={{ left: '58.6%', top: '79.0%', width: '15.8%', height: '12.6%' }}
-              title="Fake Product Detection: Identifies counterfeit & misbranded goods"
-            />
-            <a
-              href="#how-it-works"
-              className="absolute rounded-2xl hover:ring-2 hover:ring-[#22C55E]/50 hover:bg-[#22C55E]/[0.03] transition-all cursor-pointer"
-              style={{ left: '75.3%', top: '79.0%', width: '15.8%', height: '12.6%' }}
-              title="Safe for Your Family: Better food choices for a healthier tomorrow"
-            />
+              <div className="bg-[#0B3322]/90 backdrop-blur-xl rounded-3xl border border-[#28DF7E]/30 p-6 sm:p-7 shadow-2xl relative overflow-hidden group hover:border-[#28DF7E]/50 transition-all">
+                {/* Ambient Inner Glow */}
+                <div className="absolute top-0 right-0 w-48 h-48 bg-[#28DF7E]/10 rounded-full blur-2xl pointer-events-none" />
 
-            {/* ── Bottom Store Badges: App Store, Google Play, Explore Web App ── */}
-            <a
-              href="#app-store"
-              className="absolute rounded-lg hover:ring-2 hover:ring-black hover:scale-105 active:scale-95 transition-all cursor-pointer"
-              style={{ left: '40.0%', top: '93.6%', width: '6.4%', height: '4.0%' }}
-              title="Download on Apple App Store"
-            />
-            <a
-              href="#google-play"
-              className="absolute rounded-lg hover:ring-2 hover:ring-black hover:scale-105 active:scale-95 transition-all cursor-pointer"
-              style={{ left: '46.8%', top: '93.6%', width: '6.8%', height: '4.0%' }}
-              title="Get it on Google Play Store"
-            />
-            <Link
-              to="/login"
-              className="absolute rounded-full hover:ring-2 hover:ring-[#22C55E] hover:bg-[#22C55E]/10 active:scale-95 transition-all cursor-pointer"
-              style={{ left: '57.3%', top: '93.4%', width: '10.5%', height: '4.4%' }}
-              title="Launch & Explore SafeFood Web App"
-            />
+                {/* Card Header */}
+                <div className="flex items-center justify-between pb-4 border-b border-white/10 relative z-10">
+                  <div className="flex items-center gap-3">
+                    <div className="h-10 w-10 rounded-xl bg-[#28DF7E]/20 border border-[#28DF7E]/40 flex items-center justify-center text-[#28DF7E]">
+                      <ShieldCheck className="h-5 w-5 stroke-[2.5]" />
+                    </div>
+                    <div>
+                      <h3 className="text-white font-extrabold text-[15px] leading-tight">AI Compliance Scan</h3>
+                      <span className="text-[#A7C8B6] text-xs font-mono">ID: {currentSample.id}</span>
+                    </div>
+                  </div>
+                  <span className={`px-3 py-1 rounded-full ${currentSample.statusBg} border ${currentSample.statusBorder} ${currentSample.statusText} text-xs font-black tracking-wide flex items-center gap-1.5`}>
+                    <span className={`h-2 w-2 rounded-full ${currentSample.pulseBg} animate-pulse`} />
+                    {currentSample.badgeText}
+                  </span>
+                </div>
+
+                {/* Scanned Product Banner */}
+                <div className="mt-4 p-3.5 rounded-2xl bg-[#072418]/80 border border-white/5 flex items-center justify-between relative z-10">
+                  <div>
+                    <span className="text-[11px] font-bold text-[#A7C8B6] uppercase tracking-wider block">Inspected Item</span>
+                    <span className="text-[14px] font-bold text-white block mt-0.5">{currentSample.title}</span>
+                  </div>
+                  <div className="text-right">
+                    <span className="text-[11px] font-bold text-[#A7C8B6] uppercase tracking-wider block">Barcode</span>
+                    <span className="text-[13px] font-mono text-[#28DF7E] font-semibold">{currentSample.barcode}</span>
+                  </div>
+                </div>
+
+                {/* Compliance Checklist Items */}
+                <div className="mt-4 space-y-2.5 relative z-10">
+                  {currentSample.checks.map((check, i) => (
+                    <div
+                      key={i}
+                      className={`flex items-center justify-between p-2.5 rounded-xl border transition-colors ${
+                        check.status === 'fail'
+                          ? 'bg-[#EF4444]/10 border-[#EF4444]/30'
+                          : check.status === 'warning'
+                          ? 'bg-[#F97316]/10 border-[#F97316]/30'
+                          : 'bg-white/[0.03] border-white/5 hover:bg-white/[0.06]'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <div
+                          className={`h-6 w-6 rounded-full flex items-center justify-center shrink-0 ${
+                            check.status === 'fail'
+                              ? 'bg-[#EF4444]/20 text-[#EF4444]'
+                              : check.status === 'warning'
+                              ? 'bg-[#F97316]/20 text-[#F97316]'
+                              : 'bg-[#28DF7E]/20 text-[#28DF7E]'
+                          }`}
+                        >
+                          {check.status === 'fail' ? (
+                            <X className="h-3.5 w-3.5 stroke-[3]" />
+                          ) : check.status === 'warning' ? (
+                            <AlertTriangle className="h-3.5 w-3.5 stroke-[2.5]" />
+                          ) : (
+                            <Check className="h-3.5 w-3.5 stroke-[3]" />
+                          )}
+                        </div>
+                        <span className="text-[13px] font-medium text-white">{check.label}</span>
+                      </div>
+                      <span
+                        className={`text-[12px] font-semibold ${
+                          check.status === 'fail'
+                            ? 'text-[#FCA5A5]'
+                            : check.status === 'warning'
+                            ? 'text-[#FDBA74]'
+                            : 'text-[#28DF7E]'
+                        }`}
+                      >
+                        {check.value}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Card Action Link */}
+                <div className="mt-5 pt-3.5 border-t border-white/10 flex items-center justify-between relative z-10">
+                  <span className="text-xs text-[#A7C8B6] flex items-center gap-1.5">
+                    <span className="h-2 w-2 rounded-full bg-[#28DF7E]" />
+                    Backend API Active &bull; &lt;1.2s OCR
+                  </span>
+                  <Link
+                    to="/login"
+                    className="text-xs font-bold text-[#28DF7E] hover:underline flex items-center gap-1"
+                  >
+                    <span>Launch Live Scan</span>
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </Link>
+                </div>
+              </div>
+            </div>
 
           </div>
         </div>
 
-        {/* Seamless Soft Transition into the rest of the page */}
-        <div className="w-full h-8 bg-gradient-to-b from-[#EAF6E7]/80 to-[#F8FAF9]" />
+        {/* ─── Organic Curved Wave Divider dividing Hero from Features ─── */}
+        <div className="absolute bottom-0 left-0 right-0 overflow-hidden leading-none z-10 pointer-events-none">
+          <svg
+            viewBox="0 0 1440 140"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className="w-full h-[70px] sm:h-[100px] lg:h-[135px]"
+            preserveAspectRatio="none"
+          >
+            <path
+              d="M0,75 C240,145 620,135 960,105 C1220,80 1370,105 1440,90 L1440,140 L0,140 Z"
+              fill="#FFFFFF"
+            />
+          </svg>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════ */}
+      {/*  KEY FEATURES SECTION (5 WHITE CLEAN CARDS + BAR)      */}
+      {/* ══════════════════════════════════════════════════════ */}
+      <section id="features" className="pt-8 pb-16 sm:pb-20 bg-white relative z-20">
+        <div className="max-w-[1280px] mx-auto px-5 sm:px-8">
+          
+          {/* Section Heading */}
+          <div className="text-center max-w-2xl mx-auto mb-10">
+            <span className="inline-block text-[12px] font-black uppercase tracking-wider text-[#16A34A] mb-2">
+              KEY FEATURES
+            </span>
+            <h2 className="text-[32px] sm:text-[38px] font-black text-[#0A2B1D] tracking-tight leading-tight">
+              Smarter Scans. Safer Food.
+            </h2>
+            <p className="text-[15px] text-[#4B5563] mt-2">
+              From barcode to batch details — SafeFood checks it all.
+            </p>
+          </div>
+
+          {/* 5 Clean White Feature Cards in 1 Row */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5 mb-12">
+
+            {/* Card 1: Hidden Details Scan */}
+            <div className="bg-white rounded-2xl border border-[#E2E8F0] hover:border-[#22C55E]/60 p-4.5 flex flex-col justify-between shadow-xs hover:shadow-lg transition-all group">
+              <div className="h-10 w-10 rounded-xl bg-[#EBFBF2] flex items-center justify-center text-[#22C55E] mb-3 group-hover:scale-105 transition-transform">
+                <ScanIcon className="h-5 w-5 stroke-[2.2]" />
+              </div>
+              <div>
+                <h3 className="text-[14px] font-extrabold text-[#0F172A] mb-1 leading-snug">
+                  Hidden Details Scan
+                </h3>
+                <p className="text-[12px] text-[#64748B] leading-relaxed">
+                  Detects tiny fonts, missing info, wrong labels and more.
+                </p>
+              </div>
+            </div>
+
+            {/* Card 2: Genuine & Legal Check */}
+            <div className="bg-white rounded-2xl border border-[#E2E8F0] hover:border-[#22C55E]/60 p-4.5 flex flex-col justify-between shadow-xs hover:shadow-lg transition-all group">
+              <div className="h-10 w-10 rounded-xl bg-[#EBFBF2] flex items-center justify-center text-[#22C55E] mb-3 group-hover:scale-105 transition-transform">
+                <ShieldCheck className="h-5 w-5 stroke-[2.2]" />
+              </div>
+              <div>
+                <h3 className="text-[14px] font-extrabold text-[#0F172A] mb-1 leading-snug">
+                  Genuine &amp; Legal Check
+                </h3>
+                <p className="text-[12px] text-[#64748B] leading-relaxed">
+                  Verifies Govt. mandatory info, licenses and compliance.
+                </p>
+              </div>
+            </div>
+
+            {/* Card 3: Allergens & Nutrition */}
+            <div className="bg-white rounded-2xl border border-[#E2E8F0] hover:border-[#22C55E]/60 p-4.5 flex flex-col justify-between shadow-xs hover:shadow-lg transition-all group">
+              <div className="h-10 w-10 rounded-xl bg-[#EBFBF2] flex items-center justify-center text-[#22C55E] mb-3 group-hover:scale-105 transition-transform">
+                <Leaf className="h-5 w-5 stroke-[2.2]" />
+              </div>
+              <div>
+                <h3 className="text-[14px] font-extrabold text-[#0F172A] mb-1 leading-snug">
+                  Allergens &amp; Nutrition
+                </h3>
+                <p className="text-[12px] text-[#64748B] leading-relaxed">
+                  Know what&apos;s inside before you eat.
+                </p>
+              </div>
+            </div>
+
+            {/* Card 4: Fake Product Detection */}
+            <div className="bg-white rounded-2xl border border-[#E2E8F0] hover:border-[#22C55E]/60 p-4.5 flex flex-col justify-between shadow-xs hover:shadow-lg transition-all group">
+              <div className="h-10 w-10 rounded-xl bg-[#EBFBF2] flex items-center justify-center text-[#22C55E] mb-3 group-hover:scale-105 transition-transform">
+                <FileText className="h-5 w-5 stroke-[2.2]" />
+              </div>
+              <div>
+                <h3 className="text-[14px] font-extrabold text-[#0F172A] mb-1 leading-snug">
+                  Fake Product Detection
+                </h3>
+                <p className="text-[12px] text-[#64748B] leading-relaxed">
+                  Identifies counterfeit and misbranded products.
+                </p>
+              </div>
+            </div>
+
+            {/* Card 5: Safe for Your Family */}
+            <div className="bg-white rounded-2xl border border-[#E2E8F0] hover:border-[#22C55E]/60 p-4.5 flex flex-col justify-between shadow-xs hover:shadow-lg transition-all group">
+              <div className="h-10 w-10 rounded-xl bg-[#EBFBF2] flex items-center justify-center text-[#22C55E] mb-3 group-hover:scale-105 transition-transform">
+                <Users className="h-5 w-5 stroke-[2.2]" />
+              </div>
+              <div>
+                <h3 className="text-[14px] font-extrabold text-[#0F172A] mb-1 leading-snug">
+                  Safe for Your Family
+                </h3>
+                <p className="text-[12px] text-[#64748B] leading-relaxed">
+                  Better food choices for a healthier tomorrow.
+                </p>
+              </div>
+            </div>
+
+          </div>
+
+          {/* ─── Bottom Store Badges & Explore Web App Row ─── */}
+          <div className="relative flex items-center justify-center pt-2">
+            {/* Left Decorative Botanical Leaves Sketch */}
+            <div className="hidden lg:block absolute left-4 bottom-1 pointer-events-none opacity-70">
+              <svg width="42" height="42" viewBox="0 0 50 50" fill="none" stroke="#22C55E" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M10 40C10 40 12 25 25 15C35 7 42 8 42 8C42 8 43 15 35 25C25 38 10 40 10 40Z" />
+                <path d="M10 40C18 30 25 22 35 15" />
+                <path d="M18 28C22 24 26 23 26 23" />
+                <path d="M24 33C28 29 31 28 31 28" />
+              </svg>
+            </div>
+
+            {/* Store Badges Bar */}
+            <div className="inline-flex flex-wrap items-center justify-center gap-3 bg-white px-4 py-2 rounded-full border border-gray-100 shadow-xs">
+              <div className="flex items-center gap-1.5 text-[13px] font-medium text-gray-500 pr-1">
+                <svg className="w-4 h-4 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <rect x="5" y="2" width="14" height="20" rx="2" ry="2" />
+                  <line x1="12" y1="18" x2="12.01" y2="18" />
+                </svg>
+                <span>Available on</span>
+              </div>
+
+              {/* App Store button */}
+              <a
+                href="#app-store"
+                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-black text-white hover:bg-neutral-800 transition-colors shadow-xs"
+              >
+                <svg className="h-4 w-4 fill-white" viewBox="0 0 170 170">
+                  <path d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.19-2.12-9.97-3.17-14.34-3.17-4.58 0-9.49 1.05-14.75 3.17-5.26 2.13-9.5 3.24-12.74 3.35-5.35.22-10.33-1.93-14.94-6.46-3.35-3.17-7.2-7.91-11.56-14.22-5.74-8.37-10.35-17.96-13.82-28.77-3.48-10.81-5.21-21.36-5.21-31.65 0-14.89 3.83-27.18 11.49-36.88 7.66-9.7 17.1-14.65 28.32-14.86 4.93 0 10.38 1.25 16.36 3.75 5.98 2.5 9.87 3.81 11.66 3.93 1.57-.12 5.69-1.54 12.37-4.25 6.68-2.72 12.31-3.9 16.89-3.55 12.7.99 22.78 5.76 30.23 14.32-11.05 6.74-16.47 16.03-16.27 27.88.2 9.27 3.86 17.06 10.98 23.36 7.12 6.3 15.35 9.77 24.68 10.42-2.12 6.32-4.78 12.63-7.98 18.94zM119.22 33.15c0-7.23 2.65-13.97 7.95-20.21 5.3-6.24 11.83-10.15 19.59-11.74.85 7.12-1.39 13.89-6.72 20.3-5.33 6.41-11.97 10.46-19.92 12.16-.3-.18-.6-.35-.9-.51z" />
+                </svg>
+                <div className="text-left leading-none">
+                  <span className="block text-[8px] text-gray-300 font-normal">Download on the</span>
+                  <span className="block text-[11px] font-bold text-white tracking-tight">App Store</span>
+                </div>
+              </a>
+
+              {/* Google Play button */}
+              <a
+                href="#google-play"
+                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-black text-white hover:bg-neutral-800 transition-colors shadow-xs"
+              >
+                <svg className="h-4 w-4 fill-white" viewBox="0 0 512 512">
+                  <path d="M325.3 234.3L104.6 13l280.8 161.2-60.1 60.1zM47 0C34 6.8 25.3 19.2 25.3 35.3v441.3c0 16.1 8.7 28.5 21.7 35.3l256.6-256L47 0zm425.2 225.6l-58.9-34.1-65.7 64.5 65.7 64.5 60.1-34.1c18-14.3 18-46.5-1.2-60.8zM104.6 499l280.8-161.2-60.1-60.1L104.6 499z" />
+                </svg>
+                <div className="text-left leading-none">
+                  <span className="block text-[8px] text-gray-300 font-normal">GET IT ON</span>
+                  <span className="block text-[11px] font-bold text-white tracking-tight">Google Play</span>
+                </div>
+              </a>
+
+              <div className="h-6 w-px bg-gray-200 hidden sm:block mx-1" />
+
+              {/* Explore Web App button */}
+              <Link
+                to="/login"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#22C55E] text-[#15803D] hover:bg-[#EBFBF2] transition-colors text-[13px] font-bold shadow-xs"
+              >
+                <Monitor className="w-4 h-4 text-[#15803D]" />
+                <span>Explore Web App</span>
+              </Link>
+            </div>
+
+            {/* Right Decorative Botanical Leaves Sketch */}
+            <div className="hidden lg:block absolute right-4 bottom-1 pointer-events-none opacity-70 transform scale-x-[-1]">
+              <svg width="42" height="42" viewBox="0 0 50 50" fill="none" stroke="#22C55E" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M10 40C10 40 12 25 25 15C35 7 42 8 42 8C42 8 43 15 35 25C25 38 10 40 10 40Z" />
+                <path d="M10 40C18 30 25 22 35 15" />
+                <path d="M18 28C22 24 26 23 26 23" />
+                <path d="M24 33C28 29 31 28 31 28" />
+              </svg>
+            </div>
+          </div>
+
+        </div>
       </section>
 
       {/* ══════════════════════════════════════════════════════ */}

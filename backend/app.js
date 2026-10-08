@@ -46,9 +46,10 @@ export function createApp() {
     return res.json({ status: 'ok', message: 'SafeFood API is operational. Upload scans at /api/v1/scans' });
   });
 
-  // API router
+  // API router - mounted under both /api/v1 and /api for seamless frontend & mobile compatibility
   const apiRouter = createRouter();
   app.use('/api/v1', apiLimiter, apiRouter);
+  app.use('/api', apiLimiter, apiRouter);
 
   // 404 handler
   app.use(notFoundMiddleware);

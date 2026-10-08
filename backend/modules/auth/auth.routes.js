@@ -20,5 +20,8 @@ authRouter.post('/login', login);
 authRouter.post('/refresh', refreshToken);
 authRouter.get('/me', requireAuth, getMe);
 authRouter.patch('/profile', requireAuth, updateProfile);
+authRouter.post('/logout', (req, res) => {
+  return res.status(200).json({ status: 'ok', message: 'Logged out successfully' });
+});
 
 export default authRouter;

@@ -1,7 +1,11 @@
 import axios from 'axios';
 
-// Read API URL from Vite environment variables with fallback
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://trustlabel.onrender.com';
+// Read API URL from Vite environment variables with automatic localhost fallback
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL ||
+  (typeof window !== 'undefined' && window.location.hostname === 'localhost'
+    ? 'http://localhost:4000'
+    : 'https://trustlabel.onrender.com');
 
 const api = axios.create({
   baseURL: API_BASE_URL,

@@ -3,6 +3,8 @@ import {
   getComplaintById,
   listComplaints,
   generateComplaintPdf,
+  updateComplaintStatus,
+  assignComplaint,
 } from './complaints.service.js';
 
 export async function createComplaintHandler(req, res, next) {
@@ -72,9 +74,44 @@ export async function exportComplaintPdfHandler(req, res, next) {
   }
 }
 
+export async function updateComplaintStatusHandler(req, res, next) {
+  try {
+    const { status, notes, actionTaken } = req.body || {};
+    const updated = await updateComplaintStatus(req.params.id, {
+      status,
+      notes,
+      actionTaken,
+      userId: req.user.sub,
+      userName: req.user.name,
+      userRole: req.user.role,
+    });
+    return res.status(200).json(updated);
+  } catch (err) {
+    return next(err);
+  }
+}
+
+export async function assignComplaintHandler(req, res, next) {
+  try {
+    const { officerId, note } = req.body || {};
+    const updated = await assignComplaint(req.params.id, {
+      officerId,
+      note,
+      adminId: req.user.sub,
+      adminName: req.user.name,
+      userRole: req.user.role,
+    });
+    return res.status(200).json(updated);
+  } catch (err) {
+    return next(err);
+  }
+}
+
 export default {
   createComplaintHandler,
   getComplaintHandler,
   listComplaintsHandler,
   exportComplaintPdfHandler,
+  updateComplaintStatusHandler,
+  assignComplaintHandler,
 };

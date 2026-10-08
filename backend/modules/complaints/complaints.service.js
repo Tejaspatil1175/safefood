@@ -318,9 +318,94 @@ export async function generateComplaintPdf(id, { userId, role = 'user' } = {}) {
   });
 }
 
+export async function updateComplaintStatus(
+  id,
+  { status, notes = '', actionTaken = null, userId, userName = 'Officer', userRole = 'officer' } = {},
+) {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    throw new ValidationError('Invalid complaint ID format');
+  }
+
+  const complaint = await Complaint.findById(id);
+  if (!complaint) {
+    throw new NotFoundError(`Complaint with id ${id} not found`);
+  }
+
+  if (status) {
+    complaint.status = status;
+  }
+  if (notes) {
+    complaint.officerNotes = notes.trim();
+  }
+  if (actionTaken) {
+    complaint.actionTaken = actionTaken;
+  }
+
+  complaint.reviewedBy = userId ? new mongoose.Types.ObjectId(userId) : null;
+  complaint.reviewedAt = new Date();
+
+  // Add timeline entry
+  const timelineEntry = {
+    status: status || complaint.status,
+    note: notes.trim() || `Status updated to ${status}`,
+    by: userName || 'Inspector',
+    at: new Date(),
+  };
+  complaint.timeline = complaint.timeline || [];
+  complaint.timeline.push(timelineEntry);
+
+  await complaint.save();
+  return complaint;
+}
+
+export async function assignComplaint(
+  id,
+  { officerId, note = '', adminId, adminName = 'System Administrator', userRole = 'admin' } = {},
+) {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    throw new ValidationError('Invalid complaint ID format');
+  }
+
+  const complaint = await Complaint.findById(id);
+  if (!complaint) {
+    throw new NotFoundError(`Complaint with id ${id} not found`);
+  }
+
+  let assignedOfficerObj = { id: officerId, name: 'Assigned Enforcement Officer' };
+  if (officerId && mongoose.Types.ObjectId.isValid(officerId)) {
+    const officerDoc = await User.findById(officerId).lean();
+    if (officerDoc) {
+      assignedOfficerObj = {
+        id: officerDoc._id.toString(),
+        name: officerDoc.name,
+        badgeNumber: officerDoc.badgeNumber,
+        district: officerDoc.district,
+      };
+    }
+  }
+
+  complaint.assignedOfficer = assignedOfficerObj;
+  complaint.assignedAt = new Date();
+  complaint.status = COMPLAINT_STATUS.ASSIGNED || 'assigned';
+
+  const timelineEntry = {
+    status: 'assigned',
+    note: note.trim() || `Assigned to ${assignedOfficerObj.name} for statutory audit.`,
+    by: adminName || 'Admin',
+    at: new Date(),
+  };
+  complaint.timeline = complaint.timeline || [];
+  complaint.timeline.push(timelineEntry);
+
+  await complaint.save();
+  return complaint;
+}
+
 export default {
   createComplaint,
   getComplaintById,
   listComplaints,
   generateComplaintPdf,
+  updateComplaintStatus,
+  assignComplaint,
 };

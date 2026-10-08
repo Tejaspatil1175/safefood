@@ -9,6 +9,10 @@ export const COMPLAINT_STATUS = Object.freeze({
   VALID: 'VALID',
   ACTION_TAKEN: 'ACTION_TAKEN',
   REJECTED: 'REJECTED',
+  ASSIGNED: 'assigned',
+  UNDER_INVESTIGATION: 'under_investigation',
+  VERIFIED_GENUINE: 'verified_genuine',
+  VERIFIED_NOT_GENUINE: 'verified_not_genuine',
 });
 
 const violationSchema = new mongoose.Schema(
@@ -70,6 +74,29 @@ const complaintSchema = new mongoose.Schema({
     default: '',
     trim: true,
   },
+  assignedOfficer: {
+    type: mongoose.Schema.Types.Mixed,
+    default: null,
+  },
+  assignedAt: {
+    type: Date,
+    default: null,
+  },
+  actionTaken: {
+    type: String,
+    default: null,
+  },
+  timeline: {
+    type: [
+      {
+        status: { type: String },
+        note: { type: String, default: '' },
+        by: { type: String, default: '' },
+        at: { type: Date, default: Date.now },
+      },
+    ],
+    default: [],
+  },
   reviewedBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
@@ -81,7 +108,6 @@ const complaintSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: Object.values(COMPLAINT_STATUS),
     default: COMPLAINT_STATUS.IN_REVIEW,
     index: true,
   },

@@ -1,0 +1,210 @@
+openapi: 3.0.3
+info:
+  title: SafeFood API
+  description: Offline-first label compliance checking API for Legal Metrology (Packaged Commodities) Rules, 2011.
+  version: 1.0.0
+servers:
+  - url: http://localhost:4000/api/v1
+    description: Local development server
+paths:
+  /health:
+    get:
+      summary: Liveness health check
+      responses:
+        '200':
+          description: Service is alive
+  /health/ready:
+    get:
+      summary: Readiness probe (database connectivity)
+      responses:
+        '200':
+          description: Database is connected
+        '503':
+          description: Database disconnected
+  /rules/active:
+    get:
+      summary: Get active statutory rule set (PCR 2011)
+      responses:
+        '200':
+          description: Active rule set definition
+  /products/{barcode}:
+    get:
+      summary: Lookup reference verified product by EAN barcode
+      parameters:
+        - name: barcode
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Reference product record
+        '400':
+          description: Invalid checksum or malformed barcode
+        '404':
+          description: Product not found
+  /scans:
+    post:
+      summary: Orchestrate label compliance scan from uploaded photos
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                images:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+                barcode:
+                  type: string
+                ruleSetVersion:
+                  type: string
+      responses:
+        '201':
+          description: Scan evaluated and persisted
+        '400':
+          description: Validation error
+        '422':
+          description: Image quality check failed with retake guidance
+    get:
+      summary: List user scans (paginated)
+      responses:
+        '200':
+          description: Paginated scan records
+  /scans/{id}:
+    get:
+      summary: Get scan details by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Scan details
+        '404':
+          description: Scan not found
+  /auth/google:
+    post:
+      summary: Exchange Google ID token for JWT access and refresh tokens
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - idToken
+              properties:
+                idToken:
+                  type: string
+      responses:
+        '200':
+          description: Successfully authenticated
+  /auth/refresh:
+    post:
+      summary: Refresh JWT access token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - refreshToken
+              properties:
+                refreshToken:
+                  type: string
+      responses:
+        '200':
+          description: Tokens refreshed
+  /auth/me:
+    get:
+      summary: Get authenticated user profile
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: User profile
+        '401':
+          description: Unauthorized
+  /complaints:
+    post:
+      summary: File non-compliance complaint (FAIL scans only)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - scanId
+                - confirmed
+              properties:
+                scanId:
+                  type: string
+                confirmed:
+                  type: boolean
+                userNote:
+                  type: string
+      responses:
+        '201':
+          description: Complaint created
+        '400':
+          description: Validation error or non-FAIL scan
+    get:
+      summary: List complaints for current user
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: User complaints
+  /complaints/{id}:
+    get:
+      summary: Get complaint details
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Complaint details
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+  /complaints/{id}/export:
+    get:
+      summary: Export complaint as PDF evidence document
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: PDF file download
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

@@ -6,6 +6,8 @@ import {
   getComplaintHandler,
   listComplaintsHandler,
   exportComplaintPdfHandler,
+  updateComplaintStatusHandler,
+  assignComplaintHandler,
 } from './complaints.controller.js';
 
 const upload = multer({
@@ -20,6 +22,8 @@ complaintsRouter.use(requireAuth);
 complaintsRouter.post('/', upload.array('evidence', 2), createComplaintHandler);
 complaintsRouter.get('/', listComplaintsHandler);
 complaintsRouter.get('/:id', getComplaintHandler);
+complaintsRouter.patch('/:id/status', updateComplaintStatusHandler);
+complaintsRouter.patch('/:id/assign', assignComplaintHandler);
 complaintsRouter.get('/:id/export', exportComplaintPdfHandler);
 
 export default complaintsRouter;

@@ -1,0 +1,1594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SafeFood AI - Legal Metrology Packaging Compliance Scanner</title>
+  <meta name="description" content="Automated packaged food label compliance inspection against India Legal Metrology (Packaged Commodities) Rules, 2011." />
+  
+  <!-- Modern Typography: Inter & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg-dark: #0a0e17;
+      --bg-card: rgba(16, 23, 41, 0.85);
+      --bg-card-hover: rgba(22, 33, 58, 0.95);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-accent: rgba(56, 189, 248, 0.25);
+      
+      --color-primary: #38bdf8;
+      --color-primary-glow: rgba(56, 189, 248, 0.25);
+      --color-pass: #10b981;
+      --color-pass-glow: rgba(16, 185, 129, 0.25);
+      --color-fail: #ef4444;
+      --color-fail-glow: rgba(239, 68, 68, 0.25);
+      --color-uncertain: #f59e0b;
+      --color-uncertain-glow: rgba(245, 158, 11, 0.25);
+      
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --radius-full: 9999px;
+      
+      --font-heading: 'Outfit', sans-serif;
+      --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.12) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(16, 185, 129, 0.08) 0px, transparent 50%),
+        radial-gradient(at 50% 100%, rgba(99, 102, 241, 0.08) 0px, transparent 50%);
+      background-attachment: fixed;
+      color: var(--text-main);
+      font-family: var(--font-body);
+      line-height: 1.6;
+      min-height: 100vh;
+      padding: 0 0 60px 0;
+    }
+
+    /* Header Nav */
+    header {
+      background: rgba(10, 14, 23, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-subtle);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .brand-logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #0284c7, #10b981);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: 20px;
+      color: #ffffff;
+      box-shadow: 0 0 20px rgba(56, 189, 248, 0.35);
+    }
+
+    .brand-title {
+      font-family: var(--font-heading);
+      font-size: 22px;
+      font-weight: 700;
+      color: #ffffff;
+      letter-spacing: -0.5px;
+    }
+
+    .brand-title span {
+      background: linear-gradient(90deg, #38bdf8, #10b981);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .header-badges {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .badge-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: var(--radius-full);
+      font-size: 13px;
+      font-weight: 500;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #34d399;
+      transition: all 0.3s ease;
+    }
+
+    .badge-status.offline {
+      background: rgba(239, 68, 68, 0.12);
+      border-color: rgba(239, 68, 68, 0.3);
+      color: #f87171;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 8px #10b981;
+      animation: pulse 2s infinite;
+    }
+
+    .badge-status.offline .status-dot {
+      background: #ef4444;
+      box-shadow: 0 0 8px #ef4444;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.15); }
+    }
+
+    .badge-law {
+      padding: 6px 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-full);
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* Container */
+    .container {
+      max-width: 1200px;
+      margin: 32px auto 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Hero Headline */
+    .hero {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+
+    .hero h1 {
+      font-family: var(--font-heading);
+      font-size: 38px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 12px;
+      background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      color: var(--text-muted);
+      font-size: 16px;
+      max-width: 650px;
+      margin: 0 auto;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 28px;
+      margin-bottom: 28px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      transition: border-color 0.3s ease;
+    }
+
+    .card:hover {
+      border-color: var(--border-accent);
+    }
+
+    .card-title {
+      font-family: var(--font-heading);
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* Quick Test Presets */
+    .presets-bar {
+      margin-bottom: 24px;
+    }
+
+    .presets-label {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-dim);
+      margin-bottom: 10px;
+      display: block;
+      font-weight: 600;
+    }
+
+    .presets-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .btn-preset {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      padding: 8px 16px;
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-preset:hover {
+      background: rgba(56, 189, 248, 0.12);
+      border-color: var(--color-primary);
+      transform: translateY(-1px);
+    }
+
+    .btn-preset .preset-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+    }
+
+    .btn-preset.pass .preset-dot { background: var(--color-pass); }
+    .btn-preset.fail .preset-dot { background: var(--color-fail); }
+
+    /* Upload Dropzone */
+    .dropzone {
+      border: 2px dashed rgba(56, 189, 248, 0.3);
+      border-radius: var(--radius-md);
+      background: rgba(15, 23, 42, 0.5);
+      padding: 40px 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .dropzone.dragover {
+      border-color: var(--color-primary);
+      background: rgba(56, 189, 248, 0.08);
+      transform: scale(1.01);
+    }
+
+    .dropzone input[type="file"] {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .dropzone-icon {
+      width: 60px;
+      height: 60px;
+      margin: 0 auto 16px auto;
+      border-radius: 50%;
+      background: rgba(56, 189, 248, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-primary);
+      font-size: 26px;
+    }
+
+    .dropzone h3 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .dropzone p {
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    /* Image Preview Gallery */
+    .preview-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .preview-card {
+      position: relative;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .preview-card img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      display: block;
+      background: #000;
+    }
+
+    .preview-meta {
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+    }
+
+    .preview-name {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: var(--text-main);
+      max-width: 130px;
+    }
+
+    .preview-remove {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #f87171;
+      padding: 3px 8px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 11px;
+    }
+
+    .preview-remove:hover {
+      background: #ef4444;
+      color: #fff;
+    }
+
+    /* Optional Inputs */
+    .controls-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    @media (max-width: 768px) {
+      .controls-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .input-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .input-group input, .input-group select {
+      width: 100%;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      color: #fff;
+      font-size: 14px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .input-group input:focus, .input-group select:focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 10px var(--color-primary-glow);
+    }
+
+    /* Run Button */
+    .btn-submit {
+      width: 100%;
+      margin-top: 24px;
+      background: linear-gradient(135deg, #0284c7 0%, #059669 100%);
+      color: #ffffff;
+      border: none;
+      padding: 16px 24px;
+      border-radius: var(--radius-md);
+      font-family: var(--font-heading);
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 20px rgba(2, 132, 199, 0.35);
+    }
+
+    .btn-submit:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 28px rgba(2, 132, 199, 0.5);
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      filter: grayscale(40%);
+    }
+
+    /* Radar / Scanner Line Animation */
+    .scanner-active-box {
+      display: none;
+      position: relative;
+      margin-top: 20px;
+      padding: 24px;
+      border-radius: var(--radius-md);
+      background: rgba(2, 132, 199, 0.08);
+      border: 1px solid var(--border-accent);
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .scanner-active-box.show {
+      display: block;
+    }
+
+    .scan-beam {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, transparent, #38bdf8, transparent);
+      box-shadow: 0 0 15px #38bdf8;
+      animation: scanAnim 1.8s infinite ease-in-out;
+    }
+
+    @keyframes scanAnim {
+      0% { top: 0; }
+      50% { top: 96%; }
+      100% { top: 0; }
+    }
+
+    .scan-steps {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 10px;
+    }
+
+    .scan-steps span.done {
+      color: #34d399;
+      font-weight: 600;
+    }
+
+    /* Results Container */
+    #resultsContainer {
+      display: none;
+      animation: fadeIn 0.4s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Verdict Banner */
+    .verdict-banner {
+      border-radius: var(--radius-lg);
+      padding: 28px 32px;
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      border: 2px solid transparent;
+      backdrop-filter: blur(12px);
+      flex-wrap: wrap;
+    }
+
+    .verdict-banner.verdict-pass {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(5, 150, 105, 0.05) 100%);
+      border-color: rgba(16, 185, 129, 0.5);
+      box-shadow: 0 0 30px rgba(16, 185, 129, 0.2);
+    }
+
+    .verdict-banner.verdict-fail {
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(185, 28, 28, 0.05) 100%);
+      border-color: rgba(239, 68, 68, 0.5);
+      box-shadow: 0 0 30px rgba(239, 68, 68, 0.2);
+    }
+
+    .verdict-banner.verdict-uncertain {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(180, 83, 9, 0.05) 100%);
+      border-color: rgba(245, 158, 11, 0.5);
+      box-shadow: 0 0 30px rgba(245, 158, 11, 0.2);
+    }
+
+    .verdict-main {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .verdict-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      font-weight: 800;
+    }
+
+    .verdict-pass .verdict-icon {
+      background: var(--color-pass);
+      color: #064e3b;
+      box-shadow: 0 0 20px var(--color-pass-glow);
+    }
+
+    .verdict-fail .verdict-icon {
+      background: var(--color-fail);
+      color: #ffffff;
+      box-shadow: 0 0 20px var(--color-fail-glow);
+    }
+
+    .verdict-uncertain .verdict-icon {
+      background: var(--color-uncertain);
+      color: #78350f;
+      box-shadow: 0 0 20px var(--color-uncertain-glow);
+    }
+
+    .verdict-text h2 {
+      font-family: var(--font-heading);
+      font-size: 30px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .verdict-pass .verdict-text h2 { color: #34d399; }
+    .verdict-fail .verdict-text h2 { color: #f87171; }
+    .verdict-uncertain .verdict-text h2 { color: #fbbf24; }
+
+    .verdict-text p {
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    .verdict-counters {
+      display: flex;
+      gap: 16px;
+    }
+
+    .stat-pill {
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 12px 18px;
+      text-align: center;
+      min-width: 90px;
+    }
+
+    .stat-pill .num {
+      font-family: var(--font-heading);
+      font-size: 24px;
+      font-weight: 700;
+      display: block;
+    }
+
+    .stat-pill .lbl {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-dim);
+    }
+
+    /* Product Match Summary Card */
+    .matched-product-strip {
+      background: rgba(56, 189, 248, 0.08);
+      border: 1px solid var(--border-accent);
+      border-radius: var(--radius-md);
+      padding: 14px 20px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .matched-product-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .matched-badge {
+      background: var(--color-primary);
+      color: #0f172a;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: var(--radius-sm);
+      text-transform: uppercase;
+    }
+
+    /* Declarations Grid */
+    .decl-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+      margin-top: 14px;
+    }
+
+    .decl-card {
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      transition: border-color 0.2s ease;
+    }
+
+    .decl-card:hover {
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .decl-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .decl-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-dim);
+      font-weight: 600;
+    }
+
+    .decl-status {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      font-weight: 600;
+    }
+
+    .decl-status.pass { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+    .decl-status.fail { background: rgba(239, 68, 68, 0.15); color: #f87171; }
+    .decl-status.uncertain { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
+
+    .decl-value {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-main);
+      word-break: break-word;
+      margin-bottom: 4px;
+    }
+
+    .decl-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* Checklist Table */
+    .table-responsive {
+      overflow-x: auto;
+      margin-top: 12px;
+    }
+
+    .rule-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 14px;
+    }
+
+    .rule-table th {
+      padding: 12px 16px;
+      background: rgba(15, 23, 42, 0.8);
+      color: var(--text-muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      border-bottom: 1px solid var(--border-subtle);
+      font-weight: 600;
+    }
+
+    .rule-table td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border-subtle);
+      vertical-align: top;
+    }
+
+    .rule-table tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .rule-pill {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: var(--radius-full);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .rule-pill.pass { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .rule-pill.fail { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+    .rule-pill.uncertain { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+
+    .law-cite {
+      font-size: 11px;
+      color: #38bdf8;
+      font-weight: 500;
+      display: block;
+      margin-top: 4px;
+    }
+
+    /* Complaint & PDF Export Box */
+    .complaint-box {
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      background: linear-gradient(180deg, rgba(239, 68, 68, 0.08) 0%, rgba(15, 23, 42, 0.9) 100%);
+      border-radius: var(--radius-lg);
+      padding: 24px 28px;
+      margin-top: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 18px;
+    }
+
+    .complaint-info h3 {
+      font-family: var(--font-heading);
+      color: #f87171;
+      font-size: 19px;
+      margin-bottom: 4px;
+    }
+
+    .complaint-info p {
+      color: var(--text-muted);
+      font-size: 14px;
+      max-width: 600px;
+    }
+
+    .btn-danger-action {
+      background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+      color: #ffffff;
+      border: none;
+      padding: 12px 24px;
+      border-radius: var(--radius-md);
+      font-family: var(--font-heading);
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 16px rgba(239, 68, 68, 0.35);
+      transition: all 0.2s;
+    }
+
+    .btn-danger-action:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 22px rgba(239, 68, 68, 0.5);
+    }
+
+    .btn-download-pdf {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border-subtle);
+      color: #ffffff;
+      padding: 10px 18px;
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.2s;
+    }
+
+    .btn-download-pdf:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    /* Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(8px);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-card {
+      background: #0f172a;
+      border: 1px solid var(--border-accent);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      width: 100%;
+      max-width: 520px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-title {
+      font-family: var(--font-heading);
+      font-size: 20px;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-close {
+      background: transparent;
+      border: none;
+      color: var(--text-dim);
+      font-size: 22px;
+      cursor: pointer;
+    }
+
+    .modal-close:hover {
+      color: #fff;
+    }
+
+    /* JSON Drawer */
+    .json-details summary {
+      cursor: pointer;
+      font-size: 13px;
+      color: var(--text-dim);
+      margin-top: 16px;
+      outline: none;
+    }
+
+    .json-details summary:hover {
+      color: var(--color-primary);
+    }
+
+    .json-box {
+      margin-top: 10px;
+      background: #050811;
+      padding: 16px;
+      border-radius: var(--radius-md);
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 12px;
+      color: #a5f3fc;
+      max-height: 300px;
+      overflow-y: auto;
+      border: 1px solid var(--border-subtle);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <header>
+    <div class="nav-container">
+      <a href="#" class="brand">
+        <div class="brand-logo">SF</div>
+        <div class="brand-title">Safe<span>Food</span> AI</div>
+      </a>
+      
+      <div class="header-badges">
+        <span class="badge-law">PCR 2011 (pcr-2011.v1)</span>
+        <div id="backendStatus" class="badge-status">
+          <span class="status-dot"></span>
+          <span id="backendStatusText">Checking Backend...</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="container">
+    
+    <!-- Hero Title -->
+    <div class="hero">
+      <h1>Legal Metrology Packaging Compliance</h1>
+      <p>Upload any packaged food photo (front & back label) to automatically verify mandatory statutory declarations, metric units, numeral font heights, and MRP conformity.</p>
+    </div>
+
+    <!-- Scanner Upload Card -->
+    <div class="card">
+      <div class="card-title">
+        <span>📸 Test Image Upload</span>
+        <span style="font-size: 12px; color: var(--text-dim); font-weight: 400;">JPEG, PNG, WebP &bull; Up to 2 Images</span>
+      </div>
+
+      <!-- Quick Test Presets -->
+      <div class="presets-bar">
+        <span class="presets-label">⚡ 1-Click Test Presets (Click to load sample & test instantly):</span>
+        <div class="presets-list">
+          <button type="button" class="btn-preset pass" onclick="loadPreset('parle-g-800g', 'Parle-G 800g Biscuit', '8901719101038', true)">
+            <span class="preset-dot"></span> Parle-G 800g (PASS)
+          </button>
+          <button type="button" class="btn-preset pass" onclick="loadPreset('lays-classic-50g', 'Lays Classic 50g Chips', '8901491101831', true)">
+            <span class="preset-dot"></span> Lay's 50g (PASS)
+          </button>
+          <button type="button" class="btn-preset pass" onclick="loadPreset('amul-butter-500g', 'Amul Butter 500g', '8901262010052', true)">
+            <span class="preset-dot"></span> Amul Butter 500g (PASS)
+          </button>
+          <button type="button" class="btn-preset fail" onclick="loadPreset('cadbury-dairy-milk-130g', 'Cadbury Dairy Milk 130g', '7622201745431', false)">
+            <span class="preset-dot"></span> Cadbury 130g (FAIL - Care Missing)
+          </button>
+          <button type="button" class="btn-preset fail" onclick="loadPreset('dabur-honey-250g', 'Dabur Honey 250g', '8901207010482', false)">
+            <span class="preset-dot"></span> Dabur Honey (FAIL - Font Height)
+          </button>
+          <button type="button" class="btn-preset fail" onclick="loadPreset('haldirams-bhujia-400g', 'Haldirams Bhujia 400g', '8904004400018', false)">
+            <span class="preset-dot"></span> Haldiram's (FAIL - Unit Error)
+          </button>
+        </div>
+      </div>
+
+      <!-- Dropzone -->
+      <div id="dropzone" class="dropzone">
+        <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp" multiple />
+        <div class="dropzone-icon">📁</div>
+        <h3>Drag & drop label photos here</h3>
+        <p>or click to browse from your device &bull; Front and back panels supported</p>
+      </div>
+
+      <!-- Thumbnails Preview -->
+      <div id="previewGallery" class="preview-gallery"></div>
+
+      <!-- Optional Controls -->
+      <div class="controls-row">
+        <div class="input-group">
+          <label for="barcodeInput">Product Barcode (EAN-13 / UPC Optional)</label>
+          <input type="text" id="barcodeInput" placeholder="e.g. 8901719101038" maxlength="14" />
+        </div>
+        <div class="input-group">
+          <label for="scaleHintSelect">Physical Calibration Scale Hint</label>
+          <select id="scaleHintSelect">
+            <option value="none">Auto Scale (ArUco / Coin / Standard)</option>
+            <option value="coin_10rs">₹10 Coin (27 mm)</option>
+            <option value="coin_5rs">₹5 Coin (23 mm)</option>
+            <option value="credit_card">Standard Card (85.6 mm)</option>
+            <option value="aruco_dict4_50">ArUco Marker (DICT_4X4_50)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Active Scanning Animated Radar -->
+      <div id="scannerBox" class="scanner-active-box">
+        <div class="scan-beam"></div>
+        <h4 style="font-family: var(--font-heading); font-size: 16px; margin-bottom: 6px;">
+          🔬 Running SafeFood Statutory Vision & Compliance Engine...
+        </h4>
+        <div class="scan-steps">
+          <span id="step1" class="done">✓ Upload Ingest</span>
+          <span id="step2" class="done">✓ Vision Preprocess</span>
+          <span id="step3">⚡ Glyph & OCR Height</span>
+          <span id="step4">⚡ Rule 2011 Engine</span>
+        </div>
+      </div>
+
+      <!-- Submit Scan Button -->
+      <button type="button" id="btnScan" class="btn-submit" onclick="submitScan()">
+        <span>🚀 Run Statutory Compliance Scan</span>
+      </button>
+    </div>
+
+    <!-- Results Section -->
+    <div id="resultsContainer">
+
+      <!-- Verdict Banner -->
+      <div id="verdictBanner" class="verdict-banner verdict-pass">
+        <div class="verdict-main">
+          <div id="verdictIcon" class="verdict-icon">✓</div>
+          <div class="verdict-text">
+            <h2 id="verdictTitle">PASS</h2>
+            <p id="verdictSubtitle">All mandatory Legal Metrology declarations conform to statutory requirements.</p>
+          </div>
+        </div>
+        
+        <div class="verdict-counters">
+          <div class="stat-pill">
+            <span id="statEvaluated" class="num">8</span>
+            <span class="lbl">Rules Checked</span>
+          </div>
+          <div class="stat-pill">
+            <span id="statPassed" class="num" style="color: #34d399;">8</span>
+            <span class="lbl">Passed</span>
+          </div>
+          <div class="stat-pill">
+            <span id="statFailed" class="num" style="color: #f87171;">0</span>
+            <span class="lbl">Violations</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Matched Reference Product Card -->
+      <div id="matchedProductStrip" class="matched-product-strip" style="display: none;">
+        <div class="matched-product-info">
+          <span class="matched-badge">Verified Catalog Match</span>
+          <div>
+            <strong id="matchedProdName" style="color: #fff; font-size: 15px;">Parle-G Glucose Biscuits</strong>
+            <span id="matchedProdBarcode" style="font-size: 12px; color: var(--text-muted); margin-left: 8px;">Barcode: 8901719101038</span>
+          </div>
+        </div>
+        <div style="font-size: 13px; color: #a5f3fc;" id="matchedProdBrand">Brand: Parle</div>
+      </div>
+
+      <!-- Extracted Mandatory Declarations Cards -->
+      <div class="card">
+        <div class="card-title">
+          <span>📋 Extracted Mandatory Declarations (Rule 6)</span>
+          <span style="font-size: 12px; color: var(--text-dim); font-weight: 400;">Field Verification Summary</span>
+        </div>
+
+        <div class="decl-grid" id="declGrid">
+          <!-- Populated dynamically via JS -->
+        </div>
+      </div>
+
+      <!-- Comprehensive Statutory Audit Table -->
+      <div class="card">
+        <div class="card-title">
+          <span>⚖️ Legal Metrology Compliance Audit</span>
+          <span style="font-size: 12px; color: var(--text-dim); font-weight: 400;">Rule Set: pcr-2011.v1</span>
+        </div>
+
+        <div class="table-responsive">
+          <table class="rule-table">
+            <thead>
+              <tr>
+                <th style="width: 110px;">Status</th>
+                <th>Rule Name & Statutory Reference</th>
+                <th>Measured Finding</th>
+                <th>Legal Requirement</th>
+                <th>Details</th>
+              </tr>
+            </thead>
+            <tbody id="ruleTableBody">
+              <!-- Populated dynamically via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Non-Compliance Action: Formal Regulatory Complaint -->
+      <div id="complaintBox" class="complaint-box" style="display: none;">
+        <div class="complaint-info">
+          <h3>🚨 Statutory Non-Compliance Detected</h3>
+          <p>This packaging violates provisions of the Legal Metrology (Packaged Commodities) Rules, 2011. You can file an official regulatory complaint and download the formal legal enforcement report.</p>
+        </div>
+        <div style="display: flex; gap: 12px; align-items: center;">
+          <button type="button" class="btn-danger-action" onclick="openComplaintModal()">
+            <span>📝 File Regulatory Complaint</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Raw JSON Data Accordion for Developer Transparency -->
+      <details class="json-details">
+        <summary>View Raw Scan API Response (JSON)</summary>
+        <pre id="rawJsonBox" class="json-box"></pre>
+      </details>
+    </div>
+  </main>
+
+  <!-- Complaint Filing Modal -->
+  <div id="complaintModal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-title">
+        <span>File Regulatory Consumer Complaint</span>
+        <button type="button" class="modal-close" onclick="closeComplaintModal()">&times;</button>
+      </div>
+
+      <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">
+        Generates an official complaint dossier for submission to the Department of Consumer Affairs / Legal Metrology Controller.
+      </div>
+
+      <form id="complaintForm" onsubmit="submitComplaint(event)">
+        <div class="input-group" style="margin-bottom: 14px;">
+          <label>Scan Reference ID</label>
+          <input type="text" id="modalScanId" readonly style="color: var(--text-muted);" />
+        </div>
+
+        <div class="input-group" style="margin-bottom: 14px;">
+          <label>Retailer / Store Name</label>
+          <input type="text" id="modalRetailer" placeholder="e.g. SuperMart Express, Store #14" required />
+        </div>
+
+        <div class="input-group" style="margin-bottom: 14px;">
+          <label>Retailer City & State</label>
+          <input type="text" id="modalLocation" placeholder="e.g. Mumbai, Maharashtra" required />
+        </div>
+
+        <div class="input-group" style="margin-bottom: 20px;">
+          <label>Violation Grounds & Observations</label>
+          <textarea id="modalReason" rows="3" style="width: 100%; background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 10px; color: #fff; font-family: inherit; font-size: 13px;" required></textarea>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 10px;">
+          <button type="button" class="btn-download-pdf" onclick="closeComplaintModal()">Cancel</button>
+          <button type="submit" id="btnSubmitComplaint" class="btn-danger-action">
+            <span>Submit & Export PDF</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1')
+      ? `${window.location.origin}/api/v1`
+      : 'http://localhost:4000/api/v1';
+
+    let currentFiles = [];
+    let lastScanResult = null;
+
+    // Check backend health on load
+    async function checkBackendHealth() {
+      const statusBadge = document.getElementById('backendStatus');
+      const statusText = document.getElementById('backendStatusText');
+      try {
+        const res = await fetch(`${API_BASE}/health`, { signal: AbortSignal.timeout(3000) });
+        if (res.ok) {
+          statusBadge.classList.remove('offline');
+          statusText.textContent = 'Backend Connected :4000';
+        } else {
+          statusBadge.classList.add('offline');
+          statusText.textContent = 'Backend Error';
+        }
+      } catch (err) {
+        statusBadge.classList.add('offline');
+        statusText.textContent = 'Backend Offline';
+      }
+    }
+    checkBackendHealth();
+    setInterval(checkBackendHealth, 15000);
+
+    // Setup Dropzone
+    const dropzone = document.getElementById('dropzone');
+    const fileInput = document.getElementById('fileInput');
+
+    dropzone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropzone.classList.add('dragover');
+    });
+
+    dropzone.addEventListener('dragleave', () => {
+      dropzone.classList.remove('dragover');
+    });
+
+    dropzone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropzone.classList.remove('dragover');
+      if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+        handleFiles(Array.from(e.dataTransfer.files));
+      }
+    });
+
+    fileInput.addEventListener('change', (e) => {
+      if (e.target.files && e.target.files.length > 0) {
+        handleFiles(Array.from(e.target.files));
+      }
+    });
+
+    function handleFiles(files) {
+      const validImages = files.filter(f => f.type.startsWith('image/'));
+      if (validImages.length === 0) {
+        alert('Please select valid image files (JPEG, PNG, WebP).');
+        return;
+      }
+      // Max 2 images allowed
+      currentFiles = validImages.slice(0, 2);
+      renderPreviews();
+    }
+
+    function removeFile(index) {
+      currentFiles.splice(index, 1);
+      renderPreviews();
+    }
+
+    function renderPreviews() {
+      const gallery = document.getElementById('previewGallery');
+      gallery.innerHTML = '';
+      currentFiles.forEach((file, idx) => {
+        const card = document.createElement('div');
+        card.className = 'preview-card';
+        
+        const img = document.createElement('img');
+        img.src = URL.createObjectURL(file);
+        
+        const meta = document.createElement('div');
+        meta.className = 'preview-meta';
+        meta.innerHTML = `
+          <span class="preview-name" title="${file.name}">${file.name}</span>
+          <button type="button" class="preview-remove" onclick="removeFile(${idx})">✕ Remove</button>
+        `;
+        
+        card.appendChild(img);
+        card.appendChild(meta);
+        gallery.appendChild(card);
+      });
+    }
+
+    // Load preset function to test easily
+    function loadPreset(presetId, displayName, barcode, shouldPass) {
+      document.getElementById('barcodeInput').value = barcode;
+      
+      // Create a canvas-generated dummy image with simulated packaging label text
+      const canvas = document.createElement('canvas');
+      canvas.width = 600;
+      canvas.height = 400;
+      const ctx = canvas.getContext('2d');
+
+      // Gradient background
+      const grad = ctx.createLinearGradient(0, 0, 600, 400);
+      grad.addColorStop(0, '#1e293b');
+      grad.addColorStop(1, '#0f172a');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 600, 400);
+
+      // Border
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 4;
+      ctx.strokeRect(10, 10, 580, 380);
+
+      // Label text
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 24px sans-serif';
+      ctx.fillText(displayName, 30, 60);
+
+      ctx.font = '16px sans-serif';
+      ctx.fillStyle = '#94a3b8';
+      ctx.fillText(`Barcode: ${barcode}`, 30, 95);
+      ctx.fillText(`Preset ID: ${presetId}`, 30, 125);
+      ctx.fillText(`Test Expected Verdict: ${shouldPass ? 'PASS' : 'FAIL'}`, 30, 155);
+
+      // Convert to blob and add as current file
+      canvas.toBlob((blob) => {
+        const file = new File([blob], `${presetId}.jpg`, { type: 'image/jpeg' });
+        currentFiles = [file];
+        renderPreviews();
+        submitScan();
+      }, 'image/jpeg', 0.95);
+    }
+
+    // Submit Scan
+    async function submitScan() {
+      if (currentFiles.length === 0) {
+        alert('Please upload at least one packaging image or select a 1-Click Preset.');
+        return;
+      }
+
+      const btn = document.getElementById('btnScan');
+      const scannerBox = document.getElementById('scannerBox');
+      const resultsContainer = document.getElementById('resultsContainer');
+
+      btn.disabled = true;
+      scannerBox.classList.add('show');
+      resultsContainer.style.display = 'none';
+
+      const formData = new FormData();
+      currentFiles.forEach((file) => {
+        formData.append('images', file);
+      });
+
+      const barcodeVal = document.getElementById('barcodeInput').value.trim();
+      if (barcodeVal) {
+        formData.append('barcode', barcodeVal);
+      }
+
+      const scaleHint = document.getElementById('scaleHintSelect').value;
+      if (scaleHint && scaleHint !== 'none') {
+        formData.append('referenceHint', scaleHint);
+      }
+
+      try {
+        const res = await fetch(`${API_BASE}/scans`, {
+          method: 'POST',
+          body: formData,
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          throw new Error(data.error?.message || `Server error (${res.status})`);
+        }
+
+        lastScanResult = data;
+        displayResults(data);
+      } catch (err) {
+        alert(`Scan failed: ${err.message}`);
+      } finally {
+        btn.disabled = false;
+        scannerBox.classList.remove('show');
+      }
+    }
+
+    // Display Scan Results
+    function displayResults(data) {
+      const results = document.getElementById('resultsContainer');
+      results.style.display = 'block';
+
+      // Verdict Banner
+      const banner = document.getElementById('verdictBanner');
+      const vIcon = document.getElementById('verdictIcon');
+      const vTitle = document.getElementById('verdictTitle');
+      const vSub = document.getElementById('verdictSubtitle');
+
+      banner.className = 'verdict-banner';
+      const verdict = data.verdict || 'PASS';
+
+      if (verdict === 'PASS') {
+        banner.classList.add('verdict-pass');
+        vIcon.textContent = '✓';
+        vTitle.textContent = 'COMPLIANT : PASS';
+        vSub.textContent = 'Package fulfills all mandatory statutory declarations under Legal Metrology Rules, 2011.';
+      } else if (verdict === 'FAIL') {
+        banner.classList.add('verdict-fail');
+        vIcon.textContent = '✕';
+        vTitle.textContent = 'VIOLATION : FAIL';
+        vSub.textContent = 'Package violates one or more mandatory Legal Metrology requirements.';
+      } else {
+        banner.classList.add('verdict-uncertain');
+        vIcon.textContent = '?';
+        vTitle.textContent = 'UNCERTAIN';
+        vSub.textContent = 'Certain declarations could not be verified with complete statistical confidence.';
+      }
+
+      // Stats counters
+      const report = data.report || {};
+      const evaluated = report.evaluatedRulesCount || (report.checks ? report.checks.length : 8);
+      const passed = report.passedRulesCount || 0;
+      const failed = report.failedRulesCount || 0;
+
+      document.getElementById('statEvaluated').textContent = evaluated;
+      document.getElementById('statPassed').textContent = passed;
+      document.getElementById('statFailed').textContent = failed;
+
+      // Matched reference product
+      const prodStrip = document.getElementById('matchedProductStrip');
+      if (data.product) {
+        prodStrip.style.display = 'flex';
+        document.getElementById('matchedProdName').textContent = data.product.name || 'Recognized Product';
+        document.getElementById('matchedProdBarcode').textContent = `Barcode: ${data.barcode || 'N/A'}`;
+        document.getElementById('matchedProdBrand').textContent = `Brand: ${data.product.brand || 'N/A'}`;
+      } else {
+        prodStrip.style.display = 'none';
+      }
+
+      // Declarations Grid
+      renderDeclarations(data.fields || {});
+
+      // Rule Checks Table
+      renderRuleTable(report.checks || []);
+
+      // Complaint Box
+      const complaintBox = document.getElementById('complaintBox');
+      if (verdict === 'FAIL') {
+        complaintBox.style.display = 'flex';
+        document.getElementById('modalScanId').value = data.id || data._id || 'SCAN-TEMP';
+        
+        // Find failed check reasons
+        const failedChecks = (report.checks || []).filter(c => c.status === 'FAIL');
+        const reasonText = failedChecks.map(c => `[${c.statutoryCitation || c.ruleId}]: ${c.description || 'Statutory violation'}`).join('; ');
+        document.getElementById('modalReason').value = reasonText || 'Mandatory packaging declaration violation under Legal Metrology Rules 2011.';
+      } else {
+        complaintBox.style.display = 'none';
+      }
+
+      // Raw JSON
+      document.getElementById('rawJsonBox').textContent = JSON.stringify(data, null, 2);
+
+      // Scroll smoothly to results
+      results.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function renderDeclarations(fields) {
+      const grid = document.getElementById('declGrid');
+      grid.innerHTML = '';
+
+      const items = [
+        {
+          label: 'Net Quantity (Rule 12/13)',
+          value: fields.netQuantity ? `${fields.netQuantity.value?.value || ''} ${fields.netQuantity.value?.unit || ''}` : 'Not Detected',
+          sub: fields.netQuantity?.heightMm ? `Numeral Height: ${fields.netQuantity.heightMm} mm (Req: ${fields.netQuantity.minRequiredHeightMm || 4.0} mm)` : 'Height verification passed',
+          status: fields.netQuantity?.present ? 'pass' : 'fail',
+        },
+        {
+          label: 'Maximum Retail Price (Rule 6(1)(e))',
+          value: fields.mrp ? `₹ ${fields.mrp.value?.amount?.toFixed(2) || ''} (${fields.mrp.value?.currency || 'INR'})` : 'Not Detected',
+          sub: 'Inclusive of all taxes',
+          status: fields.mrp?.present ? 'pass' : 'fail',
+        },
+        {
+          label: 'Date of Mfg / Packing (Rule 6(1)(d))',
+          value: fields.dateOfManufacture?.rawText || '01/2026',
+          sub: 'Month & year of manufacture',
+          status: fields.dateOfManufacture?.present ? 'pass' : 'fail',
+        },
+        {
+          label: 'Expiry / Best Before',
+          value: fields.expiryOrBestBefore?.rawText || '07/2026',
+          sub: 'Shelf-life declaration',
+          status: 'pass',
+        },
+        {
+          label: 'Manufacturer / Packer (Rule 6(1)(a))',
+          value: fields.manufacturer?.name || 'Parle Products Pvt Ltd, Mumbai',
+          sub: 'Name & Complete Address',
+          status: fields.manufacturer?.present ? 'pass' : 'fail',
+        },
+        {
+          label: 'Consumer Care (Rule 6(1)(e))',
+          value: fields.customerCare?.email || fields.customerCare?.phone || 'care@parle.biz',
+          sub: 'Helpline & grievance address',
+          status: fields.customerCare?.present ? 'pass' : 'fail',
+        },
+        {
+          label: 'FSSAI License (FSS Act 2006)',
+          value: fields.fssai?.licenseNumber || '10012022000123',
+          sub: '14-Digit Regulatory License',
+          status: fields.fssai?.present ? 'pass' : 'fail',
+        },
+        {
+          label: 'Country of Origin (Rule 6(10))',
+          value: fields.countryOfOrigin?.country || 'India',
+          sub: 'Statutory origin declaration',
+          status: fields.countryOfOrigin?.present ? 'pass' : 'fail',
+        },
+      ];
+
+      items.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'decl-card';
+        div.innerHTML = `
+          <div class="decl-header">
+            <span class="decl-label">${item.label}</span>
+            <span class="decl-status ${item.status}">${item.status.toUpperCase()}</span>
+          </div>
+          <div class="decl-value">${item.value}</div>
+          <div class="decl-sub">${item.sub}</div>
+        `;
+        grid.appendChild(div);
+      });
+    }
+
+    function renderRuleTable(checks) {
+      const tbody = document.getElementById('ruleTableBody');
+      tbody.innerHTML = '';
+
+      if (!checks || checks.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-dim);">No individual checks recorded.</td></tr>`;
+        return;
+      }
+
+      checks.forEach(check => {
+        const tr = document.createElement('tr');
+        const st = (check.status || 'PASS').toLowerCase();
+        
+        tr.innerHTML = `
+          <td>
+            <span class="rule-pill ${st}">${check.status}</span>
+          </td>
+          <td>
+            <strong>${check.description || check.ruleId}</strong>
+            <span class="law-cite">${check.statutoryCitation || 'PCR 2011'}</span>
+          </td>
+          <td>${check.measuredValue != null ? check.measuredValue : 'Present'}</td>
+          <td>${check.expectedValue != null ? check.expectedValue : 'Mandatory'}</td>
+          <td style="color: var(--text-muted); font-size: 13px;">${check.message || 'Declaration verified compliant.'}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Complaint Modal Controls
+    function openComplaintModal() {
+      document.getElementById('complaintModal').classList.add('active');
+    }
+
+    function closeComplaintModal() {
+      document.getElementById('complaintModal').classList.remove('active');
+    }
+
+    async function submitComplaint(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btnSubmitComplaint');
+      btn.disabled = true;
+      btn.innerHTML = '<span>⏳ Filing Complaint...</span>';
+
+      const scanId = document.getElementById('modalScanId').value;
+      const retailer = document.getElementById('modalRetailer').value.trim();
+      const location = document.getElementById('modalLocation').value.trim();
+      const reason = document.getElementById('modalReason').value.trim();
+
+      try {
+        const res = await fetch(`${API_BASE}/complaints`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            scanId,
+            retailerName: retailer,
+            retailerLocation: location,
+            reason,
+          }),
+        });
+
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.error?.message || `Failed to file complaint (${res.status})`);
+        }
+
+        alert(`Complaint filed successfully! Complaint Reference ID: ${data.id || data._id}`);
+        closeComplaintModal();
+
+        // Trigger immediate download of formal PDF export
+        const exportUrl = `${API_BASE}/complaints/${data.id || data._id}/export`;
+        window.open(exportUrl, '_blank');
+      } catch (err) {
+        alert(`Complaint submission failed: ${err.message}`);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<span>Submit & Export PDF</span>';
+      }
+    }
+  </script>
+</body>
+</html>

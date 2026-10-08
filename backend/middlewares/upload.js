@@ -23,6 +23,9 @@ const multerUpload = multer({
   fileFilter,
 }).fields([
   { name: 'images', maxCount: 2 },
+  { name: 'label', maxCount: 2 },
+  { name: 'image', maxCount: 2 },
+  { name: 'file', maxCount: 2 },
   { name: 'front', maxCount: 1 },
   { name: 'back', maxCount: 1 },
 ]);
@@ -46,6 +49,15 @@ export function uploadScanImages(req, res, next) {
     if (req.files) {
       if (Array.isArray(req.files.images)) {
         files.push(...req.files.images);
+      }
+      if (Array.isArray(req.files.label)) {
+        files.push(...req.files.label);
+      }
+      if (Array.isArray(req.files.image)) {
+        files.push(...req.files.image);
+      }
+      if (Array.isArray(req.files.file)) {
+        files.push(...req.files.file);
       }
       if (Array.isArray(req.files.front)) {
         files.push(...req.files.front);

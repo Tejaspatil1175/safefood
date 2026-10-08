@@ -183,4 +183,50 @@ describe('Complaints API Integration Tests', () => {
     // PDF files always begin with magic bytes %PDF-
     expect(res.body.toString('utf-8', 0, 5)).toBe('%PDF-');
   });
+
+  it('PATCH /api/v1/complaints/:id/status updates status and timeline', async () => {
+    const complaintId = new mongoose.Types.ObjectId().toString();
+    const mockComplaint = {
+      _id: complaintId,
+      id: complaintId,
+      status: 'IN_REVIEW',
+      timeline: [],
+      save: vi.fn().mockResolvedValue(true),
+    };
+
+    vi.spyOn(Complaint, 'findById').mockResolvedValue(mockComplaint);
+
+    const res = await request(app)
+      .patch(`/api/v1/complaints/${complaintId}/status`)
+      .set('Authorization', `Bearer ${tokenA}`)
+      .send({ status: 'verified_genuine', notes: 'Inspection verified' });
+
+    expect(res.status).toBe(200);
+    expect(mockComplaint.status).toBe('verified_genuine');
+    expect(mockComplaint.officerNotes).toBe('Inspection verified');
+    expect(mockComplaint.save).toHaveBeenCalled();
+  });
+
+  it('PATCH /api/v1/complaints/:id/assign assigns officer and records timeline', async () => {
+    const complaintId = new mongoose.Types.ObjectId().toString();
+    const mockComplaint = {
+      _id: complaintId,
+      id: complaintId,
+      status: 'IN_REVIEW',
+      timeline: [],
+      save: vi.fn().mockResolvedValue(true),
+    };
+
+    vi.spyOn(Complaint, 'findById').mockResolvedValue(mockComplaint);
+
+    const res = await request(app)
+      .patch(`/api/v1/complaints/${complaintId}/assign`)
+      .set('Authorization', `Bearer ${tokenA}`)
+      .send({ officerId: 'off-1', note: 'Conduct field inspection' });
+
+    expect(res.status).toBe(200);
+    expect(mockComplaint.status).toBe('assigned');
+    expect(mockComplaint.assignedOfficer).toHaveProperty('id', 'off-1');
+    expect(mockComplaint.save).toHaveBeenCalled();
+  });
 });
