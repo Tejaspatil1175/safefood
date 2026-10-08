@@ -195,7 +195,7 @@
   animation: floatOpposite 6s ease-in-out infinite;
 }
 
-.animate-neon-glow {
-  animation: neonOrangeGlow 2.5s ease-in-out infinite;
+.font-caveat {
+  font-family: 'Caveat', cursive, sans-serif;
 }
 

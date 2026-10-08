@@ -12,11 +12,21 @@ import {
   ArrowRight,
   Users,
   ShieldAlert,
+  Star,
+  Leaf,
+  Clock,
+  Play,
+  Monitor,
+  Share2,
+  Scan as ScanIcon,
+  History as HistoryIcon,
+  FileText,
+  User,
 } from 'lucide-react';
 
 /* ─────────────────────────────────────────────────────────── */
 /*  SafeFood Landing Page – Exact replica of the reference    */
-/*  design. Clean, flat, no glow/glossy effects.              */
+/*  design with dual-phone mockup and clean SaaS aesthetic.   */
 /* ─────────────────────────────────────────────────────────── */
 
 export const LandingPage = () => {
@@ -27,15 +37,15 @@ export const LandingPage = () => {
       {/* ══════════════════════════════════════════════════════ */}
       {/*  NAVBAR                                               */}
       {/* ══════════════════════════════════════════════════════ */}
-      <header className="sticky top-0 z-50 bg-[#0B3D2B]">
+      <header className="sticky top-0 z-50 bg-[#072418]">
         <div className="max-w-[1320px] mx-auto px-5 sm:px-8 h-[72px] flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2.5">
-            <div className="h-9 w-9 rounded-lg bg-[#28B463] flex items-center justify-center">
-              <ShieldCheck className="h-5 w-5 text-white stroke-[2.5]" />
+            <div className="h-9 w-9 rounded-lg bg-[#28DF7E] flex items-center justify-center shadow-sm">
+              <ShieldCheck className="h-5 w-5 text-[#072418] stroke-[2.5]" />
             </div>
             <span className="font-extrabold text-[22px] tracking-tight text-white">
-              Safe<span className="text-[#4ADE80]">Food</span>
+              Safe<span className="text-[#28DF7E]">Food</span>
             </span>
           </Link>
 
@@ -48,11 +58,11 @@ export const LandingPage = () => {
             <a href="#contact" className="hover:text-white transition-colors">Contact</a>
           </nav>
 
-          {/* Download App Button */}
+          {/* Download App Button (Vibrant Yellow as in reference) */}
           <div className="hidden sm:block">
             <Link
               to="/login"
-              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#28B463] hover:bg-[#22994F] text-white text-sm font-bold shadow-md shadow-[#28B463]/30 transition-all hover:scale-105 active:scale-95"
+              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#FFBA08] hover:bg-[#E5A807] text-[#1A1A1A] text-sm font-extrabold shadow-sm transition-all hover:scale-105 active:scale-95"
             >
               Download App
             </Link>
@@ -71,7 +81,7 @@ export const LandingPage = () => {
 
         {/* Mobile Dropdown */}
         {mobileMenuOpen && (
-          <div className="lg:hidden bg-[#0B3D2B] border-t border-white/10 px-5 py-5 space-y-4">
+          <div className="lg:hidden bg-[#072418] border-t border-white/10 px-5 py-5 space-y-4">
             <nav className="flex flex-col gap-3 text-sm font-medium text-white/90">
               <a href="#how-it-works" onClick={() => setMobileMenuOpen(false)} className="py-1">How It Works</a>
               <a href="#features" onClick={() => setMobileMenuOpen(false)} className="py-1">App Features</a>
@@ -83,7 +93,7 @@ export const LandingPage = () => {
               <Link
                 to="/login"
                 onClick={() => setMobileMenuOpen(false)}
-                className="w-full py-3 rounded-full bg-[#28B463] text-white font-bold text-sm text-center shadow-md shadow-[#28B463]/30"
+                className="w-full py-3 rounded-full bg-[#FFBA08] text-[#1A1A1A] font-extrabold text-sm text-center shadow-sm"
               >
                 Download App
               </Link>
@@ -104,47 +114,55 @@ export const LandingPage = () => {
       {/* ══════════════════════════════════════════════════════ */}
       <section className="relative bg-[#072418] overflow-hidden">
         {/* Top-Right Emerald Organic Wave/Blob */}
-        <div className="absolute -top-24 right-[-40px] w-[540px] h-[540px] rounded-full bg-[#0E7A4E] opacity-90 blur-sm pointer-events-none" />
-
-        {/* Bottom-Right Warm Orange Organic Wave/Blob */}
-        <div className="absolute bottom-[-100px] right-[-60px] w-[460px] h-[460px] rounded-full bg-[#E8632B] opacity-95 pointer-events-none" />
+        <div className="absolute -top-16 -right-10 w-[480px] h-[480px] rounded-full bg-[#0E7A4E] opacity-90 blur-sm pointer-events-none" />
 
         {/* Ambient Center Glow */}
-        <div className="absolute top-1/2 right-[18%] -translate-y-1/2 w-[380px] h-[380px] rounded-full bg-[#22C55E]/15 blur-3xl pointer-events-none" />
+        <div className="absolute top-1/2 right-[20%] -translate-y-1/2 w-[340px] h-[340px] rounded-full bg-[#28DF7E]/15 blur-3xl pointer-events-none" />
 
-        <div className="max-w-[1320px] mx-auto px-5 sm:px-8 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-8 items-center py-12 lg:py-16">
+        <div className="max-w-[1280px] mx-auto px-5 sm:px-8 relative z-20">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-4 items-center pt-8 pb-16 sm:pt-10 sm:pb-20 lg:pt-12 lg:pb-24">
 
-            {/* ── Left Column: Copy ── */}
-            <div className="space-y-6 text-center lg:text-left max-w-[580px] mx-auto lg:mx-0">
-              <h1 className="text-[38px] sm:text-[46px] lg:text-[54px] font-extrabold text-white leading-[1.12] tracking-tight">
+            {/* ── Left Column: Copy (5 cols) ── */}
+            <div className="lg:col-span-6 space-y-5 text-center lg:text-left max-w-[540px] mx-auto lg:mx-0">
+              
+              {/* AI-Powered Food Safety Pill */}
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#113824] border border-[#28DF7E]/30 text-[#4ADE80] text-[12px] font-semibold">
+                <span className="flex h-3.5 w-3.5 items-center justify-center rounded-full bg-[#28DF7E] text-[#072418]">
+                  <Check className="h-2.5 w-2.5 stroke-[3]" />
+                </span>
+                <span>AI-Powered Food Safety</span>
+              </div>
+
+              {/* Main Headline */}
+              <h1 className="text-[36px] sm:text-[44px] lg:text-[50px] font-extrabold text-white leading-[1.12] tracking-tight">
                 Is Your Food Pack<br />
                 Genuine, Safe &amp; Legal?<br />
-                &amp; Find Out Instantly.
+                Find Out <span className="text-[#28DF7E]">Instantly.</span>
               </h1>
 
-              <p className="text-[15px] sm:text-[16px] text-[#A7C8B6] leading-relaxed max-w-[520px] mx-auto lg:mx-0">
-                SafeFood uses advanced AI to scan packaged foods, instantly
-                checking for hidden details, illegal tiny fonts, missing Govt
-                mandatory info, and fake products, along with new features like
-                allergens, nutrition, and licenses.
+              {/* Subhead Paragraph */}
+              <p className="text-[14px] sm:text-[15px] text-[#A7C8B6] leading-relaxed max-w-[480px] mx-auto lg:mx-0">
+                SafeFood uses advanced AI to scan packaged foods instantly,
+                checking for hidden details, illegal tiny fonts, missing Govt mandatory
+                info, and fake products, along with new features like allergens,
+                nutrition, and licenses.
               </p>
 
-              {/* Buttons Row */}
-              <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3.5 pt-1">
+              {/* Action Buttons Row */}
+              <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 pt-1">
                 {/* Get the Free App button */}
                 <Link
                   to="/login"
-                  className="flex items-center gap-3 px-6 py-3 rounded-full bg-[#28B463] hover:bg-[#22994F] text-white font-bold text-[15px] shadow-lg shadow-[#28B463]/30 transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+                  className="flex items-center gap-2.5 px-5 py-2.5 rounded-full bg-[#28DF7E] hover:bg-[#22C55E] text-[#072418] font-extrabold text-[14px] shadow-lg shadow-[#28DF7E]/25 transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
                 >
                   <span>Get the Free App</span>
-                  <div className="flex items-center gap-2 pl-3 border-l border-white/30">
+                  <div className="flex items-center gap-1.5 pl-2.5 border-l border-[#072418]/30">
                     {/* Apple icon */}
-                    <svg className="h-4 w-4 fill-white" viewBox="0 0 170 170">
+                    <svg className="h-3.5 w-3.5 fill-[#072418]" viewBox="0 0 170 170">
                       <path d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.19-2.12-9.97-3.17-14.34-3.17-4.58 0-9.49 1.05-14.75 3.17-5.26 2.13-9.5 3.24-12.74 3.35-5.35.22-10.33-1.93-14.94-6.46-3.35-3.17-7.2-7.91-11.56-14.22-5.74-8.37-10.35-17.96-13.82-28.77-3.48-10.81-5.21-21.36-5.21-31.65 0-14.89 3.83-27.18 11.49-36.88 7.66-9.7 17.1-14.65 28.32-14.86 4.93 0 10.38 1.25 16.36 3.75 5.98 2.5 9.87 3.81 11.66 3.93 1.57-.12 5.69-1.54 12.37-4.25 6.68-2.72 12.31-3.9 16.89-3.55 12.7.99 22.78 5.76 30.23 14.32-11.05 6.74-16.47 16.03-16.27 27.88.2 9.27 3.86 17.06 10.98 23.36 7.12 6.3 15.35 9.77 24.68 10.42-2.12 6.32-4.78 12.63-7.98 18.94zM119.22 33.15c0-7.23 2.65-13.97 7.95-20.21 5.3-6.24 11.83-10.15 19.59-11.74.85 7.12-1.39 13.89-6.72 20.3-5.33 6.41-11.97 10.46-19.92 12.16-.3-.18-.6-.35-.9-.51z" />
                     </svg>
                     {/* Google Play icon */}
-                    <svg className="h-3.5 w-3.5 fill-white" viewBox="0 0 512 512">
+                    <svg className="h-3 w-3 fill-[#072418]" viewBox="0 0 512 512">
                       <path d="M325.3 234.3L104.6 13l280.8 161.2-60.1 60.1zM47 0C34 6.8 25.3 19.2 25.3 35.3v441.3c0 16.1 8.7 28.5 21.7 35.3l256.6-256L47 0zm425.2 225.6l-58.9-34.1-65.7 64.5 65.7 64.5 60.1-34.1c18-14.3 18-46.5-1.2-60.8zM104.6 499l280.8-161.2-60.1-60.1L104.6 499z" />
                     </svg>
                   </div>
@@ -153,273 +171,484 @@ export const LandingPage = () => {
                 {/* See How It Works button */}
                 <a
                   href="#how-it-works"
-                  className="px-6 py-3 rounded-full border-2 border-white/50 hover:border-white text-white font-semibold text-[15px] transition-all hover:bg-white/10"
+                  className="px-5 py-2.5 rounded-full bg-[#0A2E1D]/80 border border-white/20 hover:border-white text-white font-semibold text-[14px] transition-all hover:bg-white/10 flex items-center gap-2"
                 >
-                  See How It Works
+                  <span className="flex h-4 w-4 items-center justify-center rounded-full bg-[#28DF7E] text-[#072418] text-[9px] pl-0.5">
+                    ▶
+                  </span>
+                  <span>See How It Works</span>
                 </a>
               </div>
 
-              {/* Trust Emblems Row */}
-              <div className="pt-6 space-y-2.5">
-                <div className="flex items-center justify-center lg:justify-start gap-3">
-                  {/* Emblem 1: Ashoka Emblem (Govt of India) */}
-                  <div className="h-12 w-12 rounded-full bg-white flex items-center justify-center border-2 border-white/30 shadow-md">
-                    <svg className="h-7 w-7 text-[#996515]" viewBox="0 0 24 24" fill="currentColor">
-                      <circle cx="12" cy="18" r="3" fill="#000080" />
-                      <path d="M12 2l2 4h-4l2-4zm-5 5l2 3h-4l2-3zm10 0l2 3h-4l2-3zm-5 4l1.5 3h-3l1.5-3zm-6 2l1.5 2h-3l1.5-2zm12 0l1.5 2h-3l1.5-2z" />
-                    </svg>
+              {/* 4 Trust Badges Row (with icons on white circles & 2-line labels below) */}
+              <div className="pt-3">
+                <div className="grid grid-cols-4 gap-2 text-center lg:text-left">
+                  {/* Badge 1: Scanned 5M+ packets */}
+                  <div className="flex flex-col items-center lg:items-start gap-1.5">
+                    <div className="h-10 w-10 rounded-full bg-white flex items-center justify-center shadow-md">
+                      <Star className="h-4.5 w-4.5 fill-[#EAB308] text-[#EAB308]" />
+                    </div>
+                    <div>
+                      <span className="block text-[11px] font-bold text-white leading-tight">Scanned</span>
+                      <span className="block text-[10.5px] text-[#8FB89C] leading-tight">5M+ packets</span>
+                    </div>
                   </div>
 
-                  {/* Emblem 2: FSSAI Official */}
-                  <div className="h-12 w-12 rounded-full bg-white flex items-center justify-center border-2 border-white/30 shadow-md">
-                    <span className="font-black text-[13px] tracking-tight text-[#006B3F] font-sans">fssai</span>
+                  {/* Badge 2: Trusted by families & retailers */}
+                  <div className="flex flex-col items-center lg:items-start gap-1.5">
+                    <div className="h-10 w-10 rounded-full bg-white flex items-center justify-center shadow-md">
+                      <ShieldCheck className="h-5 w-5 text-[#28DF7E]" />
+                    </div>
+                    <div>
+                      <span className="block text-[11px] font-bold text-white leading-tight">Trusted by</span>
+                      <span className="block text-[10.5px] text-[#8FB89C] leading-tight">families &amp; retailers</span>
+                    </div>
                   </div>
 
-                  {/* Emblem 3: Consumer Affairs / Legal Metrology */}
-                  <div className="h-12 w-12 rounded-full bg-white flex items-center justify-center border-2 border-white/30 shadow-md">
-                    <svg className="h-6 w-6 text-[#1E3A8A]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
-                      <path d="M12 3v18M6 8l6-2 6 2M6 8v3a3 3 0 006 0V8M18 8v3a3 3 0 01-6 0V8" />
-                    </svg>
+                  {/* Badge 3: Verified by experts */}
+                  <div className="flex flex-col items-center lg:items-start gap-1.5">
+                    <div className="h-10 w-10 rounded-full bg-white flex items-center justify-center shadow-md">
+                      <Leaf className="h-5 w-5 text-[#28DF7E]" />
+                    </div>
+                    <div>
+                      <span className="block text-[11px] font-bold text-white leading-tight">Verified</span>
+                      <span className="block text-[10.5px] text-[#8FB89C] leading-tight">by experts</span>
+                    </div>
                   </div>
 
-                  {/* Emblem 4: FSSAI Certified Seal */}
-                  <div className="h-12 w-12 rounded-full bg-white flex items-center justify-center border-2 border-white/30 shadow-md">
-                    <span className="font-extrabold text-[12px] italic tracking-tighter text-[#006B3F]">fssai</span>
-                  </div>
-
-                  {/* Emblem 5: Jaivik Bharat (Organic Leaf) */}
-                  <div className="h-12 w-12 rounded-full bg-white flex items-center justify-center border-2 border-white/30 shadow-md">
-                    <svg className="h-6 w-6 text-[#15803D]" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M17 8C8 10 5.9 16.17 3.82 21.34l1.89.66.95-2.3c.48.17.98.3 1.34.3C19 20 22 3 22 3c-1 2-8 2.25-13 3.25S2 11.5 2 13.5c0 3.5 3 6.5 7 6.5" />
-                    </svg>
+                  {/* Badge 4: Real-time AI checks */}
+                  <div className="flex flex-col items-center lg:items-start gap-1.5">
+                    <div className="h-10 w-10 rounded-full bg-white flex items-center justify-center shadow-md">
+                      <Clock className="h-5 w-5 text-[#28DF7E]" />
+                    </div>
+                    <div>
+                      <span className="block text-[11px] font-bold text-white leading-tight">Real-time</span>
+                      <span className="block text-[10.5px] text-[#8FB89C] leading-tight">AI checks</span>
+                    </div>
                   </div>
                 </div>
-                <p className="text-[13px] text-[#8FB89C] font-medium">
-                  Scanned 5M+ packets &bull; Trusted by families &amp; retailers
-                </p>
               </div>
             </div>
 
-            {/* ── Right Column: 3D Angled Phone Mockup with AR HUD Badges ── */}
-            <div className="relative flex justify-center lg:justify-end perspective-1200 py-6">
-              <div className="relative w-[320px] sm:w-[350px]">
+            {/* ── Right Column: Dual Phones (Scanner Phone + Report Phone) (6 cols) ── */}
+            <div className="lg:col-span-6 relative flex justify-center lg:justify-end items-center py-4">
+              <div className="relative flex items-center justify-center select-none">
 
-                {/* ─ Floating Badge: MRP & Expiry (top-left) ─ */}
-                <div className="absolute -top-3 -left-8 sm:-left-16 z-30 flex items-center gap-1.5 bg-[#E8F8EE] border border-[#28B463]/40 rounded-full px-3.5 py-1.5 shadow-[0_10px_25px_rgba(0,0,0,0.3)] animate-float-gentle">
-                  <div className="h-5 w-5 rounded-full bg-[#28B463] flex items-center justify-center">
-                    <Check className="h-3 w-3 text-white stroke-[3]" />
-                  </div>
-                  <span className="text-[12px] font-bold text-[#0E5E36] whitespace-nowrap">MRP &amp; Expiry</span>
-                </div>
-
-                {/* ─ Floating Badge: Missing Manufacturer (top-right) ─ */}
-                <div className="absolute top-4 -right-4 sm:-right-14 z-30 flex items-start gap-1.5 bg-[#FFE5DC] border border-[#FDBA74]/50 rounded-2xl px-3.5 py-2.5 shadow-[0_10px_25px_rgba(0,0,0,0.3)] animate-float-gentle">
-                  <div className="h-4 w-4 rounded-full bg-[#EA580C] text-white flex items-center justify-center shrink-0 mt-0.5">
-                    <AlertTriangle className="h-2.5 w-2.5 stroke-[3]" />
-                  </div>
-                  <span className="text-[12px] font-bold text-[#1A1A1A] leading-tight block">
-                    Missing<br />Manufacturer
-                  </span>
-                </div>
-
-                {/* ─ Floating Badge: Font Size < 1.5mm (Illegal) (mid-left) WITH NEON GLOW ─ */}
-                <div className="absolute top-[24%] -left-8 sm:-left-22 z-30 flex items-center gap-2.5 bg-[#FFECE8] border-2 border-[#FCA5A5] rounded-2xl px-3.5 py-2.5 shadow-[0_12px_30px_rgba(239,68,68,0.5),0_0_20px_rgba(249,115,22,0.4)] animate-neon-glow">
-                  <div className="h-6 w-6 rounded-full bg-[#EF4444] flex items-center justify-center shrink-0 shadow-sm">
-                    <AlertTriangle className="h-3.5 w-3.5 text-white stroke-[2.5]" />
-                  </div>
-                  <div>
-                    <span className="text-[12px] font-extrabold text-[#1A1A1A] block leading-tight">Font Size &lt; 1.5mm</span>
-                    <span className="text-[11px] font-extrabold text-[#DC2626] block">(Illegal)</span>
-                  </div>
-                </div>
-
-                {/* ─ Floating Badge: Allergens Found (mid-right) ─ */}
-                <div className="absolute top-[42%] -right-4 sm:-right-12 z-30 flex items-center gap-1.5 bg-[#FEF3C7] border border-[#FCD34D] rounded-full px-3.5 py-2 shadow-[0_10px_25px_rgba(0,0,0,0.3)] animate-float-opposite">
-                  <div className="h-4 w-4 rounded-full bg-[#D97706] text-white flex items-center justify-center shrink-0">
-                    <AlertTriangle className="h-2.5 w-2.5 stroke-[3]" />
-                  </div>
-                  <span className="text-[12px] font-bold text-[#78350F] whitespace-nowrap">Allergens Found</span>
-                </div>
-
-                {/* ─ Floating Badge: MRP & Expiry (bottom-left) ─ */}
-                <div className="absolute bottom-[28%] -left-6 sm:-left-12 z-30 flex items-center gap-1.5 bg-[#E8F8EE] border border-[#28B463]/40 rounded-full px-3.5 py-1.5 shadow-[0_10px_25px_rgba(0,0,0,0.3)] animate-float-opposite">
-                  <div className="h-5 w-5 rounded-full bg-[#28B463] flex items-center justify-center">
-                    <Check className="h-3 w-3 text-white stroke-[3]" />
-                  </div>
-                  <span className="text-[12px] font-bold text-[#0E5E36] whitespace-nowrap">MRP &amp; Expiry</span>
-                </div>
-
-                {/* ── 3D Realistic iPhone Chassis ── */}
-                <div className="phone-3d-tilted relative rounded-[48px] bg-gradient-to-b from-[#38423C] via-[#1D2520] to-[#121815] p-[5px] shadow-[0_35px_70px_-15px_rgba(0,0,0,0.85),0_15px_30px_rgba(0,0,0,0.6),-15px_15px_35px_rgba(0,0,0,0.5)]">
-                  {/* Outer Titanium Rim Highlight */}
-                  <div className="relative rounded-[45px] p-[5px] bg-[#0A0D0B] border border-white/10">
-                    
-                    {/* Side Hardware Buttons */}
-                    <div className="absolute -left-[7px] top-[95px] w-[3px] h-[32px] bg-[#4B5850] rounded-l-sm" />
-                    <div className="absolute -left-[7px] top-[140px] w-[3px] h-[45px] bg-[#4B5850] rounded-l-sm" />
-                    <div className="absolute -left-[7px] top-[195px] w-[3px] h-[45px] bg-[#4B5850] rounded-l-sm" />
-                    <div className="absolute -right-[7px] top-[130px] w-[3px] h-[55px] bg-[#4B5850] rounded-r-sm" />
-
-                    {/* Screen Container */}
-                    <div className="relative rounded-[38px] overflow-hidden bg-[#0A120D] h-[540px] sm:h-[570px] flex flex-col justify-between">
-                      
-                      {/* Glass Sheen Reflection Overlay */}
-                      <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.07] to-transparent pointer-events-none z-30" />
-
-                      {/* Dynamic Island */}
-                      <div className="absolute top-2.5 left-1/2 -translate-x-1/2 z-40 h-[22px] w-[90px] bg-black rounded-full flex items-center justify-between px-2.5">
-                        <div className="h-2.5 w-2.5 rounded-full bg-[#111] border border-[#222] relative">
-                          <div className="h-1 w-1 rounded-full bg-[#1e2a4a] absolute inset-0.5" />
-                        </div>
-                        <div className="h-2 w-2 rounded-full bg-[#151515]" />
+                {/* ── Realistic 3D Peeking Yellow Cereal / Snack Box behind Phone 1 ── */}
+                <div
+                  className="absolute -left-12 sm:-left-16 top-10 w-32 sm:w-36 h-56 sm:h-64 rounded-2xl shadow-2xl pointer-events-none hidden sm:block z-10"
+                  style={{
+                    transform: 'rotate(-13deg) skewY(3deg)',
+                    background: 'linear-gradient(135deg, #FBBF24 0%, #F59E0B 45%, #D97706 100%)',
+                    boxShadow: '-15px 25px 35px -10px rgba(0, 0, 0, 0.7), inset 2px 2px 6px rgba(255, 255, 255, 0.4)',
+                    border: '1px solid rgba(254, 240, 138, 0.4)',
+                  }}
+                >
+                  {/* Box Front Label Graphics */}
+                  <div className="p-3.5 h-full flex flex-col justify-between text-neutral-900 opacity-90">
+                    <div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-[9px] font-black tracking-wider uppercase bg-black text-[#FBBF24] px-1.5 py-0.5 rounded">
+                          ORGANIC
+                        </span>
+                        <div className="h-2 w-2 rounded-full bg-emerald-600 border border-white" />
                       </div>
-
-                      {/* Top Viewfinder Controls */}
-                      <div className="pt-8 px-4 flex items-center justify-between text-white/70 text-xs z-10">
-                        <span className="text-sm">⚡</span>
-                        <div className="flex items-center gap-1.5 bg-black/60 backdrop-blur-md px-2.5 py-0.5 rounded-full border border-white/10">
-                          <span className="h-1.5 w-1.5 rounded-full bg-[#4ADE80] animate-pulse" />
-                          <span className="text-[10px] font-mono tracking-wider text-[#4ADE80]">Scanning</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm">↻</span>
-                          <span className="text-xs opacity-60">⚙</span>
-                        </div>
+                      <div className="mt-2 text-[14px] font-black leading-tight text-white drop-shadow-sm">
+                        Healthy<br />Bites
                       </div>
-
-                      {/* Center: Realistic Snack Pack ("Spack") with AR Overlays */}
-                      <div className="flex-1 flex items-center justify-center relative my-2 px-6">
-                        
-                        {/* Corner AR Target Reticles */}
-                        <div className="absolute w-[210px] sm:w-[230px] h-[290px] sm:h-[310px] pointer-events-none z-20">
-                          <div className="absolute top-0 left-0 w-5 h-5 border-t-2 border-l-2 border-[#4ADE80]" />
-                          <div className="absolute top-0 right-0 w-5 h-5 border-t-2 border-r-2 border-[#4ADE80]" />
-                          <div className="absolute bottom-0 left-0 w-5 h-5 border-b-2 border-l-2 border-[#4ADE80]" />
-                          <div className="absolute bottom-0 right-0 w-5 h-5 border-b-2 border-r-2 border-[#4ADE80]" />
-                        </div>
-
-                        {/* Laser Scan Beam */}
-                        <div className="absolute left-6 right-6 h-[2px] bg-[#4ADE80] shadow-[0_0_12px_#4ADE80] animate-scan-line z-20 pointer-events-none" />
-
-                        {/* Realistic Food Pouch */}
-                        <div className="relative w-[180px] sm:w-[200px] rounded-2xl bg-gradient-to-b from-[#EA580C] via-[#F97316] to-[#C2410C] flex flex-col justify-between p-3.5 shadow-2xl border border-white/20 overflow-hidden">
-                          
-                          {/* Top Foil Crimp Effect */}
-                          <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-orange-600 via-orange-400 to-orange-700 opacity-70 flex justify-between px-1">
-                            {[...Array(16)].map((_, i) => (
-                              <div key={i} className="w-[1px] h-full bg-black/20" />
-                            ))}
-                          </div>
-
-                          {/* Diagonal Foil Glare */}
-                          <div className="absolute -inset-full bg-gradient-to-tr from-transparent via-white/20 to-transparent rotate-45 pointer-events-none" />
-
-                          {/* Brand name & Category Tag */}
-                          <div className="flex items-center justify-between pt-1 relative z-10">
-                            <span className="text-[20px] font-black text-white tracking-tight drop-shadow-md">
-                              Spack
-                            </span>
-                            <span className="text-[8px] font-extrabold bg-white text-[#EA580C] px-2 py-0.5 rounded-full uppercase shadow-sm">
-                              SNACK
-                            </span>
-                          </div>
-
-                          {/* Middle: Product Title & Net Weight */}
-                          <div className="flex flex-col items-center justify-center my-2 text-center relative z-10">
-                            <div className="text-[13px] font-black text-yellow-200 tracking-wider uppercase drop-shadow-sm">
-                              PURE CHEEZ
-                            </div>
-                            <div className="text-[9px] text-white/90 font-medium">
-                              Crispy Cheese Puffs
-                            </div>
-
-                            {/* Expiry Capsule */}
-                            <div className="mt-2 bg-black/50 border border-white/10 rounded-md px-3 py-1">
-                              <span className="text-[10px] font-mono font-bold text-white tracking-wider">EXP: 12/29</span>
-                            </div>
-                          </div>
-
-                          {/* Ingredients Box (With AR Alert Outline) */}
-                          <div className="relative bg-white/95 rounded-lg p-2 text-[7px] text-neutral-800 shadow-inner border border-amber-400/80 my-1 z-10">
-                            <div className="flex items-center justify-between mb-0.5">
-                              <span className="font-bold text-[7.5px] text-neutral-900">Ingredients</span>
-                              <span className="text-[6px] font-mono text-amber-700 bg-amber-100 px-1 rounded">Net: 45g</span>
-                            </div>
-                            <p className="text-neutral-600 leading-[1.2] line-clamp-2">
-                              Corn grits, edible vegetable oil, cheese powder (milk solids), seasoning, edible common salt, spices...
-                            </p>
-                          </div>
-
-                          {/* Barcode */}
-                          <div className="h-5 bg-white rounded-md flex items-center justify-center px-2 mt-1 z-10 shadow-sm">
-                            <div className="flex items-center gap-[1.5px] h-3">
-                              {[...Array(30)].map((_, i) => (
-                                <div
-                                  key={i}
-                                  className={`h-full bg-neutral-900 ${i % 4 === 0 ? 'w-[2px]' : i % 2 === 0 ? 'w-[1px]' : 'w-[1.5px]'}`}
-                                />
-                              ))}
-                            </div>
-                          </div>
-
-                          {/* Bottom Foil Crimp Effect */}
-                          <div className="absolute bottom-0 left-0 right-0 h-2 bg-gradient-to-r from-orange-700 via-orange-400 to-orange-800 opacity-70 flex justify-between px-1">
-                            {[...Array(16)].map((_, i) => (
-                              <div key={i} className="w-[1px] h-full bg-black/20" />
-                            ))}
-                          </div>
-                        </div>
+                      <div className="text-[8px] font-semibold text-yellow-100 mt-0.5">
+                        Oats &amp; Almonds
                       </div>
+                    </div>
 
-                      {/* Bottom Camera Controls */}
-                      <div className="z-10 flex flex-col items-center gap-3 pb-3 px-4">
-                        <div className="flex items-center gap-1.5 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full border border-white/10">
-                          <span className="h-2 w-2 rounded-full bg-[#4ADE80] animate-pulse" />
-                          <span className="text-[11px] text-[#4ADE80] font-medium">Scanning</span>
-                        </div>
-
-                        {/* Shutter row */}
-                        <div className="flex items-center justify-around w-full pt-1">
-                          <div className="h-9 w-9 rounded-xl bg-white/10 flex items-center justify-center text-white/70 border border-white/10">
-                            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                              <rect x="3" y="3" width="18" height="18" rx="2" />
-                              <circle cx="12" cy="12" r="3" />
-                            </svg>
-                          </div>
-                          <div className="h-[58px] w-[58px] rounded-full border-[3px] border-white/80 p-[3px] shadow-lg">
-                            <div className="h-full w-full rounded-full bg-white active:scale-95 transition-transform" />
-                          </div>
-                          <div className="h-9 w-9 rounded-xl bg-white/10 flex items-center justify-center text-white/70 border border-white/10">
-                            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                              <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z" />
-                              <circle cx="12" cy="13" r="4" />
-                            </svg>
-                          </div>
-                        </div>
+                    {/* Wheat / Snack Bar Art Silhouette */}
+                    <div className="my-2 p-1.5 rounded-lg bg-white/20 backdrop-blur-xs flex items-center gap-1.5">
+                      <div className="h-6 w-6 rounded-full bg-amber-200/80 flex items-center justify-center text-xs">
+                        🌾
                       </div>
+                      <div className="text-[7.5px] font-bold text-neutral-900 leading-tight">
+                        100% Real<br />Whole Grains
+                      </div>
+                    </div>
 
+                    {/* Bottom barcode on side of box */}
+                    <div className="bg-white/90 p-1 rounded flex flex-col items-center">
+                      <div className="flex items-center gap-[1px] h-3 w-full justify-center">
+                        {[...Array(18)].map((_, i) => (
+                          <div
+                            key={i}
+                            className={`h-full bg-black ${i % 3 === 0 ? 'w-[1.5px]' : 'w-[0.8px]'}`}
+                          />
+                        ))}
+                      </div>
+                      <span className="text-[5.5px] font-mono tracking-widest text-neutral-800">890612345</span>
                     </div>
                   </div>
                 </div>
 
-                {/* ─ Floating Card: SafeFood Report (bottom-right) ─ */}
-                <div className="absolute -bottom-6 -right-4 sm:-right-14 z-40 bg-white rounded-2xl p-4 shadow-[0_20px_50px_rgba(0,0,0,0.35)] border border-gray-100 w-[215px] sm:w-[235px]">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="font-extrabold text-[13px] text-[#1A1A1A]">SafeFood Report</span>
-                    <span className="inline-flex items-center gap-0.5 px-2 py-0.5 rounded bg-[#FEE2E2] text-[#DC2626] text-[10px] font-extrabold uppercase tracking-wide">
-                      ✕ FAILED
-                    </span>
+                {/* ── Lush Botanical Fresh Green Leaves ── */}
+                {/* Leaf Group 1 (Left, between box and Phone 1) */}
+                <div className="absolute -left-10 sm:-left-12 bottom-14 z-25 pointer-events-none animate-float-gentle">
+                  <svg width="68" height="68" viewBox="0 0 100 100" fill="none" className="filter drop-shadow-lg">
+                    <path
+                      d="M20,80 C30,40 60,30 90,20 C80,50 65,80 20,80 Z"
+                      fill="url(#leafGrad1)"
+                    />
+                    <path
+                      d="M20,80 Q55,50 90,20"
+                      stroke="#86EFAC"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                    />
+                    <path
+                      d="M40,65 Q50,60 60,62"
+                      stroke="#86EFAC"
+                      strokeWidth="1.2"
+                      strokeLinecap="round"
+                    />
+                    <path
+                      d="M55,50 Q65,46 75,49"
+                      stroke="#86EFAC"
+                      strokeWidth="1.2"
+                      strokeLinecap="round"
+                    />
+                    {/* Small secondary leaf */}
+                    <path
+                      d="M20,80 C15,60 25,45 45,40 C40,55 35,70 20,80 Z"
+                      fill="url(#leafGrad2)"
+                    />
+                    <defs>
+                      <linearGradient id="leafGrad1" x1="0%" y1="100%" x2="100%" y2="0%">
+                        <stop offset="0%" stopColor="#0E623B" />
+                        <stop offset="50%" stopColor="#15803D" />
+                        <stop offset="100%" stopColor="#22C55E" />
+                      </linearGradient>
+                      <linearGradient id="leafGrad2" x1="0%" y1="100%" x2="100%" y2="0%">
+                        <stop offset="0%" stopColor="#0B4D2D" />
+                        <stop offset="100%" stopColor="#16A34A" />
+                      </linearGradient>
+                    </defs>
+                  </svg>
+                </div>
+
+                {/* Leaf Group 2 (Right, beside Phone 2) */}
+                <div className="absolute -right-8 sm:-right-12 top-20 z-15 pointer-events-none animate-float-opposite">
+                  <svg width="85" height="85" viewBox="0 0 120 120" fill="none" className="filter drop-shadow-xl">
+                    <path
+                      d="M10,100 C30,70 60,50 110,40 C95,80 65,105 10,100 Z"
+                      fill="url(#leafGradRight1)"
+                    />
+                    <path
+                      d="M10,100 Q60,70 110,40"
+                      stroke="#A7F3D0"
+                      strokeWidth="2"
+                    />
+                    <path
+                      d="M25,110 C45,95 70,85 100,85 C85,110 55,120 25,110 Z"
+                      fill="url(#leafGradRight2)"
+                    />
+                    <defs>
+                      <linearGradient id="leafGradRight1" x1="0%" y1="100%" x2="100%" y2="0%">
+                        <stop offset="0%" stopColor="#064E3B" />
+                        <stop offset="60%" stopColor="#10B981" />
+                        <stop offset="100%" stopColor="#34D399" />
+                      </linearGradient>
+                      <linearGradient id="leafGradRight2" x1="0%" y1="100%" x2="100%" y2="0%">
+                        <stop offset="0%" stopColor="#065F46" />
+                        <stop offset="100%" stopColor="#059669" />
+                      </linearGradient>
+                    </defs>
+                  </svg>
+                </div>
+
+                {/* ── Illustrated Almonds / Hazelnuts (Bottom-Right) ── */}
+                <div className="absolute -right-6 sm:-right-10 bottom-10 z-25 pointer-events-none">
+                  <svg width="70" height="70" viewBox="0 0 100 100" fill="none" className="filter drop-shadow-lg">
+                    {/* Whole Almond */}
+                    <path
+                      d="M30,70 C15,55 20,35 40,25 C55,20 65,35 55,55 C48,70 38,75 30,70 Z"
+                      fill="url(#almondGrad)"
+                    />
+                    <path
+                      d="M32,60 C25,48 30,35 42,28"
+                      stroke="#78350F"
+                      strokeWidth="1.2"
+                      strokeLinecap="round"
+                    />
+                    {/* Cut Hazelnut / Half Almond */}
+                    <path
+                      d="M50,85 C40,75 45,60 60,55 C75,50 85,65 75,80 C68,90 58,90 50,85 Z"
+                      fill="#D97706"
+                    />
+                    <ellipse cx="62" cy="70" rx="10" ry="12" fill="#FEF3C7" transform="rotate(-15 62 70)" />
+                    <circle cx="62" cy="70" r="4" fill="#FDE68A" />
+                    <defs>
+                      <linearGradient id="almondGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+                        <stop offset="0%" stopColor="#78350F" />
+                        <stop offset="50%" stopColor="#92400E" />
+                        <stop offset="100%" stopColor="#B45309" />
+                      </linearGradient>
+                    </defs>
+                  </svg>
+                </div>
+
+                {/* ── Top-Right Sparkle Rays Doodle \ | / ── */}
+                <div className="absolute -top-6 right-6 z-20 pointer-events-none">
+                  <svg width="40" height="40" viewBox="0 0 50 50" fill="none">
+                    <line x1="8" y1="12" x2="20" y2="28" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeOpacity="0.85" />
+                    <line x1="25" y1="5" x2="25" y2="25" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeOpacity="0.85" />
+                    <line x1="42" y1="12" x2="30" y2="28" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeOpacity="0.85" />
+                  </svg>
+                </div>
+
+                {/* ─── Floating AR Badge 1: MRP & Expiry (Top Left above Phone 1) ─── */}
+                <div className="absolute -top-3 left-2 sm:left-4 z-40 flex items-center gap-2 bg-[#0E3A24] border border-[#28DF7E]/60 rounded-full px-3.5 py-1.5 shadow-xl animate-float-gentle">
+                  <div className="h-4 w-4 rounded-full bg-[#28DF7E] flex items-center justify-center text-[#072418] shrink-0">
+                    <Check className="h-2.5 w-2.5 stroke-[3.5]" />
                   </div>
-                  <ul className="space-y-1.5">
-                    <li className="flex items-start gap-1.5 text-[11px] text-[#374151]">
-                      <span className="h-1.5 w-1.5 rounded-full bg-[#EF4444] mt-1.5 shrink-0" />
-                      <span>Non-compliant tiny text font</span>
-                    </li>
-                    <li className="flex items-start gap-1.5 text-[11px] text-[#374151]">
-                      <span className="h-1.5 w-1.5 rounded-full bg-[#EF4444] mt-1.5 shrink-0" />
-                      <span>Missing details and missing details</span>
-                    </li>
-                  </ul>
+                  <span className="text-[11.5px] font-bold text-white whitespace-nowrap tracking-tight">
+                    MRP &amp; Expiry
+                  </span>
+                </div>
+
+                {/* ─── Floating AR Badge 2: Missing Manufacturer (Top Right above Phone 2) ─── */}
+                <div className="absolute -top-4 right-0 sm:-right-4 z-40 flex items-center gap-2 bg-[#FFF0E8] border border-[#FDBA74] rounded-2xl px-3 py-2 shadow-xl animate-float-gentle">
+                  <div className="h-5 w-5 rounded-full bg-[#EA580C] text-white flex items-center justify-center shrink-0 shadow-sm">
+                    <AlertTriangle className="h-3 w-3 stroke-[2.5]" />
+                  </div>
+                  <span className="text-[10.5px] font-extrabold text-[#1E293B] leading-tight block">
+                    Missing<br />Manufacturer
+                  </span>
+                </div>
+
+                {/* ─── Floating AR Badge 3: MRP & Expiry (Bottom Left below Phone 1) ─── */}
+                <div className="absolute bottom-6 -left-6 sm:-left-10 z-40 flex items-center gap-2 bg-[#0E3A24] border border-[#28DF7E]/60 rounded-full px-3.5 py-1.5 shadow-xl animate-float-opposite">
+                  <div className="h-4 w-4 rounded-full bg-[#28DF7E] flex items-center justify-center text-[#072418] shrink-0">
+                    <Check className="h-2.5 w-2.5 stroke-[3.5]" />
+                  </div>
+                  <span className="text-[11.5px] font-bold text-white whitespace-nowrap tracking-tight">
+                    MRP &amp; Expiry
+                  </span>
+                </div>
+
+                {/* ─── Floating AR Badge 4: Allergens Found (Mid Right of Phone 2) ─── */}
+                <div className="absolute bottom-32 -right-4 sm:-right-10 z-40 flex items-center gap-2 bg-[#E8F8EE] border border-[#28DF7E] rounded-full px-3.5 py-1.5 shadow-xl animate-float-opposite">
+                  <div className="h-4 w-4 rounded-full bg-[#28DF7E] flex items-center justify-center text-[#072418] shrink-0">
+                    <Check className="h-2.5 w-2.5 stroke-[3.5]" />
+                  </div>
+                  <span className="text-[11.5px] font-bold text-[#064E3B] whitespace-nowrap tracking-tight">
+                    Allergens Found
+                  </span>
+                </div>
+
+                {/* ══════════════════════════════════════════════════ */}
+                {/*  PHONE 1: The Scanner Phone (Left)                 */}
+                {/* ══════════════════════════════════════════════════ */}
+                <div className="relative z-20 w-[225px] sm:w-[245px] lg:w-[255px] h-[465px] sm:h-[495px] lg:h-[515px] rounded-[40px] bg-[#1c1c1e] p-[4px] shadow-[0_30px_60px_rgba(0,0,0,0.85)] border border-neutral-700/80">
+                  <div className="relative rounded-[36px] overflow-hidden bg-[#07130C] h-full flex flex-col justify-between">
+                    
+                    {/* Top Status Bar & Dynamic Island */}
+                    <div className="pt-2 px-3.5 flex items-center justify-between text-white/75 text-[9px] font-medium">
+                      <span>9:41</span>
+                      <div className="h-[15px] w-[58px] bg-black rounded-full flex items-center justify-end pr-2">
+                        <div className="h-2 w-2 rounded-full bg-[#112419] border border-white/20" />
+                      </div>
+                      <div className="flex items-center gap-1 text-[8.5px]">
+                        <span>5G</span>
+                        <div className="w-3.5 h-2 border border-white/60 rounded-xs flex items-center p-0.5">
+                          <div className="h-full w-full bg-white/90 rounded-2xs" />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* App Header */}
+                    <div className="px-3.5 py-1 flex items-center justify-between">
+                      <div className="flex items-center gap-1.5">
+                        <div className="h-4 w-4 rounded bg-[#28DF7E] flex items-center justify-center">
+                          <ShieldCheck className="h-2.5 w-2.5 text-[#072418] stroke-[3]" />
+                        </div>
+                        <span className="font-extrabold text-[11.5px] tracking-tight text-white">
+                          Safe<span className="text-[#28DF7E]">Food</span>
+                        </span>
+                      </div>
+                      <Menu className="h-4 w-4 text-white/80" />
+                    </div>
+
+                    {/* Scanner Title */}
+                    <div className="text-center px-2">
+                      <div className="text-[11.5px] font-bold text-white tracking-tight">
+                        Scan Food Package
+                      </div>
+                      <div className="text-[8px] text-[#A7C8B6] mt-0.5">
+                        Point your camera at the barcode or label
+                      </div>
+                    </div>
+
+                    {/* Camera Viewfinder with Target Reticle & Product */}
+                    <div className="flex-1 flex items-center justify-center relative my-1.5 px-3">
+                      
+                      {/* 4 Green Corner Reticles */}
+                      <div className="absolute inset-2.5 pointer-events-none z-20">
+                        <div className="absolute top-0 left-0 w-4 h-4 border-t-[2.5px] border-l-[2.5px] border-[#28DF7E] rounded-tl-sm shadow-[0_0_8px_#28DF7E]" />
+                        <div className="absolute top-0 right-0 w-4 h-4 border-t-[2.5px] border-r-[2.5px] border-[#28DF7E] rounded-tr-sm shadow-[0_0_8px_#28DF7E]" />
+                        <div className="absolute bottom-0 left-0 w-4 h-4 border-b-[2.5px] border-l-[2.5px] border-[#28DF7E] rounded-bl-sm shadow-[0_0_8px_#28DF7E]" />
+                        <div className="absolute bottom-0 right-0 w-4 h-4 border-b-[2.5px] border-r-[2.5px] border-[#28DF7E] rounded-br-sm shadow-[0_0_8px_#28DF7E]" />
+                      </div>
+
+                      {/* Animated Neon Laser Scan Line */}
+                      <div className="absolute left-2.5 right-2.5 h-[2px] bg-[#28DF7E] shadow-[0_0_12px_#28DF7E] animate-scan-line z-20 pointer-events-none" />
+
+                      {/* Product Package: Healthy Bites Snack Bar */}
+                      <div className="w-[145px] sm:w-[160px] rounded-xl bg-gradient-to-b from-[#EA580C] via-[#C2410C] to-[#9A3412] p-2.5 flex flex-col justify-between shadow-lg border border-amber-400/30">
+                        <div className="flex items-center justify-between">
+                          <span className="text-[12px] font-black text-white tracking-tight">Healthy Bites</span>
+                          {/* Veg Dot Symbol */}
+                          <div className="h-3 w-3 border border-emerald-400 bg-white/10 rounded-xs flex items-center justify-center">
+                            <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                          </div>
+                        </div>
+                        <div className="text-[8px] text-amber-200 font-semibold mt-0.5">Oats &amp; Almonds</div>
+                        <div className="text-[7px] text-white/80">Energy Bar</div>
+
+                        {/* Barcode Rectangle with numbers */}
+                        <div className="bg-white rounded p-1 mt-2 flex flex-col items-center shadow-xs">
+                          <div className="flex items-center gap-[1px] h-4 w-full justify-center">
+                            {[
+                              2, 1, 3, 1, 2, 1, 1, 3, 2, 1, 2, 3, 1, 2, 1, 3, 1, 2, 1, 1, 2, 3, 1, 2,
+                            ].map((w, i) => (
+                              <div
+                                key={i}
+                                className="h-full bg-black"
+                                style={{ width: `${w * 0.8}px` }}
+                              />
+                            ))}
+                          </div>
+                          <span className="text-[6.5px] font-mono font-bold text-neutral-800 tracking-wider mt-0.5">
+                            8 906123 456789
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Scanning Status Indicator */}
+                    <div className="flex justify-center pb-1">
+                      <div className="flex items-center gap-1.5 bg-[#0F3520] px-3 py-0.5 rounded-full border border-[#28DF7E]/50 shadow-sm">
+                        <span className="h-1.5 w-1.5 rounded-full bg-[#28DF7E] animate-pulse" />
+                        <span className="text-[9.5px] text-[#4ADE80] font-semibold">Scanning</span>
+                      </div>
+                    </div>
+
+                    {/* Bottom App Navigation Bar */}
+                    <div className="bg-[#05110B] border-t border-white/10 px-3.5 py-2 flex items-center justify-around text-white/60 text-[7.5px] font-medium">
+                      <div className="flex flex-col items-center text-[#28DF7E]">
+                        <ScanIcon className="h-3.5 w-3.5" />
+                        <span className="mt-0.5 font-bold">Scan</span>
+                      </div>
+                      <div className="flex flex-col items-center hover:text-white transition-colors">
+                        <HistoryIcon className="h-3.5 w-3.5" />
+                        <span className="mt-0.5">History</span>
+                      </div>
+                      <div className="flex flex-col items-center hover:text-white transition-colors">
+                        <FileText className="h-3.5 w-3.5" />
+                        <span className="mt-0.5">Reports</span>
+                      </div>
+                      <div className="flex flex-col items-center hover:text-white transition-colors">
+                        <User className="h-3.5 w-3.5" />
+                        <span className="mt-0.5">Profile</span>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+
+                {/* ══════════════════════════════════════════════════ */}
+                {/*  PHONE 2: The Report Dossier Phone (Right)         */}
+                {/* ══════════════════════════════════════════════════ */}
+                <div className="relative z-30 -ml-10 sm:-ml-14 mt-4 lg:mt-6 w-[225px] sm:w-[245px] lg:w-[255px] h-[465px] sm:h-[495px] lg:h-[515px] rounded-[40px] bg-[#1c1c1e] p-[4px] shadow-[0_35px_70px_rgba(0,0,0,0.92)] border border-neutral-700/80">
+                  <div className="relative rounded-[36px] overflow-hidden bg-[#07130C] h-full flex flex-col justify-between p-3">
+                    
+                    {/* Status Bar */}
+                    <div className="pt-0.5 flex items-center justify-between text-white/75 text-[9px] font-medium">
+                      <span>9:41</span>
+                      <div className="h-[15px] w-[58px] bg-black rounded-full" />
+                      <span>100%</span>
+                    </div>
+
+                    {/* Screen Header */}
+                    <div className="text-white text-[11px] font-bold flex items-center gap-1.5 pt-1">
+                      <ChevronRight className="h-3.5 w-3.5 rotate-180 text-white/80" />
+                      <span>SafeFood Report</span>
+                    </div>
+
+                    {/* Product is Safe Banner */}
+                    <div className="bg-[#113B26] rounded-xl p-2.5 border border-[#28DF7E]/50 text-center my-1 shadow-sm">
+                      <div className="h-6 w-6 rounded-full bg-[#28DF7E] flex items-center justify-center mx-auto text-[#072418] mb-1 shadow-sm">
+                        <ShieldCheck className="h-4 w-4 stroke-[3]" />
+                      </div>
+                      <div className="text-[12px] font-black text-white tracking-tight">Product is Safe</div>
+                      <div className="text-[7.5px] text-[#A7C8B6] mt-0.5 font-medium">
+                        No counterfeit or illegal issues detected!
+                      </div>
+                    </div>
+
+                    {/* Compliance Checklist Items */}
+                    <div className="space-y-1 my-0.5">
+                      {[
+                        { title: 'Product Authenticity', sub: 'Genuine product', pass: true },
+                        { title: 'Mandatory Details', sub: 'All required info present', pass: true },
+                        { title: 'MRP & Expiry', sub: 'Valid & clearly mentioned', pass: true },
+                        { title: 'Nutrition Information', sub: 'Available & accurate', pass: true },
+                        { title: 'Allergens', sub: 'Contains allergens (see details)', pass: false },
+                        { title: 'Legal Compliance', sub: 'FSSAI license missing', pass: false },
+                      ].map((item, i) => (
+                        <div
+                          key={i}
+                          className="flex items-center justify-between bg-white/[0.05] px-2 py-1.5 rounded-lg text-[8px] border border-white/5"
+                        >
+                          <div className="flex items-center gap-1.5 text-white">
+                            <span
+                              className={`flex h-3.5 w-3.5 items-center justify-center rounded-full text-[8px] font-black shrink-0 ${
+                                item.pass
+                                  ? 'bg-[#28DF7E]/20 text-[#28DF7E]'
+                                  : 'bg-[#F59E0B]/20 text-[#F59E0B]'
+                              }`}
+                            >
+                              {item.pass ? '✓' : '⚠️'}
+                            </span>
+                            <div>
+                              <div className="font-bold leading-none text-white/95">{item.title}</div>
+                              <div className="text-[6.5px] text-white/50 leading-none mt-0.5">{item.sub}</div>
+                            </div>
+                          </div>
+                          <span
+                            className={`font-black text-[9px] ${
+                              item.pass ? 'text-[#28DF7E]' : 'text-[#F59E0B]'
+                            }`}
+                          >
+                            {item.pass ? '✓' : '>'}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Share Report Button */}
+                    <button
+                      type="button"
+                      className="w-full py-2 rounded-xl bg-[#28DF7E] hover:bg-[#22C55E] text-[#072418] font-black text-[10px] flex items-center justify-center gap-1.5 shadow-md transition-all active:scale-95 cursor-pointer"
+                    >
+                      <Share2 className="h-3 w-3 stroke-[2.5]" />
+                      <span>Share Report</span>
+                    </button>
+
+                  </div>
+                </div>
+
+                {/* ─── Bottom-Right Handwriting Cursive Signature ─── */}
+                <div
+                  className="absolute -bottom-7 -right-4 sm:-right-8 lg:-right-12 z-35 font-caveat text-[#28DF7E] text-[28px] sm:text-[34px] font-bold leading-[0.95] pointer-events-none transform -rotate-[7deg] select-none filter drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]"
+                >
+                  Real Food.<br />
+                  Real Safety.
                 </div>
 
               </div>
@@ -427,130 +656,223 @@ export const LandingPage = () => {
 
           </div>
         </div>
+
+        {/* ─── Organic Curved Wave Divider dividing Hero from Features ─── */}
+        <div className="absolute bottom-0 left-0 right-0 overflow-hidden leading-none z-10 pointer-events-none">
+          <svg
+            viewBox="0 0 1440 140"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className="w-full h-[70px] sm:h-[100px] lg:h-[135px]"
+            preserveAspectRatio="none"
+          >
+            <path
+              d="M0,75 C240,145 620,135 960,105 C1220,80 1370,105 1440,90 L1440,140 L0,140 Z"
+              fill="#FFFFFF"
+            />
+          </svg>
+        </div>
       </section>
 
       {/* ══════════════════════════════════════════════════════ */}
-      {/*  HOW SAFEFOOD PROTECTS YOU  (5 Feature Cards)         */}
+      {/*  KEY FEATURES: Smarter Scans. Safer Food.              */}
       {/* ══════════════════════════════════════════════════════ */}
-      <section id="features" className="py-16 sm:py-20 bg-white">
-        <div className="max-w-[1320px] mx-auto px-5 sm:px-8">
-          <h2 className="text-center text-[28px] sm:text-[34px] font-extrabold text-[#111827] tracking-tight mb-12">
-            How SafeFood Protects You
-          </h2>
+      <section id="features" className="pt-8 pb-14 sm:pb-20 bg-white relative z-20 overflow-hidden">
+        
+        {/* Subtle Decorative Botanical Green Line Leaf in Top Left Corner */}
+        <div className="absolute top-2 left-6 lg:left-12 pointer-events-none opacity-80">
+          <svg width="45" height="45" viewBox="0 0 60 60" fill="none">
+            <path
+              d="M10,50 C20,25 45,15 55,10 C45,30 35,45 10,50 Z"
+              stroke="#28DF7E"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+            />
+            <path
+              d="M10,50 Q32,32 55,10"
+              stroke="#28DF7E"
+              strokeWidth="1.5"
+            />
+            <path
+              d="M10,50 C8,38 15,28 28,24 C24,34 20,44 10,50 Z"
+              stroke="#28DF7E"
+              strokeWidth="1.5"
+            />
+          </svg>
+        </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        {/* Subtle Decorative Botanical Green Line Leaf in Top Right Corner */}
+        <div className="absolute top-2 right-6 lg:right-12 pointer-events-none opacity-80">
+          <svg width="45" height="45" viewBox="0 0 60 60" fill="none">
+            <path
+              d="M50,50 C40,25 15,15 5,10 C15,30 25,45 50,50 Z"
+              stroke="#28DF7E"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+            />
+            <path
+              d="M50,50 Q28,32 5,10"
+              stroke="#28DF7E"
+              strokeWidth="1.5"
+            />
+            <path
+              d="M50,50 C52,38 45,28 32,24 C36,34 40,44 50,50 Z"
+              stroke="#28DF7E"
+              strokeWidth="1.5"
+            />
+          </svg>
+        </div>
 
-            {/* Card 1 – Detect Missing Details */}
-            <div className="bg-[#0B3524] rounded-2xl border border-[#185338] hover:border-[#22C55E]/50 p-5 flex flex-col shadow-sm transition-all duration-200">
-              <div className="h-14 w-14 rounded-xl bg-[#124230] flex items-center justify-center mb-4">
-                <div className="relative">
-                  <div className="w-7 h-8 bg-[#F97316] rounded-sm flex flex-col justify-between p-0.5 shadow-sm">
-                    <div className="h-[3px] bg-white/70 rounded-full w-3" />
-                    <div className="h-[3px] bg-white/70 rounded-full w-4" />
-                    <div className="h-[3px] bg-white/70 rounded-full w-2.5" />
-                  </div>
-                  <Search className="h-4 w-4 text-[#28B463] absolute -bottom-1 -right-1.5 stroke-[2.5]" />
-                </div>
+        <div className="max-w-[1280px] mx-auto px-5 sm:px-8">
+          
+          {/* Section Heading */}
+          <div className="text-center max-w-xl mx-auto mb-9">
+            <span className="text-[#16A34A] text-xs font-black uppercase tracking-widest block mb-1.5">
+              KEY FEATURES
+            </span>
+            <h2 className="text-[28px] sm:text-[34px] font-extrabold text-[#111827] tracking-tight">
+              Smarter Scans. Safer Food.
+            </h2>
+            <p className="text-[#6B7280] text-sm mt-1.5">
+              From barcode to batch details &mdash; SafeFood checks it all.
+            </p>
+          </div>
+
+          {/* 5 Clean White Cards in 1 Row on Desktop */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
+
+            {/* Card 1: Hidden Details Scan */}
+            <div className="bg-white rounded-2xl border border-[#E5E7EB] hover:border-[#28DF7E]/60 p-5 flex flex-col shadow-xs hover:shadow-md transition-all group">
+              <div className="h-11 w-11 rounded-xl bg-[#EBFBF2] group-hover:bg-[#D8F8E5] flex items-center justify-center mb-3.5 text-[#22C55E] transition-colors">
+                <ScanIcon className="h-5 w-5" />
               </div>
-              <h3 className="text-[15px] font-bold text-white mb-1.5 leading-snug">
-                Detect Missing<br />Details
+              <h3 className="text-[14px] font-bold text-[#111827] mb-1">
+                Hidden Details Scan
               </h3>
-              <p className="text-[12px] text-[#8FB89C] leading-relaxed">
-                Checking MRP, expiry, weight, snack, and manufacturer.
+              <p className="text-[12px] text-[#6B7280] leading-relaxed">
+                Detects tiny fonts, missing info, wrong labels and more.
               </p>
             </div>
 
-            {/* Card 2 – Measure Text Readability */}
-            <div className="bg-[#0B3524] rounded-2xl border border-[#185338] hover:border-[#22C55E]/50 p-5 flex flex-col shadow-sm transition-all duration-200">
-              <div className="h-14 w-14 rounded-xl bg-[#124230] flex items-center justify-center mb-4">
-                <div className="relative">
-                  <div className="w-7 h-9 bg-[#1E5C41] border border-[#2EB875] rounded-sm p-1 flex flex-col gap-0.5 shadow-sm">
-                    <span className="text-[7px] font-black text-[#4ADE80] block">AI</span>
-                    <div className="h-[2px] bg-white/80 rounded-full w-full" />
-                    <div className="h-[2px] bg-white/80 rounded-full w-3/4" />
-                    <div className="h-[2px] bg-white/80 rounded-full w-full" />
-                  </div>
-                  <Search className="h-4 w-4 text-[#4ADE80] absolute -bottom-1 -right-1.5 stroke-[2.5]" />
-                </div>
+            {/* Card 2: Genuine & Legal Check */}
+            <div className="bg-white rounded-2xl border border-[#E5E7EB] hover:border-[#28DF7E]/60 p-5 flex flex-col shadow-xs hover:shadow-md transition-all group">
+              <div className="h-11 w-11 rounded-xl bg-[#EBFBF2] group-hover:bg-[#D8F8E5] flex items-center justify-center mb-3.5 text-[#22C55E] transition-colors">
+                <ShieldCheck className="h-5 w-5" />
               </div>
-              <h3 className="text-[15px] font-bold text-white mb-1.5 leading-snug">
-                Measure Text<br />Readability
+              <h3 className="text-[14px] font-bold text-[#111827] mb-1">
+                Genuine &amp; Legal Check
               </h3>
-              <p className="text-[12px] text-[#8FB89C] leading-relaxed">
-                AI scan detects illegal font text used to hide info access folxuce.
+              <p className="text-[12px] text-[#6B7280] leading-relaxed">
+                Verifies Govt. mandatory info, licenses and compliance.
               </p>
             </div>
 
-            {/* Card 3 – Verify Authenticity */}
-            <div className="bg-[#0B3524] rounded-2xl border border-[#185338] hover:border-[#22C55E]/50 p-5 flex flex-col shadow-sm transition-all duration-200">
-              <div className="h-14 w-14 rounded-xl bg-[#124230] flex items-center justify-center mb-4">
-                <div className="relative">
-                  <div className="w-7 h-9 bg-[#1E5C41] border border-[#2EB875] rounded-sm p-1 flex flex-col justify-between shadow-sm">
-                    <div className="h-[3px] bg-[#4ADE80] rounded-full w-3" />
-                    <div className="space-y-0.5">
-                      <div className="h-[2px] bg-white/80 rounded-full w-full" />
-                      <div className="h-[2px] bg-white/80 rounded-full w-3/4" />
-                    </div>
-                    <CheckCircle2 className="h-3 w-3 text-[#4ADE80] self-end" />
-                  </div>
-                </div>
+            {/* Card 3: Allergens & Nutrition */}
+            <div className="bg-white rounded-2xl border border-[#E5E7EB] hover:border-[#28DF7E]/60 p-5 flex flex-col shadow-xs hover:shadow-md transition-all group">
+              <div className="h-11 w-11 rounded-xl bg-[#EBFBF2] group-hover:bg-[#D8F8E5] flex items-center justify-center mb-3.5 text-[#22C55E] transition-colors">
+                <Leaf className="h-5 w-5" />
               </div>
-              <h3 className="text-[15px] font-bold text-white mb-1.5 leading-snug">
-                Verify<br />Authenticity
+              <h3 className="text-[14px] font-bold text-[#111827] mb-1">
+                Allergens &amp; Nutrition
               </h3>
-              <p className="text-[12px] text-[#8FB89C] leading-relaxed">
-                Matches with official databases to spot fake/misleading.
+              <p className="text-[12px] text-[#6B7280] leading-relaxed">
+                Know what&apos;s inside before you eat.
               </p>
             </div>
 
-            {/* Card 4 – Allergen & Nutrition Decoder (NEW) */}
-            <div className="bg-[#0B3524] rounded-2xl border border-[#185338] hover:border-[#22C55E]/50 p-5 flex flex-col shadow-sm transition-all duration-200 relative">
-              <div className="absolute top-3 right-3 px-2 py-0.5 rounded-md bg-[#E8632B] text-white text-[10px] font-bold uppercase tracking-wide shadow-sm">
-                NEW
+            {/* Card 4: Fake Product Detection */}
+            <div className="bg-white rounded-2xl border border-[#E5E7EB] hover:border-[#28DF7E]/60 p-5 flex flex-col shadow-xs hover:shadow-md transition-all group">
+              <div className="h-11 w-11 rounded-xl bg-[#EBFBF2] group-hover:bg-[#D8F8E5] flex items-center justify-center mb-3.5 text-[#22C55E] transition-colors">
+                <FileText className="h-5 w-5" />
               </div>
-              <div className="h-14 w-14 rounded-xl bg-[#124230] flex items-center justify-center mb-4">
-                <div className="relative">
-                  <div className="w-7 h-9 bg-[#1E5C41] border border-[#2EB875] rounded-sm p-1 flex flex-col justify-between shadow-sm">
-                    <div className="h-[3px] bg-[#F97316] rounded-full w-3" />
-                    <div className="space-y-0.5">
-                      <div className="h-[2px] bg-white/80 rounded-full w-full" />
-                      <div className="h-[2px] bg-[#FBBF24] rounded-full w-3/4" />
-                    </div>
-                    <AlertTriangle className="h-3 w-3 text-[#F97316] self-end" />
-                  </div>
-                </div>
-              </div>
-              <h3 className="text-[15px] font-bold text-white mb-1.5 leading-snug">
-                Allergen &amp;<br />Nutrition Decoder
+              <h3 className="text-[14px] font-bold text-[#111827] mb-1">
+                Fake Product Detection
               </h3>
-              <p className="text-[12px] text-[#8FB89C] leading-relaxed">
-                Flags allergens and hidden ingredients.
+              <p className="text-[12px] text-[#6B7280] leading-relaxed">
+                Identifies counterfeit and misbranded products.
               </p>
             </div>
 
-            {/* Card 5 – FSSAI License Validator (NEW) */}
-            <div className="bg-[#0B3524] rounded-2xl border border-[#185338] hover:border-[#22C55E]/50 p-5 flex flex-col shadow-sm transition-all duration-200 relative">
-              <div className="absolute top-3 right-3 px-2 py-0.5 rounded-md bg-[#E8632B] text-white text-[10px] font-bold uppercase tracking-wide shadow-sm">
-                NEW
+            {/* Card 5: Safe for Your Family */}
+            <div className="bg-white rounded-2xl border border-[#E5E7EB] hover:border-[#28DF7E]/60 p-5 flex flex-col shadow-xs hover:shadow-md transition-all group">
+              <div className="h-11 w-11 rounded-xl bg-[#EBFBF2] group-hover:bg-[#D8F8E5] flex items-center justify-center mb-3.5 text-[#22C55E] transition-colors">
+                <Users className="h-5 w-5" />
               </div>
-              <div className="h-14 w-14 rounded-xl bg-[#124230] flex items-center justify-center mb-4">
-                <div className="relative">
-                  <div className="w-7 h-9 bg-[#1E5C41] border border-[#2EB875] rounded-sm p-1 flex flex-col justify-between shadow-sm">
-                    <span className="text-[6px] font-black text-white font-mono leading-none">fssai</span>
-                    <div className="h-[3px] bg-[#4ADE80] rounded-full w-3" />
-                    <Check className="h-3 w-3 text-[#4ADE80] self-end stroke-[3]" />
-                  </div>
-                </div>
-              </div>
-              <h3 className="text-[15px] font-bold text-white mb-1.5 leading-snug">
-                FSSAI License<br />Validator
+              <h3 className="text-[14px] font-bold text-[#111827] mb-1">
+                Safe for Your Family
               </h3>
-              <p className="text-[12px] text-[#8FB89C] leading-relaxed">
-                Scans and validates government licenses.
+              <p className="text-[12px] text-[#6B7280] leading-relaxed">
+                Better food choices for a healthier tomorrow.
               </p>
             </div>
 
           </div>
+
+          {/* Bottom Store Badges & Web App Bar */}
+          <div className="mt-10 pt-6 border-t border-[#E5E7EB] flex flex-wrap items-center justify-between gap-4">
+            
+            {/* Left Botanical line leaf icon */}
+            <div className="hidden lg:block text-[#28DF7E]">
+              <svg width="32" height="32" viewBox="0 0 50 50" fill="none">
+                <path d="M8,42 C16,20 38,12 45,8 C38,24 30,36 8,42 Z" stroke="#28DF7E" strokeWidth="2" strokeLinecap="round" />
+                <path d="M8,42 Q26,26 45,8" stroke="#28DF7E" strokeWidth="1.6" />
+              </svg>
+            </div>
+
+            {/* Center Store Buttons */}
+            <div className="flex flex-wrap items-center justify-center gap-3 mx-auto">
+              <span className="text-xs font-bold text-[#4B5563] flex items-center gap-1.5">
+                <span className="h-2 w-2 rounded-full bg-[#28DF7E]" />
+                Available on
+              </span>
+
+              {/* App Store Badge */}
+              <a
+                href="#download"
+                className="inline-flex items-center gap-2.5 px-4 py-2 rounded-xl bg-[#111827] text-white hover:bg-black transition-all hover:scale-102 active:scale-98 shadow-sm"
+              >
+                <svg className="h-4.5 w-4.5 fill-white" viewBox="0 0 170 170">
+                  <path d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.19-2.12-9.97-3.17-14.34-3.17-4.58 0-9.49 1.05-14.75 3.17-5.26 2.13-9.5 3.24-12.74 3.35-5.35.22-10.33-1.93-14.94-6.46-3.35-3.17-7.2-7.91-11.56-14.22-5.74-8.37-10.35-17.96-13.82-28.77-3.48-10.81-5.21-21.36-5.21-31.65 0-14.89 3.83-27.18 11.49-36.88 7.66-9.7 17.1-14.65 28.32-14.86 4.93 0 10.38 1.25 16.36 3.75 5.98 2.5 9.87 3.81 11.66 3.93 1.57-.12 5.69-1.54 12.37-4.25 6.68-2.72 12.31-3.9 16.89-3.55 12.7.99 22.78 5.76 30.23 14.32-11.05 6.74-16.47 16.03-16.27 27.88.2 9.27 3.86 17.06 10.98 23.36 7.12 6.3 15.35 9.77 24.68 10.42-2.12 6.32-4.78 12.63-7.98 18.94zM119.22 33.15c0-7.23 2.65-13.97 7.95-20.21 5.3-6.24 11.83-10.15 19.59-11.74.85 7.12-1.39 13.89-6.72 20.3-5.33 6.41-11.97 10.46-19.92 12.16-.3-.18-.6-.35-.9-.51z" />
+                </svg>
+                <div className="text-left">
+                  <div className="text-[7.5px] uppercase tracking-wider text-white/70 leading-none">Download on the</div>
+                  <div className="text-[11.5px] font-bold leading-none mt-0.5">App Store</div>
+                </div>
+              </a>
+
+              {/* Google Play Badge */}
+              <a
+                href="#download"
+                className="inline-flex items-center gap-2.5 px-4 py-2 rounded-xl bg-[#111827] text-white hover:bg-black transition-all hover:scale-102 active:scale-98 shadow-sm"
+              >
+                <svg className="h-4 w-4 fill-white" viewBox="0 0 512 512">
+                  <path d="M325.3 234.3L104.6 13l280.8 161.2-60.1 60.1zM47 0C34 6.8 25.3 19.2 25.3 35.3v441.3c0 16.1 8.7 28.5 21.7 35.3l256.6-256L47 0zm425.2 225.6l-58.9-34.1-65.7 64.5 65.7 64.5 60.1-34.1c18-14.3 18-46.5-1.2-60.8zM104.6 499l280.8-161.2-60.1-60.1L104.6 499z" />
+                </svg>
+                <div className="text-left">
+                  <div className="text-[7.5px] uppercase tracking-wider text-white/70 leading-none">GET IT ON</div>
+                  <div className="text-[11.5px] font-bold leading-none mt-0.5">Google Play</div>
+                </div>
+              </a>
+
+              {/* Explore Web App Button */}
+              <Link
+                to="/login"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#EBFBF2] border border-[#28DF7E] text-[#111827] hover:bg-[#D4F5E2] font-extrabold text-xs transition-all hover:scale-102 active:scale-98 shadow-xs"
+              >
+                <Monitor className="h-4 w-4 text-[#16A34A]" />
+                <span>Explore Web App</span>
+              </Link>
+            </div>
+
+            {/* Right Botanical line leaf icon */}
+            <div className="hidden lg:block text-[#28DF7E]">
+              <svg width="32" height="32" viewBox="0 0 50 50" fill="none">
+                <path d="M42,42 C34,20 12,12 5,8 C12,24 20,36 42,42 Z" stroke="#28DF7E" strokeWidth="2" strokeLinecap="round" />
+                <path d="M42,42 Q24,26 5,8" stroke="#28DF7E" strokeWidth="1.6" />
+              </svg>
+            </div>
+          </div>
+
         </div>
       </section>
 
