@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import {
   ShieldCheck,
@@ -22,6 +22,16 @@ import {
   Download,
   Building2,
   Plus,
+  Camera,
+  Bell,
+  MapPin,
+  ChevronRight,
+  Eye,
+  Phone,
+  RefreshCw,
+  Send,
+  Smartphone,
+  HelpCircle,
 } from "lucide-react";
 import {
   SafeFoodRole,
@@ -46,12 +56,11 @@ export const Route = createFileRoute("/app/$")({
 
 function AppPortalPage() {
   const { _splat } = Route.useParams();
-  const navigate = useNavigate();
   const locationInfo = parsePortalLocation(_splat);
   const { role, activeSection, isInvestigationDetail, isComplaintCreate, isComplaintDetail } = locationInfo;
   const currentRoleConfig = portalRoles[role];
 
-  // Local interactive states for demonstration
+  // Interactive state
   const [selectedScanItem, setSelectedScanItem] = useState(sampleScans[0]!);
   const scanItem = selectedScanItem ?? sampleScans[0]!;
   const [newComplaintNote, setNewComplaintNote] = useState("");
@@ -65,285 +74,1377 @@ function AppPortalPage() {
   const [officerAddedMessage, setOfficerAddedMessage] = useState(false);
 
   const switchRole = (newRole: SafeFoodRole) => {
-    navigate({ to: `/app/${newRole}/dashboard` });
+    window.location.href = `/app/${newRole}/dashboard`;
   };
 
+  // Render role-specific experiences
+  if (role === "user") {
+    return (
+      <CitizenAppView
+        activeSection={activeSection}
+        isComplaintCreate={isComplaintCreate}
+        isComplaintDetail={isComplaintDetail}
+        scanItem={scanItem}
+        setSelectedScanItem={setSelectedScanItem}
+        newComplaintDistrict={newComplaintDistrict}
+        setNewComplaintDistrict={setNewComplaintDistrict}
+        newComplaintNote={newComplaintNote}
+        setNewComplaintNote={setNewComplaintNote}
+        complaintSubmitted={complaintSubmitted}
+        setComplaintSubmitted={setComplaintSubmitted}
+        switchRole={switchRole}
+      />
+    );
+  }
+
+  if (role === "officer") {
+    return (
+      <OfficerAppView
+        activeSection={activeSection}
+        isInvestigationDetail={isInvestigationDetail}
+        scanItem={scanItem}
+        setSelectedScanItem={setSelectedScanItem}
+        investigationStatus={investigationStatus}
+        setInvestigationStatus={setInvestigationStatus}
+        officerNote={officerNote}
+        setOfficerNote={setOfficerNote}
+        officerActionSaved={officerActionSaved}
+        setOfficerActionSaved={setOfficerActionSaved}
+        switchRole={switchRole}
+      />
+    );
+  }
+
+  return (
+    <AdminConsoleView
+      activeSection={activeSection}
+      switchRole={switchRole}
+      newOfficerName={newOfficerName}
+      setNewOfficerName={setNewOfficerName}
+      newOfficerDistrict={newOfficerDistrict}
+      setNewOfficerDistrict={setNewOfficerDistrict}
+      officerAddedMessage={officerAddedMessage}
+      setOfficerAddedMessage={setOfficerAddedMessage}
+    />
+  );
+}
+
+/* ==========================================================================
+   1. CITIZEN APP EXPERIENCE (Simple, mobile-first consumer application)
+   ========================================================================== */
+
+type CitizenAppProps = {
+  activeSection: string;
+  isComplaintCreate: boolean;
+  isComplaintDetail: boolean;
+  scanItem: (typeof sampleScans)[number];
+  setSelectedScanItem: (item: (typeof sampleScans)[number]) => void;
+  newComplaintDistrict: string;
+  setNewComplaintDistrict: (v: string) => void;
+  newComplaintNote: string;
+  setNewComplaintNote: (v: string) => void;
+  complaintSubmitted: boolean;
+  setComplaintSubmitted: (v: boolean) => void;
+  switchRole: (r: SafeFoodRole) => void;
+};
+
+function CitizenAppView({
+  activeSection,
+  isComplaintCreate,
+  isComplaintDetail,
+  scanItem,
+  setSelectedScanItem,
+  newComplaintDistrict,
+  setNewComplaintDistrict,
+  newComplaintNote,
+  setNewComplaintNote,
+  complaintSubmitted,
+  setComplaintSubmitted,
+  switchRole,
+}: CitizenAppProps) {
+  return (
+    <div className="sf-demo sf-app-root">
+      <div className="sf-app-shell">
+        {/* Top App Header */}
+        <header className="sf-app-header">
+          <div className="sf-app-header-user">
+            <div className="sf-app-avatar">AS</div>
+            <div className="sf-app-user-meta">
+              <h2>Aarav Sharma</h2>
+              <span>
+                <MapPin style={{ width: 12, height: 12, color: "var(--deep-green)" }} />
+                Dhule, Maharashtra
+              </span>
+            </div>
+          </div>
+
+          <div className="sf-app-header-actions">
+            <select
+              className="sf-app-role-select"
+              value="user"
+              onChange={(e) => switchRole(e.target.value as SafeFoodRole)}
+              aria-label="Switch demo mode"
+            >
+              <option value="user">📱 Citizen App</option>
+              <option value="officer">🛡️ Officer App</option>
+              <option value="admin">🏢 Admin Panel</option>
+            </select>
+
+            <a href="/login" className="sf-app-signout-btn" title="Sign out">
+              <LogOut style={{ width: 15, height: 15 }} />
+            </a>
+          </div>
+        </header>
+
+        {/* Main Body */}
+        <main className="sf-app-body">
+          {/* SECTION: CITIZEN HOME */}
+          {activeSection === "dashboard" && (
+            <>
+              {/* Hero Scanner Card */}
+              <div className="sf-app-hero-scanner">
+                <div className="sf-app-hero-badge">
+                  <Sparkles style={{ width: 13, height: 13 }} />
+                  AI Label & Food Safety Check
+                </div>
+                <div className="sf-app-hero-content">
+                  <h3>Scan Any Food Label</h3>
+                  <p>
+                    Point camera at MRP, expiry date, address, or FSSAI number. Instant check for illegal tiny fonts and fake declarations.
+                  </p>
+                </div>
+                <a href={portalHref("user", "scan")} className="sf-app-scan-btn">
+                  <Camera style={{ width: 18, height: 18 }} />
+                  Tap to Scan Food Package
+                </a>
+              </div>
+
+              {/* Quick Action Tiles */}
+              <div className="sf-app-action-grid">
+                <a href={portalHref("user", "scan")} className="sf-app-action-tile">
+                  <div className="sf-app-action-icon">
+                    <ScanLine />
+                  </div>
+                  <span>Scan Food</span>
+                </a>
+                <a href={portalHref("user", "complaints/new")} className="sf-app-action-tile">
+                  <div className="sf-app-action-icon" style={{ color: "#d97706" }}>
+                    <FilePlus2 />
+                  </div>
+                  <span>Report Issue</span>
+                </a>
+                <a href={portalHref("user", "history")} className="sf-app-action-tile">
+                  <div className="sf-app-action-icon">
+                    <History />
+                  </div>
+                  <span>My Scans</span>
+                </a>
+                <a href={portalHref("user", "complaints")} className="sf-app-action-tile">
+                  <div className="sf-app-action-icon">
+                    <FileText />
+                  </div>
+                  <span>Grievances</span>
+                </a>
+              </div>
+
+              {/* Active Complaint Status Widget */}
+              <div
+                style={{
+                  border: "1px solid color-mix(in oklab, #f59e0b 40%, var(--sf-line))",
+                  borderRadius: 14,
+                  padding: "14px 16px",
+                  background: "color-mix(in oklab, #f59e0b 8%, var(--background))",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 10,
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                  <span style={{ fontSize: "11px", fontWeight: 800, color: "#b45309", display: "flex", alignItems: "center", gap: 5 }}>
+                    <AlertTriangle style={{ width: 14, height: 14 }} />
+                    ACTIVE GRIEVANCE IN PROGRESS
+                  </span>
+                  <a
+                    href={portalHref("user", "complaints/GRV-2048")}
+                    style={{ fontSize: "11px", fontWeight: 700, color: "var(--deep-green)", textDecoration: "none" }}
+                  >
+                    Track Status &rarr;
+                  </a>
+                </div>
+                <div>
+                  <strong style={{ fontSize: "13px" }}>Almond Oat Energy Bar (GRV-2048)</strong>
+                  <div style={{ fontSize: "11px", color: "var(--sf-quiet)", marginTop: 2 }}>
+                    Assigned to <strong>Inspector Meera Iyer</strong> (Dhule Division) · Field visit conducted today
+                  </div>
+                </div>
+              </div>
+
+              {/* Recent Scans (Card list instead of a database table) */}
+              <div>
+                <div className="sf-app-section-title">
+                  <h4>Recent Food Scans</h4>
+                  <a href={portalHref("user", "history")}>View all ({sampleScans.length}) &rarr;</a>
+                </div>
+
+                <div className="sf-app-card-list">
+                  {sampleScans.map((scan) => (
+                    <div key={scan.id} className="sf-app-product-card">
+                      <div className="sf-app-product-card-top">
+                        <div className="sf-app-product-info">
+                          <div className="sf-app-product-thumb">
+                            {scan.warning ? (
+                              <AlertTriangle style={{ width: 22, height: 22, color: "#d97706" }} />
+                            ) : (
+                              <CheckCircle2 style={{ width: 22, height: 22, color: "var(--deep-green)" }} />
+                            )}
+                          </div>
+                          <div className="sf-app-product-meta">
+                            <strong>{scan.product}</strong>
+                            <span>{scan.category} · {scan.date}</span>
+                          </div>
+                        </div>
+
+                        <span className={`sf-app-badge ${scan.warning ? "sf-app-badge-warn" : "sf-app-badge-ok"}`}>
+                          {scan.warning ? "⚠️ Issue Flagged" : "✅ Passed"}
+                        </span>
+                      </div>
+
+                      <div className="sf-app-product-card-actions">
+                        <span style={{ fontSize: "11px", color: "var(--sf-quiet)" }}>
+                          {scan.warning ? "Missing complete packer address" : "All 6 PCR mandatory declarations clear"}
+                        </span>
+                        {scan.warning ? (
+                          <a href={portalHref("user", "complaints/new")}>
+                            Report to Officer &rarr;
+                          </a>
+                        ) : (
+                          <a href={portalHref("user", "scan")}>
+                            View Check &rarr;
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Consumer Rights Tip */}
+              <div
+                style={{
+                  border: "1px solid var(--sf-line)",
+                  borderRadius: 14,
+                  padding: "14px 16px",
+                  background: "var(--sf-pale)",
+                  display: "flex",
+                  alignItems: "flex-start",
+                  gap: 12,
+                  fontSize: "12px",
+                  lineHeight: 1.5,
+                }}
+              >
+                <ShieldCheck style={{ width: 20, height: 20, color: "var(--deep-green)", flexShrink: 0, marginTop: 2 }} />
+                <div>
+                  <strong style={{ display: "block", marginBottom: 3 }}>Know Your Legal Food Rights</strong>
+                  Under Rule 6 of the Legal Metrology (Packaged Commodities) Rules, 2011, it is illegal for food brands to print MRP, expiry dates, or net weight smaller than 2mm font. If you cannot read it clearly, you have the right to report it.
+                </div>
+              </div>
+            </>
+          )}
+
+          {/* SECTION: CITIZEN SCAN */}
+          {activeSection === "scan" && (
+            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+              <div>
+                <h3 style={{ margin: "0 0 4px", fontSize: "18px", fontWeight: 800 }}>Label Scanner & Verification</h3>
+                <p style={{ margin: 0, fontSize: "12px", color: "var(--sf-quiet)" }}>
+                  Hold package in camera frame to scan mandatory legal declarations under PCR 2011.
+                </p>
+              </div>
+
+              {/* Camera Viewfinder Simulator */}
+              <div className="sf-app-viewfinder">
+                <div className="sf-app-viewfinder-scanline" />
+                <span style={{ fontSize: "11px", color: "#94a3b8", display: "inline-block", marginBottom: 8 }}>
+                  AI CAMERA VIEWFINDER (4-PANEL COMPLIANCE SCAN)
+                </span>
+
+                <div className="sf-app-target-box">
+                  <ScanLine style={{ width: 44, height: 44, color: "#34d399" }} />
+                </div>
+
+                <strong style={{ display: "block", fontSize: "15px", color: "#ffffff", marginTop: 6 }}>
+                  {scanItem.product}
+                </strong>
+                <span style={{ fontSize: "11px", color: "#94a3b8" }}>
+                  Category: {scanItem.category} · Barcode: 8901234567890
+                </span>
+              </div>
+
+              {/* Sample Product Switcher Pills */}
+              <div>
+                <span style={{ fontSize: "11px", fontWeight: 700, color: "var(--sf-quiet)" }}>
+                  TAP A SAMPLE PRODUCT TO TEST SCAN:
+                </span>
+                <div className="sf-app-sample-pills">
+                  {sampleScans.map((s) => (
+                    <button
+                      key={s.id}
+                      type="button"
+                      className={`sf-app-sample-pill ${scanItem.id === s.id ? "sf-app-sample-pill-active" : ""}`}
+                      onClick={() => setSelectedScanItem(s)}
+                    >
+                      {s.warning ? "⚠️ " : "✅ "}
+                      {s.product}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Verdict Summary Card */}
+              <div
+                style={{
+                  border: `1.5px solid ${scanItem.warning ? "#f59e0b" : "var(--deep-green)"}`,
+                  borderRadius: 14,
+                  padding: 16,
+                  background: scanItem.warning ? "color-mix(in oklab, #f59e0b 8%, var(--background))" : "var(--sf-pale)",
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6 }}>
+                  <span style={{ fontSize: "12px", fontWeight: 800, color: scanItem.warning ? "#b45309" : "var(--deep-green)" }}>
+                    {scanItem.warning ? "⚠️ COMPLIANCE VIOLATION DETECTED" : "✅ 100% COMPLIANT PACKAGING"}
+                  </span>
+                  <span className={`sf-app-badge ${scanItem.warning ? "sf-app-badge-warn" : "sf-app-badge-ok"}`}>
+                    {scanItem.warning ? "Rule 6 Breach" : "FSSAI + PCR Passed"}
+                  </span>
+                </div>
+                <p style={{ margin: 0, fontSize: "12px", color: "var(--foreground)", lineHeight: 1.5 }}>
+                  {scanItem.warning
+                    ? "Incomplete manufacturer/packer address detected. City, district or PIN code is missing, violating Rule 6(1)(a) of Legal Metrology Rules."
+                    : "Product displays all mandatory declarations: clear MRP including taxes, net quantity, best before date, complete packer address, and valid 14-digit FSSAI license."}
+                </p>
+              </div>
+
+              {/* 6 Mandatory Declarations Checklist */}
+              <div>
+                <h4 style={{ margin: "0 0 10px", fontSize: "14px", fontWeight: 800 }}>
+                  Mandatory Legal Metrology Declarations (PCR 2011)
+                </h4>
+                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  {mandatoryDeclarations.map((decl, index) => {
+                    const isFailedItem = scanItem.warning && index === 3;
+                    const isOk = !isFailedItem && decl.ok;
+
+                    return (
+                      <div
+                        key={decl.label}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          padding: "11px 14px",
+                          borderRadius: 10,
+                          border: "1px solid var(--sf-line)",
+                          background: isOk ? "var(--background)" : "color-mix(in oklab, #ef4444 8%, var(--background))",
+                        }}
+                      >
+                        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                          {isOk ? (
+                            <CheckCircle2 style={{ width: 18, height: 18, color: "var(--deep-green)", flexShrink: 0 }} />
+                          ) : (
+                            <X style={{ width: 18, height: 18, color: "#b91c1c", flexShrink: 0 }} />
+                          )}
+                          <div>
+                            <strong style={{ fontSize: "12px", display: "block" }}>{decl.label}</strong>
+                            <span style={{ fontSize: "11px", color: "var(--sf-quiet)" }}>
+                              {isFailedItem ? "CRITICAL: Address incomplete without district or PIN" : decl.detail}
+                            </span>
+                          </div>
+                        </div>
+
+                        <span className={`sf-app-badge ${isOk ? "sf-app-badge-ok" : "sf-app-badge-crit"}`}>
+                          {isOk ? "PASSED" : "FAILED"}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* If warning, Quick Action button to lodge complaint */}
+              {scanItem.warning && (
+                <a
+                  href={portalHref("user", "complaints/new")}
+                  className="sf-app-scan-btn"
+                  style={{ background: "#b45309", justifyContent: "center" }}
+                >
+                  <FilePlus2 style={{ width: 17, height: 17 }} />
+                  Lodge Grievance for {scanItem.product} &rarr;
+                </a>
+              )}
+            </div>
+          )}
+
+          {/* SECTION: CITIZEN HISTORY */}
+          {activeSection === "history" && (
+            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+              <div>
+                <h3 style={{ margin: "0 0 4px", fontSize: "18px", fontWeight: 800 }}>My Scan History</h3>
+                <p style={{ margin: 0, fontSize: "12px", color: "var(--sf-quiet)" }}>
+                  All packaged food products scanned with your account.
+                </p>
+              </div>
+
+              <div className="sf-app-card-list">
+                {sampleScans.map((scan) => (
+                  <div key={scan.id} className="sf-app-product-card">
+                    <div className="sf-app-product-card-top">
+                      <div className="sf-app-product-info">
+                        <div className="sf-app-product-thumb">
+                          {scan.warning ? (
+                            <AlertTriangle style={{ width: 22, height: 22, color: "#d97706" }} />
+                          ) : (
+                            <CheckCircle2 style={{ width: 22, height: 22, color: "var(--deep-green)" }} />
+                          )}
+                        </div>
+                        <div className="sf-app-product-meta">
+                          <strong>{scan.product}</strong>
+                          <span>Scan ID: {scan.id} · {scan.date}</span>
+                        </div>
+                      </div>
+
+                      <span className={`sf-app-badge ${scan.warning ? "sf-app-badge-warn" : "sf-app-badge-ok"}`}>
+                        {scan.warning ? "⚠️ Check label" : "✅ Looks good"}
+                      </span>
+                    </div>
+
+                    <div className="sf-app-product-card-actions">
+                      <span style={{ fontSize: "11px", color: "var(--sf-quiet)" }}>Category: {scan.category}</span>
+                      <a href={portalHref("user", "scan")}>View Detailed Audit &rarr;</a>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* SECTION: CITIZEN COMPLAINTS / GRIEVANCES */}
+          {activeSection === "complaints" && !isComplaintCreate && !isComplaintDetail && (
+            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <div>
+                  <h3 style={{ margin: "0 0 4px", fontSize: "18px", fontWeight: 800 }}>My Filed Grievances</h3>
+                  <p style={{ margin: 0, fontSize: "12px", color: "var(--sf-quiet)" }}>
+                    Track status of complaints sent to District Food Safety Officers.
+                  </p>
+                </div>
+                <a
+                  href={portalHref("user", "complaints/new")}
+                  className="sf-app-scan-btn"
+                  style={{ padding: "8px 14px", fontSize: "12px" }}
+                >
+                  <Plus style={{ width: 14, height: 14 }} /> New
+                </a>
+              </div>
+
+              <div className="sf-app-card-list">
+                {sampleComplaints.map((c) => (
+                  <div key={c.id} className="sf-app-product-card">
+                    <div className="sf-app-product-card-top">
+                      <div>
+                        <span style={{ fontSize: "10px", fontWeight: 800, color: "var(--deep-green)" }}>{c.id}</span>
+                        <strong style={{ display: "block", fontSize: "14px", marginTop: 2 }}>{c.product}</strong>
+                        <span style={{ fontSize: "11px", color: "var(--sf-quiet)" }}>{c.location} · {c.date}</span>
+                      </div>
+
+                      <span
+                        className={`sf-app-badge ${
+                          c.status === "Resolved"
+                            ? "sf-app-badge-ok"
+                            : c.status === "Under investigation"
+                              ? "sf-app-badge-warn"
+                              : "sf-app-badge-crit"
+                        }`}
+                      >
+                        {c.status}
+                      </span>
+                    </div>
+
+                    <div className="sf-app-product-card-actions">
+                      <span style={{ fontSize: "11px", color: "var(--sf-quiet)" }}>
+                        Officer: <strong>{c.officer}</strong>
+                      </span>
+                      <a href={portalHref("user", `complaints/${c.id}`)}>View Timeline &rarr;</a>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* SUB-SECTION: CREATE COMPLAINT */}
+          {isComplaintCreate && (
+            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+              <div>
+                <h3 style={{ margin: "0 0 4px", fontSize: "18px", fontWeight: 800 }}>File a Consumer Grievance</h3>
+                <p style={{ margin: 0, fontSize: "12px", color: "var(--sf-quiet)" }}>
+                  Submit label violation to the District Legal Metrology Officer.
+                </p>
+              </div>
+
+              {complaintSubmitted ? (
+                <div
+                  style={{
+                    textAlign: "center",
+                    padding: "36px 20px",
+                    border: "1px solid var(--sf-line)",
+                    borderRadius: 16,
+                    background: "var(--background)",
+                  }}
+                >
+                  <CheckCircle2 style={{ width: 50, height: 50, color: "var(--deep-green)", margin: "0 auto 12px" }} />
+                  <h4 style={{ margin: "0 0 6px", fontSize: "18px", fontWeight: 800 }}>Grievance Submitted!</h4>
+                  <p style={{ color: "var(--sf-quiet)", fontSize: "12px", maxWidth: 360, margin: "0 auto 20px" }}>
+                    Case ID <strong>GRV-2051</strong> generated. Assigned to the District Food Safety Officer in <strong>{newComplaintDistrict}</strong>.
+                  </p>
+                  <a href={portalHref("user", "complaints")} className="sf-app-scan-btn" style={{ display: "inline-flex" }}>
+                    View in My Grievances &rarr;
+                  </a>
+                </div>
+              ) : (
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    setComplaintSubmitted(true);
+                  }}
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 14,
+                    background: "var(--background)",
+                    border: "1px solid var(--sf-line)",
+                    borderRadius: 16,
+                    padding: 18,
+                  }}
+                >
+                  <div className="sf-demo-field">
+                    <label>Product Detected with Violation</label>
+                    <input type="text" readOnly value="Almond Oat Energy Bar (Batch B-4029)" />
+                  </div>
+
+                  <div className="sf-demo-field">
+                    <label>District Jurisdiction</label>
+                    <select value={newComplaintDistrict} onChange={(e) => setNewComplaintDistrict(e.target.value)}>
+                      <option value="DHULE">DHULE</option>
+                      <option value="PUNE">PUNE</option>
+                      <option value="MUMBAI">MUMBAI</option>
+                      <option value="BENGALURU URBAN">BENGALURU URBAN</option>
+                    </select>
+                  </div>
+
+                  <div className="sf-demo-field">
+                    <label>Store or Purchase Location</label>
+                    <input type="text" required placeholder="e.g. Reliance Fresh, Station Road" />
+                  </div>
+
+                  <div className="sf-demo-field">
+                    <label>Describe the Packaging Issue</label>
+                    <textarea
+                      value={newComplaintNote}
+                      onChange={(e) => setNewComplaintNote(e.target.value)}
+                      required
+                      placeholder="e.g. Packer address was completely missing, font size too small to read..."
+                    />
+                  </div>
+
+                  <div
+                    style={{
+                      border: "1px dashed var(--sf-line)",
+                      borderRadius: 8,
+                      padding: 10,
+                      background: "var(--sf-pale)",
+                      fontSize: "11px",
+                      color: "var(--sf-quiet)",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 8,
+                    }}
+                  >
+                    <Camera style={{ width: 16, height: 16, color: "var(--deep-green)", flexShrink: 0 }} />
+                    Label scan photos automatically attached as evidence.
+                  </div>
+
+                  <button type="submit" className="sf-app-scan-btn" style={{ marginTop: 6, justifyContent: "center" }}>
+                    <Send style={{ width: 16, height: 16 }} />
+                    Submit Complaint to Officer &rarr;
+                  </button>
+                </form>
+              )}
+            </div>
+          )}
+
+          {/* SUB-SECTION: COMPLAINT DETAIL & TIMELINE */}
+          {isComplaintDetail && (
+            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <div>
+                  <h3 style={{ margin: "0 0 2px", fontSize: "18px", fontWeight: 800 }}>Case GRV-2048</h3>
+                  <span style={{ fontSize: "11px", color: "var(--sf-quiet)" }}>Almond Oat Energy Bar</span>
+                </div>
+                <span className="sf-app-badge sf-app-badge-warn">Under investigation</span>
+              </div>
+
+              {/* Progress Steps Timeline */}
+              <div
+                style={{
+                  background: "var(--background)",
+                  border: "1px solid var(--sf-line)",
+                  borderRadius: 14,
+                  padding: "16px",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 14,
+                }}
+              >
+                <strong style={{ fontSize: "13px" }}>Investigation Status Steps</strong>
+
+                <div className="sf-demo-timeline">
+                  <div className="sf-demo-timeline-step">
+                    <span className="sf-demo-timeline-mark"><Check /></span>
+                    <div>
+                      <strong>1. Grievance Submitted by Citizen</strong>
+                      <small>Oct 11, 2026 at 10:45 am · Status: IN_REVIEW</small>
+                    </div>
+                  </div>
+                  <div className="sf-demo-timeline-step">
+                    <span className="sf-demo-timeline-mark"><Check /></span>
+                    <div>
+                      <strong>2. Assigned to Inspector Meera Iyer</strong>
+                      <small>Oct 11, 2026 at 02:15 pm · Status: ASSIGNED</small>
+                    </div>
+                  </div>
+                  <div className="sf-demo-timeline-step">
+                    <span className="sf-demo-timeline-mark"><Check /></span>
+                    <div>
+                      <strong>3. Physical Inspection Conducted at Retailer</strong>
+                      <small>Oct 12, 2026 at 11:30 am · Status: UNDER_INVESTIGATION</small>
+                    </div>
+                  </div>
+                  <div className="sf-demo-timeline-step">
+                    <span className="sf-demo-timeline-mark" style={{ background: "var(--background)", border: "1px solid var(--sf-line)", color: "var(--sf-quiet)" }}>4</span>
+                    <div>
+                      <strong>4. Statutory Notice Issued to Packer</strong>
+                      <small>Pending formal response from manufacturer</small>
+                    </div>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  className="sf-app-scan-btn"
+                  style={{ background: "var(--background)", border: "1px solid var(--sf-line)", color: "var(--foreground)", boxShadow: "none" }}
+                  onClick={() => alert("Downloading official statutory complaint PDF.")}
+                >
+                  <Download style={{ width: 16, height: 16, color: "var(--deep-green)" }} />
+                  Download PDF Grievance Report
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* SECTION: CITIZEN SETTINGS */}
+          {activeSection === "settings" && (
+            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+              <div>
+                <h3 style={{ margin: "0 0 4px", fontSize: "18px", fontWeight: 800 }}>Account & Profile</h3>
+                <p style={{ margin: 0, fontSize: "12px", color: "var(--sf-quiet)" }}>
+                  Manage your citizen profile and notification preferences.
+                </p>
+              </div>
+
+              <div
+                style={{
+                  background: "var(--background)",
+                  border: "1px solid var(--sf-line)",
+                  borderRadius: 16,
+                  padding: 16,
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 14,
+                }}
+              >
+                <div className="sf-demo-field">
+                  <label>Full Name</label>
+                  <input type="text" readOnly value="Aarav Sharma" />
+                </div>
+                <div className="sf-demo-field">
+                  <label>Email Address</label>
+                  <input type="text" readOnly value="aarav@safefood.in" />
+                </div>
+                <div className="sf-demo-field">
+                  <label>Assigned District</label>
+                  <input type="text" readOnly value="DHULE / MAHARASHTRA" />
+                </div>
+
+                <div className="sf-demo-toggle-line">
+                  <div>
+                    <strong>Food Safety Recall Alerts</strong>
+                    <div style={{ color: "var(--sf-quiet)", fontSize: "10px" }}>Receive alerts when non-compliant products are recalled in your district.</div>
+                  </div>
+                  <input type="checkbox" defaultChecked />
+                </div>
+
+                <div className="sf-demo-toggle-line">
+                  <div>
+                    <strong>Grievance SMS & WhatsApp Updates</strong>
+                    <div style={{ color: "var(--sf-quiet)", fontSize: "10px" }}>Instant notifications when an officer inspects your complaint.</div>
+                  </div>
+                  <input type="checkbox" defaultChecked />
+                </div>
+
+                <a
+                  href="/login"
+                  className="sf-app-scan-btn"
+                  style={{ background: "color-mix(in oklab, #ef4444 14%, var(--background))", color: "#b91c1c", boxShadow: "none", border: "1px solid #ef4444", marginTop: 8 }}
+                >
+                  <LogOut style={{ width: 16, height: 16 }} />
+                  Sign Out
+                </a>
+              </div>
+            </div>
+          )}
+        </main>
+
+        {/* Bottom App Navigation Dock (Sticky thumb-friendly tabs) */}
+        <nav className="sf-app-dock" aria-label="App Navigation">
+          <div className="sf-app-dock-inner">
+            <a
+              href={portalHref("user", "dashboard")}
+              className={`sf-app-dock-tab ${activeSection === "dashboard" ? "sf-app-dock-tab-active" : ""}`}
+            >
+              <Home />
+              <span>Home</span>
+            </a>
+
+            <a
+              href={portalHref("user", "history")}
+              className={`sf-app-dock-tab ${activeSection === "history" ? "sf-app-dock-tab-active" : ""}`}
+            >
+              <History />
+              <span>Scans</span>
+            </a>
+
+            {/* Elevated Center Scan Button */}
+            <a href={portalHref("user", "scan")} className="sf-app-dock-scan-btn" title="Scan Label">
+              <Camera />
+            </a>
+
+            <a
+              href={portalHref("user", "complaints")}
+              className={`sf-app-dock-tab ${activeSection.startsWith("complaints") ? "sf-app-dock-tab-active" : ""}`}
+            >
+              <FileText />
+              <span>Grievances</span>
+            </a>
+
+            <a
+              href={portalHref("user", "settings")}
+              className={`sf-app-dock-tab ${activeSection === "settings" ? "sf-app-dock-tab-active" : ""}`}
+            >
+              <User />
+              <span>Profile</span>
+            </a>
+          </div>
+        </nav>
+      </div>
+    </div>
+  );
+}
+
+/* ==========================================================================
+   2. OFFICER APP EXPERIENCE (Fast, field-inspection tool for enforcement)
+   ========================================================================== */
+
+type OfficerAppProps = {
+  activeSection: string;
+  isInvestigationDetail: boolean;
+  scanItem: (typeof sampleScans)[number];
+  setSelectedScanItem: (item: (typeof sampleScans)[number]) => void;
+  investigationStatus: string;
+  setInvestigationStatus: (v: string) => void;
+  officerNote: string;
+  setOfficerNote: (v: string) => void;
+  officerActionSaved: boolean;
+  setOfficerActionSaved: (v: boolean) => void;
+  switchRole: (r: SafeFoodRole) => void;
+};
+
+function OfficerAppView({
+  activeSection,
+  isInvestigationDetail,
+  scanItem,
+  setSelectedScanItem,
+  investigationStatus,
+  setInvestigationStatus,
+  officerNote,
+  setOfficerNote,
+  officerActionSaved,
+  setOfficerActionSaved,
+  switchRole,
+}: OfficerAppProps) {
+  return (
+    <div className="sf-demo sf-app-root">
+      <div className="sf-app-shell sf-app-shell-officer">
+        {/* Tactical Field Header */}
+        <header className="sf-app-header">
+          <div className="sf-app-header-user">
+            <div className="sf-app-avatar sf-app-avatar-officer">MI</div>
+            <div className="sf-app-user-meta">
+              <h2>Inspector Meera Iyer</h2>
+              <span>
+                <ShieldCheck style={{ width: 12, height: 12, color: "#34d399" }} />
+                OFF-DHU-4921 · Dhule District
+              </span>
+            </div>
+          </div>
+
+          <div className="sf-app-header-actions">
+            <select
+              className="sf-app-role-select"
+              value="officer"
+              onChange={(e) => switchRole(e.target.value as SafeFoodRole)}
+              aria-label="Switch demo mode"
+            >
+              <option value="user">📱 Citizen App</option>
+              <option value="officer">🛡️ Officer App</option>
+              <option value="admin">🏢 Admin Panel</option>
+            </select>
+
+            <a href="/login" className="sf-app-signout-btn" title="Sign out">
+              <LogOut style={{ width: 15, height: 15 }} />
+            </a>
+          </div>
+        </header>
+
+        {/* Main Body */}
+        <main className="sf-app-body">
+          {/* SECTION: OFFICER DASHBOARD (FIELD FEED) */}
+          {activeSection === "dashboard" && (
+            <>
+              {/* Field Duty Status Banner */}
+              <div className="sf-officer-banner">
+                <div>
+                  <strong style={{ display: "block", fontSize: "14px" }}>Enforcement Division</strong>
+                  <span style={{ color: "#94a3b8", fontSize: "11px" }}>Auto-Verification: ACTIVE</span>
+                </div>
+                <span className="sf-officer-duty-pill">
+                  <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#34d399" }} />
+                  ON FIELD DUTY
+                </span>
+              </div>
+
+              {/* 3 Quick Field Metrics */}
+              <div className="sf-officer-stats-row">
+                <div className="sf-officer-stat-pill">
+                  <strong>48</strong>
+                  <span>Market Audits</span>
+                </div>
+                <div className="sf-officer-stat-pill">
+                  <strong style={{ color: "#ef4444" }}>16</strong>
+                  <span>Violations</span>
+                </div>
+                <div className="sf-officer-stat-pill">
+                  <strong style={{ color: "#f59e0b" }}>5</strong>
+                  <span>Assigned Cases</span>
+                </div>
+              </div>
+
+              {/* Fast Field Action Button */}
+              <a href={portalHref("officer", "scan")} className="sf-app-scan-btn">
+                <ScanLine style={{ width: 18, height: 18 }} />
+                Conduct Field Inspection Scan &rarr;
+              </a>
+
+              {/* Active Assigned Cases (Queue of Case Cards, NOT a database table) */}
+              <div>
+                <div className="sf-app-section-title">
+                  <h4>Assigned Field Cases ({sampleInvestigations.length})</h4>
+                  <a href={portalHref("officer", "investigations")}>View all &rarr;</a>
+                </div>
+
+                <div className="sf-app-card-list">
+                  {sampleInvestigations.map((inv) => (
+                    <div key={inv.id} className="sf-case-card">
+                      <div className="sf-case-card-header">
+                        <div>
+                          <span style={{ fontSize: "11px", fontWeight: 800, color: "var(--deep-green)" }}>{inv.id}</span>
+                          <span style={{ fontSize: "11px", color: "var(--sf-quiet)", marginLeft: 6 }}>({inv.complaint})</span>
+                          <strong style={{ display: "block", fontSize: "14px", marginTop: 2 }}>{inv.product}</strong>
+                        </div>
+                        <span className="sf-app-badge sf-app-badge-warn">{inv.status}</span>
+                      </div>
+
+                      <div className="sf-case-card-body">
+                        <div><strong>Jurisdiction:</strong> {inv.district}</div>
+                        <div><strong>Assigned:</strong> {inv.assigned}</div>
+                      </div>
+
+                      <a href={portalHref("officer", `investigations/${inv.id}`)} className="sf-case-card-btn">
+                        Open Case & Record Findings &rarr;
+                      </a>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
+
+          {/* SECTION: OFFICER SCAN / FIELD AUDIT */}
+          {activeSection === "scan" && (
+            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+              <div>
+                <h3 style={{ margin: "0 0 4px", fontSize: "18px", fontWeight: 800 }}>Field OCR Inspection Audit</h3>
+                <p style={{ margin: 0, fontSize: "12px", color: "var(--sf-quiet)" }}>
+                  Conduct statutory check against Rule 6 of PCR 2011 & FSSAI labeling norms.
+                </p>
+              </div>
+
+              {/* Field Camera Viewfinder */}
+              <div className="sf-app-viewfinder">
+                <div className="sf-app-viewfinder-scanline" />
+                <span style={{ fontSize: "11px", color: "#94a3b8", display: "inline-block", marginBottom: 8 }}>
+                  OFFICER FIELD OCR AUDIT (HIGH-PRECISION ZOOM)
+                </span>
+
+                <div className="sf-app-target-box">
+                  <ScanLine style={{ width: 44, height: 44, color: "#34d399" }} />
+                </div>
+
+                <strong style={{ display: "block", fontSize: "15px", color: "#ffffff", marginTop: 6 }}>
+                  {scanItem.product}
+                </strong>
+                <span style={{ fontSize: "11px", color: "#94a3b8" }}>
+                  Category: {scanItem.category} · Barcode: 8901234567890
+                </span>
+              </div>
+
+              {/* Sample Product Picker */}
+              <div>
+                <span style={{ fontSize: "11px", fontWeight: 700, color: "var(--sf-quiet)" }}>
+                  SAMPLE PACKAGING AUDIT TEST:
+                </span>
+                <div className="sf-app-sample-pills">
+                  {sampleScans.map((s) => (
+                    <button
+                      key={s.id}
+                      type="button"
+                      className={`sf-app-sample-pill ${scanItem.id === s.id ? "sf-app-sample-pill-active" : ""}`}
+                      onClick={() => setSelectedScanItem(s)}
+                    >
+                      {s.warning ? "⚠️ " : "✅ "}
+                      {s.product}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Legal Metrology Statutory Checklist */}
+              <div>
+                <h4 style={{ margin: "0 0 10px", fontSize: "14px", fontWeight: 800 }}>
+                  Statutory Rule 6 Audit Verification
+                </h4>
+                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  {mandatoryDeclarations.map((decl, index) => {
+                    const isFailedItem = scanItem.warning && index === 3;
+                    const isOk = !isFailedItem && decl.ok;
+
+                    return (
+                      <div
+                        key={decl.label}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          padding: "11px 14px",
+                          borderRadius: 10,
+                          border: "1px solid var(--sf-line)",
+                          background: isOk ? "var(--background)" : "color-mix(in oklab, #ef4444 8%, var(--background))",
+                        }}
+                      >
+                        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                          {isOk ? (
+                            <CheckCircle2 style={{ width: 18, height: 18, color: "var(--deep-green)", flexShrink: 0 }} />
+                          ) : (
+                            <X style={{ width: 18, height: 18, color: "#b91c1c", flexShrink: 0 }} />
+                          )}
+                          <div>
+                            <strong style={{ fontSize: "12px", display: "block" }}>{decl.label}</strong>
+                            <span style={{ fontSize: "11px", color: "var(--sf-quiet)" }}>
+                              {isFailedItem ? "BREACH: Missing packer district / PIN code" : decl.detail}
+                            </span>
+                          </div>
+                        </div>
+
+                        <span className={`sf-app-badge ${isOk ? "sf-app-badge-ok" : "sf-app-badge-crit"}`}>
+                          {isOk ? "COMPLIANT" : "VIOLATION"}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Enforcement Action Buttons */}
+              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                {scanItem.warning && (
+                  <button
+                    type="button"
+                    className="sf-app-scan-btn"
+                    style={{ background: "#b91c1c" }}
+                    onClick={() => alert("Statutory Enforcement Violation logged in Dhule District Register (Auto-Verified).")}
+                  >
+                    File Enforcement Report (Auto-Verified) &rarr;
+                  </button>
+                )}
+                <button
+                  type="button"
+                  className="sf-app-scan-btn"
+                  style={{ background: "var(--background)", border: "1px solid var(--sf-line)", color: "var(--foreground)", boxShadow: "none" }}
+                  onClick={() => alert("Drafting Statutory Notice under Sec 36 of Legal Metrology Act.")}
+                >
+                  Draft Statutory Notice under Sec 36 &rarr;
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* SECTION: OFFICER INVESTIGATIONS LIST */}
+          {activeSection === "investigations" && !isInvestigationDetail && (
+            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+              <div>
+                <h3 style={{ margin: "0 0 4px", fontSize: "18px", fontWeight: 800 }}>Field Cases Queue</h3>
+                <p style={{ margin: 0, fontSize: "12px", color: "var(--sf-quiet)" }}>
+                  Grievances assigned for field verification in Dhule District.
+                </p>
+              </div>
+
+              <div className="sf-app-card-list">
+                {sampleInvestigations.map((inv) => (
+                  <div key={inv.id} className="sf-case-card">
+                    <div className="sf-case-card-header">
+                      <div>
+                        <span style={{ fontSize: "11px", fontWeight: 800, color: "var(--deep-green)" }}>{inv.id}</span>
+                        <strong style={{ display: "block", fontSize: "14px", marginTop: 2 }}>{inv.product}</strong>
+                        <span style={{ fontSize: "11px", color: "var(--sf-quiet)" }}>Ref: {inv.complaint} · {inv.district}</span>
+                      </div>
+                      <span className="sf-app-badge sf-app-badge-warn">{inv.status}</span>
+                    </div>
+
+                    <a href={portalHref("officer", `investigations/${inv.id}`)} className="sf-case-card-btn">
+                      Inspect & Record Findings &rarr;
+                    </a>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* SUB-SECTION: INVESTIGATION CASE DETAIL & STATUS UPDATE */}
+          {isInvestigationDetail && (
+            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+              <div>
+                <h3 style={{ margin: "0 0 2px", fontSize: "18px", fontWeight: 800 }}>Investigation INV-873</h3>
+                <span style={{ fontSize: "11px", color: "var(--sf-quiet)" }}>Almond Oat Energy Bar · Indiranagar Market</span>
+              </div>
+
+              {officerActionSaved ? (
+                <div
+                  style={{
+                    padding: 14,
+                    border: "1px solid var(--deep-green)",
+                    borderRadius: 12,
+                    background: "var(--sf-pale)",
+                    color: "var(--deep-green)",
+                    fontSize: "12px",
+                  }}
+                >
+                  <CheckCircle2 style={{ display: "inline", width: 15, height: 15, marginRight: 6, verticalAlign: "middle" }} />
+                  Record saved! Synced with District Legal Metrology Register (Auto-Verified).
+                </div>
+              ) : null}
+
+              {/* Status Update Form */}
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  setOfficerActionSaved(true);
+                }}
+                style={{
+                  background: "var(--background)",
+                  border: "1px solid var(--sf-line)",
+                  borderRadius: 16,
+                  padding: 18,
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 14,
+                }}
+              >
+                <div className="sf-demo-field">
+                  <label>Update Investigation Status</label>
+                  <select
+                    value={investigationStatus}
+                    onChange={(e) => setInvestigationStatus(e.target.value)}
+                  >
+                    <option value="under_investigation">Under Field Investigation</option>
+                    <option value="verified_genuine">Verified Genuine Violation</option>
+                    <option value="verified_not_genuine">False Alarm / Compliant</option>
+                    <option value="action_taken">Notice Issued / Action Taken</option>
+                  </select>
+                </div>
+
+                <div className="sf-demo-field">
+                  <label>Field Notes & Observations</label>
+                  <textarea
+                    value={officerNote}
+                    onChange={(e) => setOfficerNote(e.target.value)}
+                    required
+                    placeholder="Record retailer name, seized batch numbers, or inspection notes..."
+                  />
+                </div>
+
+                <button type="submit" className="sf-app-scan-btn" style={{ justifyContent: "center" }}>
+                  Save Enforcement Record (Auto-Verified) &rarr;
+                </button>
+              </form>
+            </div>
+          )}
+
+          {/* SECTION: OFFICER SETTINGS */}
+          {activeSection === "settings" && (
+            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+              <div>
+                <h3 style={{ margin: "0 0 4px", fontSize: "18px", fontWeight: 800 }}>Officer Profile</h3>
+                <p style={{ margin: 0, fontSize: "12px", color: "var(--sf-quiet)" }}>
+                  Food Safety Enforcement Division credentials.
+                </p>
+              </div>
+
+              <div
+                style={{
+                  background: "var(--background)",
+                  border: "1px solid var(--sf-line)",
+                  borderRadius: 16,
+                  padding: 16,
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 14,
+                }}
+              >
+                <div className="sf-demo-field">
+                  <label>Officer Name</label>
+                  <input type="text" readOnly value="Inspector Meera Iyer" />
+                </div>
+                <div className="sf-demo-field">
+                  <label>Badge Identifier</label>
+                  <input type="text" readOnly value="OFF-DHU-4921" />
+                </div>
+                <div className="sf-demo-field">
+                  <label>District Jurisdiction</label>
+                  <input type="text" readOnly value="DHULE / MAHARASHTRA" />
+                </div>
+
+                <div className="sf-demo-toggle-line">
+                  <div>
+                    <strong>Auto-Verification Priority</strong>
+                    <div style={{ color: "var(--sf-quiet)", fontSize: "10px" }}>Reports submitted by your badge bypass manual approval.</div>
+                  </div>
+                  <input type="checkbox" defaultChecked />
+                </div>
+
+                <a
+                  href="/login"
+                  className="sf-app-scan-btn"
+                  style={{ background: "color-mix(in oklab, #ef4444 14%, var(--background))", color: "#b91c1c", boxShadow: "none", border: "1px solid #ef4444", marginTop: 8 }}
+                >
+                  <LogOut style={{ width: 16, height: 16 }} />
+                  Sign Out
+                </a>
+              </div>
+            </div>
+          )}
+        </main>
+
+        {/* Bottom Officer App Navigation Dock */}
+        <nav className="sf-app-dock" aria-label="Officer Navigation">
+          <div className="sf-app-dock-inner">
+            <a
+              href={portalHref("officer", "dashboard")}
+              className={`sf-app-dock-tab ${activeSection === "dashboard" ? "sf-app-dock-tab-active" : ""}`}
+            >
+              <Home />
+              <span>Feed</span>
+            </a>
+
+            {/* Elevated Center Scan Button */}
+            <a href={portalHref("officer", "scan")} className="sf-app-dock-scan-btn" title="Audit Scan">
+              <ScanLine />
+            </a>
+
+            <a
+              href={portalHref("officer", "investigations")}
+              className={`sf-app-dock-tab ${activeSection.startsWith("investigations") ? "sf-app-dock-tab-active" : ""}`}
+            >
+              <ClipboardCheck />
+              <span>Cases</span>
+            </a>
+
+            <a
+              href={portalHref("officer", "settings")}
+              className={`sf-app-dock-tab ${activeSection === "settings" ? "sf-app-dock-tab-active" : ""}`}
+            >
+              <User />
+              <span>Profile</span>
+            </a>
+          </div>
+        </nav>
+      </div>
+    </div>
+  );
+}
+
+/* ==========================================================================
+   3. ADMIN CONSOLE VIEW (Regulatory Oversight Console)
+   ========================================================================== */
+
+type AdminConsoleProps = {
+  activeSection: string;
+  switchRole: (r: SafeFoodRole) => void;
+  newOfficerName: string;
+  setNewOfficerName: (v: string) => void;
+  newOfficerDistrict: string;
+  setNewOfficerDistrict: (v: string) => void;
+  officerAddedMessage: boolean;
+  setOfficerAddedMessage: (v: boolean) => void;
+};
+
+function AdminConsoleView({
+  activeSection,
+  switchRole,
+  newOfficerName,
+  setNewOfficerName,
+  newOfficerDistrict,
+  setNewOfficerDistrict,
+  officerAddedMessage,
+  setOfficerAddedMessage,
+}: AdminConsoleProps) {
   return (
     <div className="sf-demo sf-demo-app">
-      {/* Top sticky navigation bar */}
       <header className="sf-demo-topbar">
         <div className="sf-demo-topbar-left">
-          <Link to="/" className="sf-demo-brand" aria-label="SafeFood Home">
+          <a href="/" className="sf-demo-brand" aria-label="SafeFood Home">
             <span className="sf-demo-brand-mark">
               <ShieldCheck />
             </span>
             <span>SafeFood</span>
-          </Link>
-
+          </a>
           <span className="sf-demo-divider" />
-          <span className="sf-demo-workspace-label">
-            {role === "user" && "Citizen Consumer Portal"}
-            {role === "officer" && "Food Safety Enforcement Division"}
-            {role === "admin" && "Regulatory & District Oversight Workspace"}
-          </span>
+          <span className="sf-demo-workspace-label">Regulatory & District Oversight Workspace</span>
         </div>
 
         <div className="sf-demo-topbar-right">
-          <span className="sf-demo-demo-chip">
-            <ShieldCheck />
-            Interactive Demo
-          </span>
-
           <div className="sf-demo-user-chip">
-            <span className="sf-demo-avatar">{currentRoleConfig.initials}</span>
+            <span className="sf-demo-avatar">PA</span>
             <div>
-              <strong>{currentRoleConfig.name}</strong>
-              <div style={{ color: "var(--sf-quiet)", fontSize: "10px" }}>
-                {currentRoleConfig.title}
-              </div>
+              <strong>Platform Administrator</strong>
+              <div style={{ color: "var(--sf-quiet)", fontSize: "10px" }}>Regulatory Head</div>
             </div>
           </div>
 
-          <Link
-            to="/login"
-            className="sf-demo-text-link"
-            style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: "11px" }}
-            title="Sign out to demo login"
-          >
+          <a href="/login" className="sf-demo-text-link" style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: "11px" }}>
             <LogOut style={{ width: 14, height: 14 }} />
             <span>Sign out</span>
-          </Link>
+          </a>
         </div>
       </header>
 
-      {/* App main layout grid: Sidebar + Workspace */}
       <div className="sf-demo-app-grid">
-        {/* Navigation Sidebar */}
         <aside className="sf-demo-sidebar">
-          <span className="sf-demo-sidebar-heading">NAVIGATION</span>
-
-          <nav className="sf-demo-nav-list" aria-label="Portal Navigation">
-            {currentRoleConfig.navigation.map((item) => {
-              const itemFullPath = portalHref(role, item.path);
-              const isCurrent =
-                (item.path === "dashboard" && activeSection === "dashboard") ||
-                (item.path !== "dashboard" && activeSection.startsWith(item.path.split("/")[0] ?? ""));
-              const Icon = item.icon;
-
-              return (
-                <Link
-                  key={item.path}
-                  to={itemFullPath}
-                  className={`sf-demo-nav-link ${isCurrent ? "sf-demo-nav-link-active" : ""}`}
-                >
-                  <Icon />
-                  <span>{item.label}</span>
-                </Link>
-              );
-            })}
+          <span className="sf-demo-sidebar-heading">ADMINISTRATION</span>
+          <nav className="sf-demo-nav-list">
+            <a href={portalHref("admin", "dashboard")} className={`sf-demo-nav-link ${activeSection === "dashboard" ? "sf-demo-nav-link-active" : ""}`}>
+              <Home />
+              <span>Overview</span>
+            </a>
+            <a href={portalHref("admin", "officers")} className={`sf-demo-nav-link ${activeSection === "officers" ? "sf-demo-nav-link-active" : ""}`}>
+              <UserCog />
+              <span>Officer Fleet</span>
+            </a>
+            <a href={portalHref("admin", "users")} className={`sf-demo-nav-link ${activeSection === "users" ? "sf-demo-nav-link-active" : ""}`}>
+              <Users />
+              <span>Citizens</span>
+            </a>
+            <a href={portalHref("admin", "complaints")} className={`sf-demo-nav-link ${activeSection === "complaints" ? "sf-demo-nav-link-active" : ""}`}>
+              <FileText />
+              <span>Grievances Queue</span>
+            </a>
+            <a href={portalHref("admin", "settings")} className={`sf-demo-nav-link ${activeSection === "settings" ? "sf-demo-nav-link-active" : ""}`}>
+              <User />
+              <span>Settings</span>
+            </a>
           </nav>
 
-          {/* Quick Role Switcher */}
           <div className="sf-demo-role-switch">
-            <p>SWITCH DEMO PERSONA</p>
-            <select
-              value={role}
-              onChange={(e) => switchRole(e.target.value as SafeFoodRole)}
-              aria-label="Switch portal role"
-            >
-              <option value="user">Citizen (Aarav Sharma)</option>
-              <option value="officer">Officer (Inspector Meera)</option>
-              <option value="admin">Administrator (Regulatory Head)</option>
+            <p>SWITCH PERSONA</p>
+            <select value="admin" onChange={(e) => switchRole(e.target.value as SafeFoodRole)}>
+              <option value="user">📱 Citizen App (Aarav)</option>
+              <option value="officer">🛡️ Officer App (Insp. Meera)</option>
+              <option value="admin">🏢 Admin Console</option>
             </select>
           </div>
         </aside>
 
-        {/* Main Workspace Area */}
         <main className="sf-demo-workspace">
-          {/* Header & Breadcrumb */}
-          <div className="sf-demo-page-head">
-            <div>
-              <div className="sf-demo-breadcrumb">
-                SafeFood &rsaquo; {role.toUpperCase()} &rsaquo; {activeSection.toUpperCase()}
-              </div>
-              <h1>
-                {activeSection === "dashboard" && `Welcome, ${currentRoleConfig.name}`}
-                {activeSection === "scan" && (role === "officer" ? "Statutory Label Inspection Audit" : "Scan Food Product Label")}
-                {activeSection === "history" && "Inspection & Scan History"}
-                {activeSection === "complaints" && !isComplaintCreate && !isComplaintDetail && (role === "admin" ? "District Grievances Queue" : "My Filed Grievances")}
-                {isComplaintCreate && "File a Legal Metrology Grievance"}
-                {isComplaintDetail && "Grievance Detail & Statutory Timeline"}
-                {activeSection === "investigations" && !isInvestigationDetail && "Enforcement Investigations Queue"}
-                {isInvestigationDetail && "Investigation Case File INV-873"}
-                {activeSection === "users" && "Registered Citizens Directory"}
-                {activeSection === "officers" && "District Enforcement Officer Fleet"}
-                {activeSection === "settings" && "Account & Platform Settings"}
-              </h1>
-              <p>
-                {role === "user" && "Verify packaged food declarations, identify illegal tiny fonts, and lodge grievances directly to district food safety officers."}
-                {role === "officer" && "Conduct market inspections, auto-verify non-compliant products under PCR 2011, and issue statutory notices."}
-                {role === "admin" && "Monitor compliance rates across districts, deploy field officers, and review consumer protection grievances."}
-              </p>
-            </div>
-
-            <div className="sf-demo-page-actions">
-              {role === "user" && (
-                <>
-                  <Link to={portalHref("user", "scan")} className="sf-demo-primary-action">
-                    <ScanLine style={{ width: 14, height: 14, display: "inline", marginRight: 6, verticalAlign: "middle" }} />
-                    Scan Label
-                  </Link>
-                  <Link to={portalHref("user", "complaints/new")} className="sf-demo-quick-link" style={{ minHeight: 36, padding: "0 12px" }}>
-                    <FilePlus2 style={{ width: 14, height: 14 }} />
-                    File Grievance
-                  </Link>
-                </>
-              )}
-              {role === "officer" && (
-                <Link to={portalHref("officer", "scan")} className="sf-demo-primary-action">
-                  <ScanLine style={{ width: 14, height: 14, display: "inline", marginRight: 6, verticalAlign: "middle" }} />
-                  Field Inspection Scan
-                </Link>
-              )}
-              {role === "admin" && (
-                <Link to={portalHref("admin", "officers")} className="sf-demo-primary-action">
-                  <UserCog style={{ width: 14, height: 14, display: "inline", marginRight: 6, verticalAlign: "middle" }} />
-                  Deploy Officer
-                </Link>
-              )}
-            </div>
-          </div>
-
-          {/* SECTION: DASHBOARD */}
           {activeSection === "dashboard" && (
             <>
-              {/* Stat Cards */}
               <div className="sf-demo-stat-grid">
-                {role === "user" && (
-                  <>
-                    <div className="sf-demo-stat">
-                      <div className="sf-demo-stat-top">
-                        <span className="sf-demo-stat-label">TOTAL LABELS SCANNED</span>
-                        <span className="sf-demo-stat-icon"><ScanLine /></span>
-                      </div>
-                      <strong>28</strong>
-                      <small>Across snacks, dairy & staples</small>
-                    </div>
-                    <div className="sf-demo-stat">
-                      <div className="sf-demo-stat-top">
-                        <span className="sf-demo-stat-label">COMPLIANT PRODUCTS</span>
-                        <span className="sf-demo-stat-icon"><CheckCircle2 /></span>
-                      </div>
-                      <strong>21</strong>
-                      <small>Passed PCR 2011 & FSSAI</small>
-                    </div>
-                    <div className="sf-demo-stat">
-                      <div className="sf-demo-stat-top">
-                        <span className="sf-demo-stat-label">ISSUES FLAGGED</span>
-                        <span className="sf-demo-stat-icon" style={{ color: "var(--warning)" }}><AlertTriangle /></span>
-                      </div>
-                      <strong>7</strong>
-                      <small>Missing MRP, dates, or address</small>
-                    </div>
-                    <div className="sf-demo-stat">
-                      <div className="sf-demo-stat-top">
-                        <span className="sf-demo-stat-label">GRIEVANCES LODGED</span>
-                        <span className="sf-demo-stat-icon"><FileText /></span>
-                      </div>
-                      <strong>3</strong>
-                      <small>1 under investigation, 1 resolved</small>
-                    </div>
-                  </>
-                )}
-
-                {role === "officer" && (
-                  <>
-                    <div className="sf-demo-stat">
-                      <div className="sf-demo-stat-top">
-                        <span className="sf-demo-stat-label">MARKET INSPECTIONS</span>
-                        <span className="sf-demo-stat-icon"><ScanLine /></span>
-                      </div>
-                      <strong>48</strong>
-                      <small>In assigned district (Dhule)</small>
-                    </div>
-                    <div className="sf-demo-stat">
-                      <div className="sf-demo-stat-top">
-                        <span className="sf-demo-stat-label">STATUTORY VIOLATIONS</span>
-                        <span className="sf-demo-stat-icon" style={{ color: "var(--destructive)" }}><AlertTriangle /></span>
-                      </div>
-                      <strong>16</strong>
-                      <small>PCR Rule 6 breaches logged</small>
-                    </div>
-                    <div className="sf-demo-stat">
-                      <div className="sf-demo-stat-top">
-                        <span className="sf-demo-stat-label">ASSIGNED INVESTIGATIONS</span>
-                        <span className="sf-demo-stat-icon"><ClipboardCheck /></span>
-                      </div>
-                      <strong>5</strong>
-                      <small>3 pending field visits</small>
-                    </div>
-                    <div className="sf-demo-stat">
-                      <div className="sf-demo-stat-top">
-                        <span className="sf-demo-stat-label">AUTO-VERIFIED REPORTS</span>
-                        <span className="sf-demo-stat-icon"><ShieldCheck /></span>
-                      </div>
-                      <strong>12</strong>
-                      <small>Officer status priority enabled</small>
-                    </div>
-                  </>
-                )}
-
-                {role === "admin" && (
-                  <>
-                    <div className="sf-demo-stat">
-                      <div className="sf-demo-stat-top">
-                        <span className="sf-demo-stat-label">STATEWIDE GRIEVANCES</span>
-                        <span className="sf-demo-stat-icon"><FileText /></span>
-                      </div>
-                      <strong>142</strong>
-                      <small>Across 9 administrative districts</small>
-                    </div>
-                    <div className="sf-demo-stat">
-                      <div className="sf-demo-stat-top">
-                        <span className="sf-demo-stat-label">ACTIVE FIELD OFFICERS</span>
-                        <span className="sf-demo-stat-icon"><UserCog /></span>
-                      </div>
-                      <strong>34</strong>
-                      <small>Enforcement fleet deployed</small>
-                    </div>
-                    <div className="sf-demo-stat">
-                      <div className="sf-demo-stat-top">
-                        <span className="sf-demo-stat-label">VERIFIED VIOLATIONS</span>
-                        <span className="sf-demo-stat-icon" style={{ color: "var(--destructive)" }}><AlertTriangle /></span>
-                      </div>
-                      <strong>89</strong>
-                      <small>Legal notices issued to packers</small>
-                    </div>
-                    <div className="sf-demo-stat">
-                      <div className="sf-demo-stat-top">
-                        <span className="sf-demo-stat-label">DISTRICT RESOLUTION RATE</span>
-                        <span className="sf-demo-stat-icon"><CheckCircle2 /></span>
-                      </div>
-                      <strong>84.2%</strong>
-                      <small>Average turnaround: 3.2 days</small>
-                    </div>
-                  </>
-                )}
+                <div className="sf-demo-stat">
+                  <div className="sf-demo-stat-top">
+                    <span className="sf-demo-stat-label">STATEWIDE GRIEVANCES</span>
+                    <span className="sf-demo-stat-icon"><FileText /></span>
+                  </div>
+                  <strong>142</strong>
+                  <small>Across 9 districts</small>
+                </div>
+                <div className="sf-demo-stat">
+                  <div className="sf-demo-stat-top">
+                    <span className="sf-demo-stat-label">ACTIVE FIELD OFFICERS</span>
+                    <span className="sf-demo-stat-icon"><UserCog /></span>
+                  </div>
+                  <strong>34</strong>
+                  <small>Enforcement fleet deployed</small>
+                </div>
+                <div className="sf-demo-stat">
+                  <div className="sf-demo-stat-top">
+                    <span className="sf-demo-stat-label">VERIFIED VIOLATIONS</span>
+                    <span className="sf-demo-stat-icon" style={{ color: "var(--destructive)" }}><AlertTriangle /></span>
+                  </div>
+                  <strong>89</strong>
+                  <small>Notices issued to packers</small>
+                </div>
+                <div className="sf-demo-stat">
+                  <div className="sf-demo-stat-top">
+                    <span className="sf-demo-stat-label">RESOLUTION RATE</span>
+                    <span className="sf-demo-stat-icon"><CheckCircle2 /></span>
+                  </div>
+                  <strong>84.2%</strong>
+                  <small>Avg turnaround: 3.2 days</small>
+                </div>
               </div>
 
-              {/* Main Dashboard Grid */}
               <div className="sf-demo-dashboard-grid">
-                {/* Primary Content Panel */}
                 <div className="sf-demo-panel">
                   <div className="sf-demo-panel-head">
-                    <h2>
-                      {role === "user" && "Recent Packaged Food Checks"}
-                      {role === "officer" && "Active District Grievances & Audits"}
-                      {role === "admin" && "Latest District Grievance Feed"}
-                    </h2>
-                    <span style={{ fontSize: "11px", color: "var(--sf-quiet)" }}>Live updates</span>
+                    <h2>Latest District Grievances Feed</h2>
                   </div>
-
                   <div className="sf-demo-panel-body">
                     <div className="sf-demo-table-wrap">
                       <table className="sf-demo-table">
@@ -351,121 +1452,41 @@ function AppPortalPage() {
                           <tr>
                             <th>IDENTIFIER</th>
                             <th>PRODUCT</th>
-                            <th>LOCATION / DISTRICT</th>
-                            <th>VERDICT / STATUS</th>
+                            <th>DISTRICT</th>
+                            <th>STATUS</th>
                             <th>ACTION</th>
                           </tr>
                         </thead>
                         <tbody>
-                          {role === "user" &&
-                            sampleScans.map((scan) => (
-                              <tr key={scan.id}>
-                                <td>{scan.id}</td>
-                                <td>{scan.product}</td>
-                                <td>Indiranagar, Bengaluru</td>
-                                <td>
-                                  <span className={`sf-demo-status ${scan.warning ? "sf-demo-status-warn" : ""}`}>
-                                    {scan.warning ? <AlertTriangle style={{ width: 11, height: 11 }} /> : <CheckCircle2 style={{ width: 11, height: 11 }} />}
-                                    {scan.result}
-                                  </span>
-                                </td>
-                                <td>
-                                  {scan.warning ? (
-                                    <Link to={portalHref("user", "complaints/new")} className="sf-demo-text-link">
-                                      Lodge Grievance &rarr;
-                                    </Link>
-                                  ) : (
-                                    <span style={{ color: "var(--sf-quiet)" }}>Passed</span>
-                                  )}
-                                </td>
-                              </tr>
-                            ))}
-
-                          {role === "officer" &&
-                            sampleInvestigations.map((inv) => (
-                              <tr key={inv.id}>
-                                <td>{inv.id}</td>
-                                <td>{inv.product}</td>
-                                <td>{inv.district}</td>
-                                <td>
-                                  <span className="sf-demo-status">
-                                    <ClipboardCheck style={{ width: 11, height: 11 }} />
-                                    {inv.status}
-                                  </span>
-                                </td>
-                                <td>
-                                  <Link to={portalHref("officer", `investigations/${inv.id}`)} className="sf-demo-text-link">
-                                    Open Case &rarr;
-                                  </Link>
-                                </td>
-                              </tr>
-                            ))}
-
-                          {role === "admin" &&
-                            sampleComplaints.map((c) => (
-                              <tr key={c.id}>
-                                <td>{c.id}</td>
-                                <td>{c.product}</td>
-                                <td>{c.location}</td>
-                                <td>
-                                  <span className="sf-demo-status">
-                                    {c.status}
-                                  </span>
-                                </td>
-                                <td>
-                                  <Link to={portalHref("admin", "complaints")} className="sf-demo-text-link">
-                                    Review &rarr;
-                                  </Link>
-                                </td>
-                              </tr>
-                            ))}
+                          {sampleComplaints.map((c) => (
+                            <tr key={c.id}>
+                              <td>{c.id}</td>
+                              <td>{c.product}</td>
+                              <td>{c.location}</td>
+                              <td><span className="sf-demo-status">{c.status}</span></td>
+                              <td><a href={portalHref("admin", "complaints")} className="sf-demo-text-link">Review &rarr;</a></td>
+                            </tr>
+                          ))}
                         </tbody>
                       </table>
                     </div>
                   </div>
                 </div>
 
-                {/* Side Quick Actions & Info Panel */}
-                <div style={{ display: "grid", gap: 15 }}>
-                  <div className="sf-demo-panel">
-                    <div className="sf-demo-panel-head">
-                      <h2>Quick Shortcuts</h2>
-                    </div>
-                    <div className="sf-demo-panel-body">
-                      <div className="sf-demo-quick-actions">
-                        <Link to={portalHref(role, "scan")} className="sf-demo-quick-link">
-                          <ScanLine />
-                          <span>Launch OCR & Legal Metrology Scanner</span>
-                        </Link>
-                        {role === "user" && (
-                          <Link to={portalHref("user", "complaints/new")} className="sf-demo-quick-link">
-                            <FilePlus2 />
-                            <span>File Form PCR-6 Complaint</span>
-                          </Link>
-                        )}
-                        {role === "officer" && (
-                          <Link to={portalHref("officer", "investigations")} className="sf-demo-quick-link">
-                            <ClipboardCheck />
-                            <span>View Assigned Enforcement Cases</span>
-                          </Link>
-                        )}
-                        {role === "admin" && (
-                          <Link to={portalHref("admin", "officers")} className="sf-demo-quick-link">
-                            <Users />
-                            <span>Manage District Officer Fleet</span>
-                          </Link>
-                        )}
-                      </div>
-                    </div>
+                <div className="sf-demo-panel">
+                  <div className="sf-demo-panel-head">
+                    <h2>Admin Actions</h2>
                   </div>
-
-                  <div className="sf-demo-callout">
-                    <Sparkles />
-                    <div>
-                      <strong>Google Gemini AI Regulatory Audit:</strong>
-                      <p style={{ margin: "4px 0 0", color: "var(--sf-quiet)" }}>
-                        Automated checks verify declarations against Rule 6 of the Legal Metrology (Packaged Commodities) Rules, 2011 and FSSAI Packaging Regulations.
-                      </p>
+                  <div className="sf-demo-panel-body">
+                    <div className="sf-demo-quick-actions">
+                      <a href={portalHref("admin", "officers")} className="sf-demo-quick-link">
+                        <UserCog />
+                        <span>Deploy New Field Officer</span>
+                      </a>
+                      <a href={portalHref("admin", "complaints")} className="sf-demo-quick-link">
+                        <FileText />
+                        <span>View Statewide Queue</span>
+                      </a>
                     </div>
                   </div>
                 </div>
@@ -473,586 +1494,11 @@ function AppPortalPage() {
             </>
           )}
 
-          {/* SECTION: SCAN / INSPECT */}
-          {activeSection === "scan" && (
-            <div className="sf-demo-report-grid">
-              <div className="sf-demo-panel">
-                <div className="sf-demo-panel-head">
-                  <h2>Packaging Label Scanner & OCR Audit</h2>
-                  <span style={{ fontSize: "11px", color: "var(--sf-quiet)" }}>4 camera angles / label sides</span>
-                </div>
-                <div className="sf-demo-panel-body">
-                  <div className="sf-demo-filter-row">
-                    <label style={{ fontSize: "11px", fontWeight: 700, alignSelf: "center" }}>Select sample package to inspect:</label>
-                    <select
-                      value={scanItem.id}
-                      onChange={(e) => {
-                        const found = sampleScans.find((s) => s.id === e.target.value);
-                        if (found) setSelectedScanItem(found);
-                      }}
-                      aria-label="Select package"
-                    >
-                      {sampleScans.map((s) => (
-                        <option key={s.id} value={s.id}>
-                          {s.product} ({s.category})
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div style={{ border: "1px dashed var(--sf-line)", borderRadius: 6, padding: 18, background: "var(--sf-pale)", textAlign: "center", margin: "14px 0" }}>
-                    <ScanLine style={{ width: 36, height: 36, color: "var(--sf-green)", margin: "0 auto 8px" }} />
-                    <strong style={{ display: "block", fontSize: "13px" }}>{scanItem.product}</strong>
-                    <span style={{ color: "var(--sf-quiet)", fontSize: "11px" }}>Batch B-4029 · Barcode 8901234567890 · Category: {scanItem.category}</span>
-                  </div>
-
-                  <h3 className="sf-demo-section-label">Legal Metrology (PCR 2011) Mandatory Declarations</h3>
-                  <div className="sf-demo-check-list">
-                    {mandatoryDeclarations.map((decl, index) => {
-                      const isFailedItem = scanItem.warning && index === 3;
-                      const isOk = !isFailedItem && decl.ok;
-
-                      return (
-                        <div key={decl.label} className="sf-demo-check-item">
-                          <span>
-                            {isOk ? <CheckCircle2 /> : <X className="sf-demo-missing" />}
-                            <div>
-                              <strong>{decl.label}</strong>
-                              <div style={{ color: "var(--sf-quiet)", fontSize: "10px" }}>
-                                {isFailedItem ? "CRITICAL: Incomplete packer address. Lacks district and pin code." : decl.detail}
-                              </div>
-                            </div>
-                          </span>
-                          <span className={`sf-demo-status ${!isOk ? "sf-demo-status-warn" : ""}`}>
-                            {isOk ? "COMPLIANT" : "VIOLATION"}
-                          </span>
-                        </div>
-                      );
-                    })}
-                  </div>
-
-                  {scanItem.warning && (
-                    <div style={{ marginTop: 20, textAlign: "right" }}>
-                      {role === "user" ? (
-                        <Link to={portalHref("user", "complaints/new")} className="sf-demo-primary-action" style={{ display: "inline-block", width: "auto", padding: "10px 18px" }}>
-                          Lodge Consumer Grievance with this Scan &rarr;
-                        </Link>
-                      ) : (
-                        <button
-                          type="button"
-                          className="sf-demo-primary-action"
-                          style={{ width: "auto", padding: "10px 18px" }}
-                          onClick={() => alert("Statutory violation notice logged in district register (Auto-Verified).")}
-                        >
-                          File Official Enforcement Report (Auto-Verified) &rarr;
-                        </button>
-                      )}
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* AI Statutory Audit Sidebar */}
-              <div className="sf-demo-panel">
-                <div className="sf-demo-panel-head">
-                  <h2>Gemini AI Statutory Legal Audit</h2>
-                </div>
-                <div className="sf-demo-panel-body" style={{ display: "grid", gap: 14 }}>
-                  <div className="sf-demo-callout">
-                    <Sparkles />
-                    <div>
-                      <strong>Executive Summary</strong>
-                      <p style={{ margin: "4px 0 0", color: "var(--sf-quiet)" }}>
-                        {scanItem.warning
-                          ? "Audit failed: Mandatory declaration of manufacturer/packer address is ambiguous under Rule 6(1)(a) of Legal Metrology (Packaged Commodities) Rules, 2011."
-                          : "Package satisfies Rule 6 declarations with clear net quantity, MRP including taxes, customer care helpline, and valid 14-digit FSSAI license."}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div style={{ border: "1px solid var(--sf-line)", borderRadius: 5, padding: 12, fontSize: "11px" }}>
-                    <div style={{ fontWeight: 700, marginBottom: 4 }}>Statutory Legal Reference:</div>
-                    <code style={{ color: "var(--sf-green)", fontSize: "10px" }}>
-                      Legal Metrology Act 2009, Sec 36 / PCR 2011 Rule 6
-                    </code>
-                  </div>
-
-                  <div style={{ border: "1px solid var(--sf-line)", borderRadius: 5, padding: 12, fontSize: "11px" }}>
-                    <div style={{ fontWeight: 700, marginBottom: 4 }}>Recommended Action:</div>
-                    <p style={{ margin: 0, color: "var(--sf-quiet)" }}>
-                      {scanItem.warning
-                        ? "Issue statutory inquiry notice to manufacturer / packer for clarification within 15 days."
-                        : "No regulatory intervention required. Product complies with packaging disclosure laws."}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* SECTION: HISTORY */}
-          {activeSection === "history" && (
-            <div className="sf-demo-panel">
-              <div className="sf-demo-panel-head">
-                <h2>Inspection & Label Check Archive</h2>
-                <span style={{ fontSize: "11px", color: "var(--sf-quiet)" }}>All recorded scans</span>
-              </div>
-              <div className="sf-demo-panel-body">
-                <div className="sf-demo-table-wrap">
-                  <table className="sf-demo-table">
-                    <thead>
-                      <tr>
-                        <th>SCAN ID</th>
-                        <th>PRODUCT NAME</th>
-                        <th>CATEGORY</th>
-                        <th>DATE & TIME</th>
-                        <th>STATUTORY VERDICT</th>
-                        <th>ACTION</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {sampleScans.map((s) => (
-                        <tr key={s.id}>
-                          <td>{s.id}</td>
-                          <td>{s.product}</td>
-                          <td>{s.category}</td>
-                          <td>{s.date}</td>
-                          <td>
-                            <span className={`sf-demo-status ${s.warning ? "sf-demo-status-warn" : ""}`}>
-                              {s.warning ? <AlertTriangle style={{ width: 11, height: 11 }} /> : <CheckCircle2 style={{ width: 11, height: 11 }} />}
-                              {s.result}
-                            </span>
-                          </td>
-                          <td>
-                            <Link to={portalHref(role, "scan")} className="sf-demo-text-link">
-                              View Inspection &rarr;
-                            </Link>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* SECTION: COMPLAINTS / GRIEVANCES (CITIZEN & ADMIN) */}
-          {activeSection === "complaints" && !isComplaintCreate && !isComplaintDetail && (
-            <div className="sf-demo-panel">
-              <div className="sf-demo-panel-head">
-                <h2>{role === "admin" ? "All District Grievances Queue" : "My Lodged Grievances"}</h2>
-                {role === "user" && (
-                  <Link to={portalHref("user", "complaints/new")} className="sf-demo-primary-action" style={{ width: "auto", minHeight: 32, padding: "0 12px" }}>
-                    + New Grievance
-                  </Link>
-                )}
-              </div>
-              <div className="sf-demo-panel-body">
-                <div className="sf-demo-table-wrap">
-                  <table className="sf-demo-table">
-                    <thead>
-                      <tr>
-                        <th>GRIEVANCE ID</th>
-                        <th>PRODUCT</th>
-                        <th>LOCATION / DISTRICT</th>
-                        <th>FILED ON</th>
-                        <th>ASSIGNED OFFICER</th>
-                        <th>STATUS</th>
-                        <th>ACTION</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {sampleComplaints.map((c) => (
-                        <tr key={c.id}>
-                          <td>{c.id}</td>
-                          <td>{c.product}</td>
-                          <td>{c.location}</td>
-                          <td>{c.date}</td>
-                          <td>{c.officer}</td>
-                          <td>
-                            <span className="sf-demo-status">
-                              {c.status}
-                            </span>
-                          </td>
-                          <td>
-                            <Link to={portalHref(role, `complaints/${c.id}`)} className="sf-demo-text-link">
-                              View Details &rarr;
-                            </Link>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* SUB-SECTION: CREATE COMPLAINT */}
-          {isComplaintCreate && (
-            <div className="sf-demo-panel sf-demo-form-panel">
-              <div className="sf-demo-panel-head">
-                <h2>Lodge a Legal Metrology (PCR 2011) Grievance</h2>
-              </div>
-              <div className="sf-demo-panel-body">
-                {complaintSubmitted ? (
-                  <div style={{ textAlign: "center", padding: "30px 0" }}>
-                    <CheckCircle2 style={{ width: 44, height: 44, color: "var(--sf-green)", margin: "0 auto 10px" }} />
-                    <h3 style={{ fontSize: "18px", fontWeight: 800 }}>Grievance Successfully Lodged</h3>
-                    <p style={{ color: "var(--sf-quiet)", fontSize: "12px", maxWidth: 440, margin: "6px auto 16px" }}>
-                      Your complaint has been assigned Grievance ID <strong>GRV-2051</strong> and routed to the Food Safety Officer in <strong>{newComplaintDistrict}</strong>.
-                    </p>
-                    <Link to={portalHref("user", "complaints")} className="sf-demo-primary-action" style={{ display: "inline-block", width: "auto", padding: "10px 22px" }}>
-                      View In Complaints Queue
-                    </Link>
-                  </div>
-                ) : (
-                  <form
-                    onSubmit={(e) => {
-                      e.preventDefault();
-                      setComplaintSubmitted(true);
-                    }}
-                  >
-                    <div className="sf-demo-form-grid">
-                      <div className="sf-demo-field sf-demo-field-full">
-                        <label>Non-Compliant Scanned Product</label>
-                        <input type="text" readOnly value="Almond Oat Energy Bar (Batch B-4029) — Incomplete Packer Address" />
-                      </div>
-
-                      <div className="sf-demo-field">
-                        <label>Purchased / Detected In District</label>
-                        <select
-                          value={newComplaintDistrict}
-                          onChange={(e) => setNewComplaintDistrict(e.target.value)}
-                        >
-                          <option value="DHULE">DHULE</option>
-                          <option value="PUNE">PUNE</option>
-                          <option value="MUMBAI">MUMBAI</option>
-                          <option value="NAGPUR">NAGPUR</option>
-                          <option value="BENGALURU URBAN">BENGALURU URBAN</option>
-                        </select>
-                      </div>
-
-                      <div className="sf-demo-field">
-                        <label>Store / Purchase Address</label>
-                        <input type="text" required placeholder="e.g. Shop 4, Station Road Market" />
-                      </div>
-
-                      <div className="sf-demo-field sf-demo-field-full">
-                        <label>Consumer Grievance Statement / Note</label>
-                        <textarea
-                          value={newComplaintNote}
-                          onChange={(e) => setNewComplaintNote(e.target.value)}
-                          placeholder="Describe the label issue (e.g. address details missing, font size smaller than prescribed under PCR 2011 Rule 6)..."
-                          required
-                        />
-                      </div>
-
-                      <div className="sf-demo-field sf-demo-field-full">
-                        <label>Evidence Photos (GridFS demo)</label>
-                        <div style={{ border: "1px dashed var(--sf-line)", borderRadius: 4, padding: "12px", fontSize: "11px", color: "var(--sf-quiet)", textAlign: "center" }}>
-                          Front label and nutritional table photos automatically attached from inspection scan.
-                        </div>
-                      </div>
-
-                      <div className="sf-demo-field-full" style={{ marginTop: 12 }}>
-                        <button type="submit" className="sf-demo-primary-action">
-                          Submit Grievance to District Officer &rarr;
-                        </button>
-                      </div>
-                    </div>
-                  </form>
-                )}
-              </div>
-            </div>
-          )}
-
-          {/* SUB-SECTION: COMPLAINT DETAIL & TIMELINE */}
-          {isComplaintDetail && (
-            <div className="sf-demo-report-grid">
-              <div className="sf-demo-panel">
-                <div className="sf-demo-panel-head">
-                  <h2>Grievance Case GRV-2048</h2>
-                  <span className="sf-demo-status">Under investigation</span>
-                </div>
-                <div className="sf-demo-panel-body">
-                  <div style={{ display: "grid", gap: 12, fontSize: "12px" }}>
-                    <div>
-                      <strong>Product:</strong> Almond Oat Energy Bar (40 g)
-                    </div>
-                    <div>
-                      <strong>Location:</strong> Indiranagar Market, Bengaluru Urban
-                    </div>
-                    <div>
-                      <strong>Assigned Enforcement Officer:</strong> Inspector Meera Iyer (OFF-BLR-892)
-                    </div>
-                    <div>
-                      <strong>Statutory Violations:</strong>
-                      <ul style={{ margin: "6px 0 0", paddingLeft: 18, color: "var(--destructive)" }}>
-                        <li>Rule 6(1)(a): Incomplete name and address of the manufacturer/packer</li>
-                        <li>Rule 7: Mandatory declaration font height less than 2.0 mm</li>
-                      </ul>
-                    </div>
-                  </div>
-
-                  <h3 className="sf-demo-section-label">Official Grievance Timeline</h3>
-                  <div className="sf-demo-timeline">
-                    <div className="sf-demo-timeline-step">
-                      <span className="sf-demo-timeline-mark"><Check /></span>
-                      <div>
-                        <strong>Grievance Submitted by Citizen</strong>
-                        <small>Oct 11, 2026 at 10:45 am · Status: IN_REVIEW</small>
-                      </div>
-                    </div>
-                    <div className="sf-demo-timeline-step">
-                      <span className="sf-demo-timeline-mark"><Check /></span>
-                      <div>
-                        <strong>Assigned to District Officer Meera Iyer</strong>
-                        <small>Oct 11, 2026 at 02:15 pm · Status: ASSIGNED</small>
-                      </div>
-                    </div>
-                    <div className="sf-demo-timeline-step">
-                      <span className="sf-demo-timeline-mark"><Check /></span>
-                      <div>
-                        <strong>Physical Inspection Conducted at Retailer</strong>
-                        <small>Oct 12, 2026 at 11:30 am · Status: UNDER_INVESTIGATION</small>
-                      </div>
-                    </div>
-                    <div className="sf-demo-timeline-step">
-                      <span className="sf-demo-timeline-mark" style={{ background: "var(--background)", border: "1px solid var(--sf-line)", color: "var(--sf-quiet)" }}>4</span>
-                      <div>
-                        <strong>Statutory Notice Issued to Packer</strong>
-                        <small>Pending formal reply from manufacturer</small>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Action Side Panel */}
-              <div className="sf-demo-panel">
-                <div className="sf-demo-panel-head">
-                  <h2>Official Report Export</h2>
-                </div>
-                <div className="sf-demo-panel-body" style={{ display: "grid", gap: 14 }}>
-                  <div className="sf-demo-callout">
-                    <Download />
-                    <div>
-                      <strong>Export PDF Report</strong>
-                      <p style={{ margin: "4px 0 0", color: "var(--sf-quiet)" }}>
-                        Download official legal metrology compliance complaint report with AI statutory citations.
-                      </p>
-                    </div>
-                  </div>
-
-                  <button
-                    type="button"
-                    className="sf-demo-primary-action"
-                    onClick={() => alert("Downloading official PDF: complaint-GRV-2048.pdf (SafeFood Compliance Report with Gemini AI audit).")}
-                  >
-                    Download PDF Complaint
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* SECTION: INVESTIGATIONS (OFFICER) */}
-          {activeSection === "investigations" && !isInvestigationDetail && (
-            <div className="sf-demo-panel">
-              <div className="sf-demo-panel-head">
-                <h2>Assigned Field Investigations</h2>
-                <span style={{ fontSize: "11px", color: "var(--sf-quiet)" }}>Officer Queue</span>
-              </div>
-              <div className="sf-demo-panel-body">
-                <div className="sf-demo-table-wrap">
-                  <table className="sf-demo-table">
-                    <thead>
-                      <tr>
-                        <th>CASE ID</th>
-                        <th>ORIGINATING GRIEVANCE</th>
-                        <th>SUSPECT PRODUCT</th>
-                        <th>DISTRICT</th>
-                        <th>ASSIGNED DATE</th>
-                        <th>STATUS</th>
-                        <th>ACTION</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {sampleInvestigations.map((inv) => (
-                        <tr key={inv.id}>
-                          <td>{inv.id}</td>
-                          <td>{inv.complaint}</td>
-                          <td>{inv.product}</td>
-                          <td>{inv.district}</td>
-                          <td>{inv.assigned}</td>
-                          <td>
-                            <span className="sf-demo-status">
-                              {inv.status}
-                            </span>
-                          </td>
-                          <td>
-                            <Link to={portalHref("officer", `investigations/${inv.id}`)} className="sf-demo-text-link">
-                              Inspect Case &rarr;
-                            </Link>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* SUB-SECTION: INVESTIGATION DETAIL (OFFICER) */}
-          {isInvestigationDetail && (
-            <div className="sf-demo-report-grid">
-              <div className="sf-demo-panel">
-                <div className="sf-demo-panel-head">
-                  <h2>Investigation Case File: INV-873</h2>
-                  <span className="sf-demo-status">In progress</span>
-                </div>
-                <div className="sf-demo-panel-body">
-                  <div style={{ display: "grid", gap: 12, fontSize: "12px" }}>
-                    <div><strong>Grievance Reference:</strong> GRV-2048</div>
-                    <div><strong>Suspect Product:</strong> Almond Oat Energy Bar (Batch B-4029)</div>
-                    <div><strong>Alleged Breach:</strong> Legal Metrology PCR 2011 Rule 6 (Incomplete Packer Address)</div>
-                  </div>
-
-                  <h3 className="sf-demo-section-label">Update Field Inspection Status & Notes</h3>
-                  {officerActionSaved ? (
-                    <div style={{ padding: "14px", border: "1px solid var(--sf-green)", borderRadius: 5, background: "var(--sf-pale)", color: "var(--sf-green)", fontSize: "12px", marginBottom: 15 }}>
-                      <CheckCircle2 style={{ display: "inline", width: 14, height: 14, marginRight: 6, verticalAlign: "middle" }} />
-                      Enforcement record updated and synced with District Administration!
-                    </div>
-                  ) : null}
-
-                  <form
-                    onSubmit={(e) => {
-                      e.preventDefault();
-                      setOfficerActionSaved(true);
-                    }}
-                  >
-                    <div className="sf-demo-form-fields">
-                      <div className="sf-demo-field">
-                        <label>Update Investigation Status</label>
-                        <select
-                          value={investigationStatus}
-                          onChange={(e) => setInvestigationStatus(e.target.value)}
-                        >
-                          <option value="under_investigation">Under Field Investigation</option>
-                          <option value="verified_genuine">Verified Genuine Violation</option>
-                          <option value="verified_not_genuine">False Alarm / Compliant</option>
-                          <option value="action_taken">Notice Issued / Action Taken</option>
-                        </select>
-                      </div>
-
-                      <div className="sf-demo-field">
-                        <label>Officer Field Notes & Findings</label>
-                        <textarea
-                          value={officerNote}
-                          onChange={(e) => setOfficerNote(e.target.value)}
-                          placeholder="Record inspection observations, seized sample details, or batch numbers..."
-                          required
-                        />
-                      </div>
-
-                      <button type="submit" className="sf-demo-primary-action">
-                        Save Enforcement Record &rarr;
-                      </button>
-                    </div>
-                  </form>
-                </div>
-              </div>
-
-              <div className="sf-demo-panel">
-                <div className="sf-demo-panel-head">
-                  <h2>Statutory Enforcement Powers</h2>
-                </div>
-                <div className="sf-demo-panel-body" style={{ display: "grid", gap: 14 }}>
-                  <div className="sf-demo-callout">
-                    <ShieldCheck />
-                    <div>
-                      <strong>Auto-Verification Active</strong>
-                      <p style={{ margin: "4px 0 0", color: "var(--sf-quiet)" }}>
-                        As an authorized Food Safety Enforcement Officer, all reports submitted by your account are tagged VERIFIED immediately in the statutory district register.
-                      </p>
-                    </div>
-                  </div>
-
-                  <button
-                    type="button"
-                    className="sf-demo-primary-action"
-                    onClick={() => alert("Official Statutory Notice draft generated under Section 36 of Legal Metrology Act.")}
-                  >
-                    Generate Statutory Notice Draft
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* SECTION: USERS (ADMIN) */}
-          {activeSection === "users" && (
-            <div className="sf-demo-panel">
-              <div className="sf-demo-panel-head">
-                <h2>Registered Citizens & Consumers Directory</h2>
-                <span style={{ fontSize: "11px", color: "var(--sf-quiet)" }}>District Consumer Base</span>
-              </div>
-              <div className="sf-demo-panel-body">
-                <div className="sf-demo-table-wrap">
-                  <table className="sf-demo-table">
-                    <thead>
-                      <tr>
-                        <th>CITIZEN NAME</th>
-                        <th>EMAIL</th>
-                        <th>DISTRICT</th>
-                        <th>TOTAL SCANS</th>
-                        <th>GRIEVANCES LODGED</th>
-                        <th>STATUS</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>Aarav Sharma</td>
-                        <td>aarav@safefood.in</td>
-                        <td>DHULE</td>
-                        <td>28</td>
-                        <td>3</td>
-                        <td><span className="sf-demo-status">Active</span></td>
-                      </tr>
-                      <tr>
-                        <td>Pooja Deshmukh</td>
-                        <td>pooja@safefood.in</td>
-                        <td>PUNE</td>
-                        <td>14</td>
-                        <td>1</td>
-                        <td><span className="sf-demo-status">Active</span></td>
-                      </tr>
-                      <tr>
-                        <td>Nikhil Kulkarni</td>
-                        <td>nikhil@safefood.in</td>
-                        <td>MUMBAI</td>
-                        <td>42</td>
-                        <td>6</td>
-                        <td><span className="sf-demo-status">Active</span></td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* SECTION: OFFICERS (ADMIN) */}
           {activeSection === "officers" && (
             <div className="sf-demo-report-grid">
               <div className="sf-demo-panel">
                 <div className="sf-demo-panel-head">
                   <h2>District Enforcement Officer Fleet</h2>
-                  <span style={{ fontSize: "11px", color: "var(--sf-quiet)" }}>34 Deployed Officers</span>
                 </div>
                 <div className="sf-demo-panel-body">
                   <div className="sf-demo-table-wrap">
@@ -1060,7 +1506,7 @@ function AppPortalPage() {
                       <thead>
                         <tr>
                           <th>OFFICER NAME</th>
-                          <th>BADGE NUMBER</th>
+                          <th>BADGE</th>
                           <th>DISTRICT</th>
                           <th>ACTIVE CASES</th>
                           <th>STATUS</th>
@@ -1081,31 +1527,22 @@ function AppPortalPage() {
                           <td>8</td>
                           <td><span className="sf-demo-status">On Duty</span></td>
                         </tr>
-                        <tr>
-                          <td>Inspector Sanjay Verma</td>
-                          <td>OFF-MUM-7731</td>
-                          <td>MUMBAI</td>
-                          <td>12</td>
-                          <td><span className="sf-demo-status">On Duty</span></td>
-                        </tr>
                       </tbody>
                     </table>
                   </div>
                 </div>
               </div>
 
-              {/* Deploy New Officer Form */}
               <div className="sf-demo-panel">
                 <div className="sf-demo-panel-head">
-                  <h2>Deploy / Create Field Officer</h2>
+                  <h2>Deploy Field Officer</h2>
                 </div>
                 <div className="sf-demo-panel-body">
-                  {officerAddedMessage ? (
-                    <div style={{ padding: "12px", background: "var(--sf-pale)", border: "1px solid var(--sf-green)", borderRadius: 4, color: "var(--sf-green)", fontSize: "11px" }}>
-                      Field officer deployed successfully to district {newOfficerDistrict}!
+                  {officerAddedMessage && (
+                    <div style={{ padding: 10, background: "var(--sf-pale)", border: "1px solid var(--deep-green)", borderRadius: 6, color: "var(--deep-green)", fontSize: "11px", marginBottom: 10 }}>
+                      Officer deployed to district {newOfficerDistrict}!
                     </div>
-                  ) : null}
-
+                  )}
                   <form
                     onSubmit={(e) => {
                       e.preventDefault();
@@ -1115,32 +1552,25 @@ function AppPortalPage() {
                   >
                     <div className="sf-demo-form-fields">
                       <div className="sf-demo-field">
-                        <label>Officer Full Name</label>
+                        <label>Officer Name</label>
                         <input
                           type="text"
+                          required
                           value={newOfficerName}
                           onChange={(e) => setNewOfficerName(e.target.value)}
                           placeholder="e.g. Inspector Anil Shinde"
-                          required
                         />
                       </div>
-
                       <div className="sf-demo-field">
-                        <label>Assigned District Jurisdiction</label>
-                        <select
-                          value={newOfficerDistrict}
-                          onChange={(e) => setNewOfficerDistrict(e.target.value)}
-                        >
+                        <label>Assigned District</label>
+                        <select value={newOfficerDistrict} onChange={(e) => setNewOfficerDistrict(e.target.value)}>
                           <option value="DHULE">DHULE</option>
                           <option value="PUNE">PUNE</option>
                           <option value="MUMBAI">MUMBAI</option>
-                          <option value="NAGPUR">NAGPUR</option>
-                          <option value="NASHIK">NASHIK</option>
                         </select>
                       </div>
-
                       <button type="submit" className="sf-demo-primary-action">
-                        Deploy Field Officer
+                        Deploy Officer
                       </button>
                     </div>
                   </form>
@@ -1149,48 +1579,98 @@ function AppPortalPage() {
             </div>
           )}
 
-          {/* SECTION: SETTINGS */}
-          {activeSection === "settings" && (
-            <div className="sf-demo-panel sf-demo-form-panel">
+          {activeSection === "users" && (
+            <div className="sf-demo-panel">
               <div className="sf-demo-panel-head">
-                <h2>Account & Platform Preferences</h2>
+                <h2>Registered Citizens</h2>
               </div>
               <div className="sf-demo-panel-body">
-                <div className="sf-demo-form-fields">
-                  <div className="sf-demo-field">
-                    <label>Active Account Persona</label>
-                    <input type="text" readOnly value={`${currentRoleConfig.name} (${currentRoleConfig.title})`} />
-                  </div>
-
-                  <div className="sf-demo-field">
-                    <label>Assigned District</label>
-                    <input type="text" readOnly value="DHULE / MAHARASHTRA" />
-                  </div>
-
-                  <div className="sf-demo-toggle-line">
-                    <div>
-                      <strong>Legal Metrology PCR 2011 Automated Alerts</strong>
-                      <div style={{ color: "var(--sf-quiet)", fontSize: "10px" }}>Receive alerts when non-compliant products are flagged in your district.</div>
-                    </div>
-                    <input type="checkbox" defaultChecked />
-                  </div>
-
-                  <div className="sf-demo-toggle-line">
-                    <div>
-                      <strong>Google Gemini AI Regulatory Audit Summaries</strong>
-                      <div style={{ color: "var(--sf-quiet)", fontSize: "10px" }}>Include automated statutory legal summaries in exported PDF reports.</div>
-                    </div>
-                    <input type="checkbox" defaultChecked />
-                  </div>
+                <div className="sf-demo-table-wrap">
+                  <table className="sf-demo-table">
+                    <thead>
+                      <tr>
+                        <th>CITIZEN NAME</th>
+                        <th>EMAIL</th>
+                        <th>DISTRICT</th>
+                        <th>TOTAL SCANS</th>
+                        <th>STATUS</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Aarav Sharma</td>
+                        <td>aarav@safefood.in</td>
+                        <td>DHULE</td>
+                        <td>28</td>
+                        <td><span className="sf-demo-status">Active</span></td>
+                      </tr>
+                      <tr>
+                        <td>Pooja Deshmukh</td>
+                        <td>pooja@safefood.in</td>
+                        <td>PUNE</td>
+                        <td>14</td>
+                        <td><span className="sf-demo-status">Active</span></td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
               </div>
             </div>
           )}
 
-          {/* Footer note */}
-          <div className="sf-demo-footer-note">
-            SafeFood Prototype Environment · Designed strictly to match existing typography, color tokens, and layout guidelines.
-          </div>
+          {activeSection === "complaints" && (
+            <div className="sf-demo-panel">
+              <div className="sf-demo-panel-head">
+                <h2>Statewide Grievances Queue</h2>
+              </div>
+              <div className="sf-demo-panel-body">
+                <div className="sf-demo-table-wrap">
+                  <table className="sf-demo-table">
+                    <thead>
+                      <tr>
+                        <th>GRIEVANCE ID</th>
+                        <th>PRODUCT</th>
+                        <th>LOCATION</th>
+                        <th>STATUS</th>
+                        <th>OFFICER</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {sampleComplaints.map((c) => (
+                        <tr key={c.id}>
+                          <td>{c.id}</td>
+                          <td>{c.product}</td>
+                          <td>{c.location}</td>
+                          <td><span className="sf-demo-status">{c.status}</span></td>
+                          <td>{c.officer}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeSection === "settings" && (
+            <div className="sf-demo-panel" style={{ maxWidth: 600 }}>
+              <div className="sf-demo-panel-head">
+                <h2>Platform Settings</h2>
+              </div>
+              <div className="sf-demo-panel-body">
+                <div className="sf-demo-form-fields">
+                  <div className="sf-demo-field">
+                    <label>Platform Name</label>
+                    <input type="text" readOnly value="SafeFood Regulatory Compliance Platform" />
+                  </div>
+                  <div className="sf-demo-field">
+                    <label>Legal Framework Reference</label>
+                    <input type="text" readOnly value="Legal Metrology Act 2009 & PCR 2011" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </main>
       </div>
     </div>

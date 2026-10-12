@@ -182,3 +182,618 @@
 @media (prefers-reduced-motion: reduce) {
   .sf-demo *, .sf-demo *::before, .sf-demo *::after { scroll-behavior: auto !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
 }
+
+/* ==========================================================================
+   SafeFood Modern App Interface (Citizen & Officer App Experience)
+   ========================================================================== */
+
+.sf-app-shell {
+  width: 100%;
+  max-width: 680px;
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--background);
+  box-shadow: 0 0 35px rgba(0, 0, 0, 0.05);
+  position: relative;
+  padding-bottom: 96px; /* Space for bottom dock */
+}
+
+@media (min-width: 1024px) {
+  .sf-app-shell-officer {
+    max-width: 760px;
+  }
+}
+
+/* App Header */
+.sf-app-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: color-mix(in oklab, var(--background) 92%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--sf-line);
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.sf-app-header-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sf-app-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--deep-green);
+  color: #ffffff;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  font-size: 14px;
+  box-shadow: 0 2px 10px color-mix(in oklab, var(--deep-green) 30%, transparent);
+  flex-shrink: 0;
+}
+
+.sf-app-avatar-officer {
+  background: #0f766e;
+}
+
+.sf-app-user-meta h2 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 800;
+  font-family: var(--font-heading);
+  line-height: 1.2;
+}
+
+.sf-app-user-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--sf-quiet);
+}
+
+.sf-app-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sf-app-role-select {
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--sf-line);
+  background: var(--background);
+  color: var(--foreground);
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.sf-app-signout-btn {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: 1px solid var(--sf-line);
+  color: var(--sf-quiet);
+  transition: all 0.2s;
+  background: var(--background);
+  text-decoration: none !important;
+}
+
+.sf-app-signout-btn:hover {
+  color: var(--destructive);
+  border-color: var(--destructive);
+}
+
+/* App Main Body */
+.sf-app-body {
+  padding: 18px 18px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex: 1;
+}
+
+/* Hero Scanner Card */
+.sf-app-hero-scanner {
+  background: linear-gradient(135deg, color-mix(in oklab, var(--primary) 12%, var(--background)), color-mix(in oklab, var(--deep-green) 16%, var(--background)));
+  border: 1.5px solid color-mix(in oklab, var(--primary) 35%, var(--sf-line));
+  border-radius: 18px;
+  padding: 22px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+}
+
+.sf-app-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: color-mix(in oklab, var(--primary) 20%, var(--background));
+  border: 1px solid color-mix(in oklab, var(--primary) 35%, transparent);
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--deep-green);
+  width: fit-content;
+}
+
+.sf-app-hero-content h3 {
+  margin: 0 0 6px;
+  font-size: 21px;
+  font-weight: 800;
+  font-family: var(--font-heading);
+}
+
+.sf-app-hero-content p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--sf-quiet);
+  line-height: 1.5;
+}
+
+.sf-app-scan-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: var(--deep-green);
+  color: #ffffff !important;
+  padding: 14px 20px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 14px;
+  box-shadow: 0 4px 14px color-mix(in oklab, var(--deep-green) 35%, transparent);
+  transition: transform 0.15s, background 0.2s;
+  cursor: pointer;
+  border: none;
+  text-decoration: none !important;
+}
+
+.sf-app-scan-btn:hover {
+  background: var(--primary);
+  transform: translateY(-1px);
+}
+
+.sf-app-scan-btn:active {
+  transform: translateY(1px);
+}
+
+/* Quick Action Tiles */
+.sf-app-action-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.sf-app-action-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 6px;
+  border-radius: 14px;
+  background: var(--background);
+  border: 1px solid var(--sf-line);
+  text-align: center;
+  transition: all 0.2s;
+  cursor: pointer;
+  text-decoration: none !important;
+  color: inherit;
+}
+
+.sf-app-action-tile:hover {
+  border-color: var(--primary);
+  background: var(--sf-pale);
+  transform: translateY(-2px);
+}
+
+.sf-app-action-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: var(--sf-pale);
+  color: var(--deep-green);
+}
+
+.sf-app-action-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.sf-app-action-tile span {
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+/* Product Scan Cards (No Tables) */
+.sf-app-section-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2px;
+}
+
+.sf-app-section-title h4 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 800;
+  font-family: var(--font-heading);
+}
+
+.sf-app-section-title a {
+  font-size: 12px;
+  color: var(--deep-green);
+  font-weight: 700;
+  text-decoration: none !important;
+}
+
+.sf-app-card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sf-app-product-card {
+  border: 1px solid var(--sf-line);
+  border-radius: 14px;
+  padding: 14px 16px;
+  background: var(--background);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.sf-app-product-card:hover {
+  border-color: color-mix(in oklab, var(--primary) 60%, var(--sf-line));
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+}
+
+.sf-app-product-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.sf-app-product-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sf-app-product-thumb {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--sf-pale);
+  display: grid;
+  place-items: center;
+  color: var(--deep-green);
+  flex-shrink: 0;
+}
+
+.sf-app-product-meta strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.sf-app-product-meta span {
+  font-size: 11px;
+  color: var(--sf-quiet);
+}
+
+.sf-app-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 9px;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.sf-app-badge-ok {
+  background: color-mix(in oklab, #10b981 14%, var(--background));
+  color: #047857;
+  border: 1px solid color-mix(in oklab, #10b981 30%, transparent);
+}
+
+.sf-app-badge-warn {
+  background: color-mix(in oklab, #f59e0b 14%, var(--background));
+  color: #b45309;
+  border: 1px solid color-mix(in oklab, #f59e0b 30%, transparent);
+}
+
+.sf-app-badge-crit {
+  background: color-mix(in oklab, #ef4444 14%, var(--background));
+  color: #b91c1c;
+  border: 1px solid color-mix(in oklab, #ef4444 30%, transparent);
+}
+
+.sf-app-product-card-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid var(--sf-line);
+  padding-top: 10px;
+  font-size: 12px;
+}
+
+.sf-app-product-card-actions a,
+.sf-app-product-card-actions button {
+  color: var(--deep-green);
+  font-weight: 700;
+  text-decoration: none !important;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+/* Floating / Sticky Bottom Navigation Dock */
+.sf-app-dock {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 30;
+  background: color-mix(in oklab, var(--background) 95%, transparent);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid var(--sf-line);
+  display: flex;
+  justify-content: center;
+  padding: 8px 12px 14px;
+}
+
+.sf-app-dock-inner {
+  width: 100%;
+  max-width: 680px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: 4px;
+}
+
+.sf-app-dock-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 6px 12px;
+  border-radius: 10px;
+  color: var(--sf-quiet);
+  text-decoration: none !important;
+  font-size: 10px;
+  font-weight: 700;
+  transition: all 0.2s;
+  min-width: 58px;
+}
+
+.sf-app-dock-tab svg {
+  width: 20px;
+  height: 20px;
+}
+
+.sf-app-dock-tab:hover {
+  color: var(--foreground);
+}
+
+.sf-app-dock-tab-active {
+  color: var(--deep-green) !important;
+  background: var(--sf-pale);
+}
+
+.sf-app-dock-tab-active svg {
+  color: var(--deep-green);
+}
+
+.sf-app-dock-scan-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  margin-top: -18px;
+  background: var(--deep-green);
+  color: #ffffff !important;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  box-shadow: 0 4px 16px color-mix(in oklab, var(--deep-green) 40%, transparent);
+  transition: transform 0.15s, background 0.2s;
+  text-decoration: none !important;
+}
+
+.sf-app-dock-scan-btn svg {
+  width: 24px;
+  height: 24px;
+}
+
+.sf-app-dock-scan-btn:hover {
+  transform: scale(1.06);
+  background: var(--primary);
+}
+
+/* Interactive Camera Viewfinder */
+.sf-app-viewfinder {
+  border-radius: 16px;
+  background: #0f172a;
+  color: #f8fafc;
+  padding: 24px 20px;
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+}
+
+.sf-app-viewfinder-scanline {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: #34d399;
+  box-shadow: 0 0 14px #34d399;
+  animation: sf-scan-sweep 2.4s ease-in-out infinite;
+}
+
+@keyframes sf-scan-sweep {
+  0% { top: 10%; opacity: 0.3; }
+  50% { top: 85%; opacity: 1; }
+  100% { top: 10%; opacity: 0.3; }
+}
+
+.sf-app-target-box {
+  width: 180px;
+  height: 140px;
+  margin: 12px auto;
+  border: 2px dashed #34d399;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: rgba(52, 211, 153, 0.05);
+}
+
+.sf-app-sample-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.sf-app-sample-pill {
+  padding: 7px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--sf-line);
+  background: var(--background);
+  color: var(--foreground);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.sf-app-sample-pill-active {
+  border-color: var(--deep-green);
+  background: var(--sf-pale);
+  color: var(--deep-green);
+  font-weight: 700;
+}
+
+/* Officer Field Card Styles */
+.sf-officer-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #0f172a;
+  color: #f8fafc;
+  padding: 14px 18px;
+  border-radius: 14px;
+  font-size: 12px;
+  gap: 12px;
+}
+
+.sf-officer-duty-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: #1e293b;
+  border: 1px solid #334155;
+  color: #34d399;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.sf-officer-stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.sf-officer-stat-pill {
+  background: var(--background);
+  border: 1px solid var(--sf-line);
+  border-radius: 12px;
+  padding: 12px 10px;
+  text-align: center;
+}
+
+.sf-officer-stat-pill strong {
+  display: block;
+  font-size: 22px;
+  font-family: var(--font-heading);
+}
+
+.sf-officer-stat-pill span {
+  font-size: 10px;
+  color: var(--sf-quiet);
+}
+
+.sf-case-card {
+  border: 1px solid var(--sf-line);
+  border-radius: 14px;
+  padding: 16px;
+  background: var(--background);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sf-case-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sf-case-card-body {
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.sf-case-card-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  background: var(--deep-green);
+  color: #ffffff !important;
+  font-weight: 700;
+  font-size: 12px;
+  text-decoration: none !important;
+  cursor: pointer;
+  border: none;
+  width: 100%;
+}
