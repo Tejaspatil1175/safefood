@@ -44,3 +44,8 @@ Thumbs.db
 .vscode/*
 !.vscode/extensions.json
 *.sw?
+
+# Ignored Local Docs
+frontend/BACKEND_ROLES_ARCHITECTURE.md
+BACKEND_ROLES_ARCHITECTURE.md
+
