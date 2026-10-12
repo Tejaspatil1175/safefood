@@ -38,14 +38,16 @@ import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/compone
 import phones from "@/assets/safefood-phones.jpg";
 
 export const Route = createFileRoute("/")({
-  head: () => ({ meta: [
-    { title: "SafeFood — AI Scans for Safer Choices" },
-    { name: "description", content: "Discover SafeFood: packaged food checks for hidden label details, allergens, nutrition, and product authenticity." },
-    { property: "og:title", content: "SafeFood — AI Scans for Safer Choices" },
-    { property: "og:description", content: "Smarter scans. Safer food. Discover what is inside your packaged food." },
-    { property: "og:type", content: "website" },
-    { name: "twitter:card", content: "summary_large_image" },
-  ] }),
+  head: () => ({
+    meta: [
+      { title: "SafeFood — AI Scans for Safer Choices" },
+      { name: "description", content: "Discover SafeFood: packaged food checks for hidden label details, allergens, nutrition, and product authenticity." },
+      { property: "og:title", content: "SafeFood — AI Scans for Safer Choices" },
+      { property: "og:description", content: "Smarter scans. Safer food. Discover what is inside your packaged food." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ]
+  }),
   component: Index,
 });
 
@@ -185,6 +187,7 @@ function Index() {
   const [activeScanIdx, setActiveScanIdx] = useState(0);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const open = (value: Panel) => { setPanel(value); setMobileMenu(false); setDemoScanned(false); };
+  const activeScan = sampleScans[activeScanIdx] ?? sampleScans[0]!;
 
   return (
     <main>
@@ -304,15 +307,15 @@ function Index() {
               <div className="sample-card-preview">
                 <div className="sample-card-title-row">
                   <div>
-                    <strong>{sampleScans[activeScanIdx].name}</strong>
+                    <strong>{activeScan.name}</strong>
                     <span className="sample-package-id">Batch #SF-2026-X99</span>
                   </div>
-                  <span className={`sample-badge badge-${sampleScans[activeScanIdx].badgeType}`}>
-                    {sampleScans[activeScanIdx].status}
+                  <span className={`sample-badge badge-${activeScan.badgeType}`}>
+                    {activeScan.status}
                   </span>
                 </div>
                 <div className="sample-points-list">
-                  {sampleScans[activeScanIdx].points.map((pt, i) => (
+                  {activeScan.points.map((pt, i) => (
                     <div key={i} className="sample-point">
                       <CheckCircle2 className="pt-icon" />
                       <span>{pt}</span>
@@ -322,7 +325,7 @@ function Index() {
                 <div className="sample-card-footer">
                   <div>
                     <span className="score-label">SafeFood Safety Grade:</span>
-                    <strong className="score-val">{sampleScans[activeScanIdx].score}</strong>
+                    <strong className="score-val">{activeScan.score}</strong>
                   </div>
                   <Button variant="hero" size="sm" onClick={() => open("web")}>
                     <ScanLine style={{ width: 14, height: 14 }} /> Test Live Scan
@@ -356,7 +359,7 @@ function Index() {
                 <li><CheckCheck /> Family allergen danger alerts</li>
                 <li><CheckCheck /> Nutritional balance scorecard</li>
               </ul>
-              <Link to="/app/consumer" className="role-action-link">
+              <Link to="/app/$" params={{ _splat: "user/dashboard" }} className="role-action-link">
                 Launch Consumer Portal <ArrowRight style={{ width: 14, height: 14 }} />
               </Link>
             </article>
@@ -374,7 +377,7 @@ function Index() {
                 <li><CheckCheck /> Mandatory packaging compliance audit</li>
                 <li><CheckCheck /> Violation report & digital seizure logging</li>
               </ul>
-              <Link to="/app/officer" className="role-action-link">
+              <Link to="/app/$" params={{ _splat: "officer/dashboard" }} className="role-action-link">
                 Launch Officer Portal <ArrowRight style={{ width: 14, height: 14 }} />
               </Link>
             </article>
@@ -391,7 +394,7 @@ function Index() {
                 <li><CheckCheck /> Supplier authenticity certificates</li>
                 <li><CheckCheck /> Counterfeit incidence alerts</li>
               </ul>
-              <Link to="/app/admin" className="role-action-link">
+              <Link to="/app/$" params={{ _splat: "admin/dashboard" }} className="role-action-link">
                 Launch Admin Console <ArrowRight style={{ width: 14, height: 14 }} />
               </Link>
             </article>
@@ -557,9 +560,9 @@ function Index() {
             <div className="footer-nav-col">
               <h4>Role Portals</h4>
               <ul>
-                <li><Link to="/app/consumer">Consumer App</Link></li>
-                <li><Link to="/app/officer">Food Safety Officer</Link></li>
-                <li><Link to="/app/admin">Supermarket Admin</Link></li>
+                <li><Link to="/app/$" params={{ _splat: "user/dashboard" }}>Consumer App</Link></li>
+                <li><Link to="/app/$" params={{ _splat: "officer/dashboard" }}>Food Safety Officer</Link></li>
+                <li><Link to="/app/$" params={{ _splat: "admin/dashboard" }}>Supermarket Admin</Link></li>
                 <li><Link to="/login">Sign In / Switch Role</Link></li>
                 <li><Link to="/register">Create Account</Link></li>
               </ul>
@@ -584,7 +587,7 @@ function Index() {
       </footer>
 
       {/* DIALOG MODAL */}
-      <Dialog open={panel !== null} onOpenChange={(value) => { if (!value) setPanel(null); }}><DialogContent className="safefood-dialog">
+      <Dialog open={panel !== null} onOpenChange={(value: boolean) => { if (!value) setPanel(null); }}><DialogContent className="safefood-dialog">
         <span className="dialog-icon"><ShieldCheck /></span>
         <DialogTitle>{panel === "how" ? "A closer look at every label" : panel === "business" ? "Safer shelves. More confidence." : panel === "stories" ? "Everyday choices, made safer" : panel === "contact" ? "Let’s talk food safety" : panel === "web" ? "Try a SafeFood scan" : "Take SafeFood with you"}</DialogTitle>
         <DialogDescription>{panel === "download" ? "The SafeFood app is coming soon. App Store and Google Play links will be available here when it launches." : panel === "how" ? "From a packaged food label to a clearer picture of what you eat." : panel === "web" ? "Preview a sample food label check. This demo does not verify a real product." : panel === "business" ? "Food safety checks for retailers, manufacturers, and your own applications." : panel === "stories" ? "Real customer stories will appear here after launch." : "Our contact details will be available here soon."}</DialogDescription>

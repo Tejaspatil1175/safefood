@@ -52,7 +52,8 @@ function AppPortalPage() {
   const currentRoleConfig = portalRoles[role];
 
   // Local interactive states for demonstration
-  const [selectedScanItem, setSelectedScanItem] = useState(sampleScans[0]);
+  const [selectedScanItem, setSelectedScanItem] = useState(sampleScans[0]!);
+  const scanItem = selectedScanItem ?? sampleScans[0]!;
   const [newComplaintNote, setNewComplaintNote] = useState("");
   const [newComplaintDistrict, setNewComplaintDistrict] = useState("DHULE");
   const [complaintSubmitted, setComplaintSubmitted] = useState(false);
@@ -126,7 +127,7 @@ function AppPortalPage() {
               const itemFullPath = portalHref(role, item.path);
               const isCurrent =
                 (item.path === "dashboard" && activeSection === "dashboard") ||
-                (item.path !== "dashboard" && activeSection.startsWith(item.path.split("/")[0]));
+                (item.path !== "dashboard" && activeSection.startsWith(item.path.split("/")[0] ?? ""));
               const Icon = item.icon;
 
               return (
@@ -484,7 +485,7 @@ function AppPortalPage() {
                   <div className="sf-demo-filter-row">
                     <label style={{ fontSize: "11px", fontWeight: 700, alignSelf: "center" }}>Select sample package to inspect:</label>
                     <select
-                      value={selectedScanItem.id}
+                      value={scanItem.id}
                       onChange={(e) => {
                         const found = sampleScans.find((s) => s.id === e.target.value);
                         if (found) setSelectedScanItem(found);
@@ -501,14 +502,14 @@ function AppPortalPage() {
 
                   <div style={{ border: "1px dashed var(--sf-line)", borderRadius: 6, padding: 18, background: "var(--sf-pale)", textAlign: "center", margin: "14px 0" }}>
                     <ScanLine style={{ width: 36, height: 36, color: "var(--sf-green)", margin: "0 auto 8px" }} />
-                    <strong style={{ display: "block", fontSize: "13px" }}>{selectedScanItem.product}</strong>
-                    <span style={{ color: "var(--sf-quiet)", fontSize: "11px" }}>Batch B-4029 · Barcode 8901234567890 · Category: {selectedScanItem.category}</span>
+                    <strong style={{ display: "block", fontSize: "13px" }}>{scanItem.product}</strong>
+                    <span style={{ color: "var(--sf-quiet)", fontSize: "11px" }}>Batch B-4029 · Barcode 8901234567890 · Category: {scanItem.category}</span>
                   </div>
 
                   <h3 className="sf-demo-section-label">Legal Metrology (PCR 2011) Mandatory Declarations</h3>
                   <div className="sf-demo-check-list">
                     {mandatoryDeclarations.map((decl, index) => {
-                      const isFailedItem = selectedScanItem.warning && index === 3;
+                      const isFailedItem = scanItem.warning && index === 3;
                       const isOk = !isFailedItem && decl.ok;
 
                       return (
@@ -530,7 +531,7 @@ function AppPortalPage() {
                     })}
                   </div>
 
-                  {selectedScanItem.warning && (
+                  {scanItem.warning && (
                     <div style={{ marginTop: 20, textAlign: "right" }}>
                       {role === "user" ? (
                         <Link to={portalHref("user", "complaints/new")} className="sf-demo-primary-action" style={{ display: "inline-block", width: "auto", padding: "10px 18px" }}>
@@ -562,7 +563,7 @@ function AppPortalPage() {
                     <div>
                       <strong>Executive Summary</strong>
                       <p style={{ margin: "4px 0 0", color: "var(--sf-quiet)" }}>
-                        {selectedScanItem.warning
+                        {scanItem.warning
                           ? "Audit failed: Mandatory declaration of manufacturer/packer address is ambiguous under Rule 6(1)(a) of Legal Metrology (Packaged Commodities) Rules, 2011."
                           : "Package satisfies Rule 6 declarations with clear net quantity, MRP including taxes, customer care helpline, and valid 14-digit FSSAI license."}
                       </p>
@@ -579,7 +580,7 @@ function AppPortalPage() {
                   <div style={{ border: "1px solid var(--sf-line)", borderRadius: 5, padding: 12, fontSize: "11px" }}>
                     <div style={{ fontWeight: 700, marginBottom: 4 }}>Recommended Action:</div>
                     <p style={{ margin: 0, color: "var(--sf-quiet)" }}>
-                      {selectedScanItem.warning
+                      {scanItem.warning
                         ? "Issue statutory inquiry notice to manufacturer / packer for clarification within 15 days."
                         : "No regulatory intervention required. Product complies with packaging disclosure laws."}
                     </p>

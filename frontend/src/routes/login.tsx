@@ -51,7 +51,7 @@ function LoginPage() {
       setError("Please enter an email address.");
       return;
     }
-    navigate({ to: `/app/${selectedRole}/dashboard` });
+    navigate({ to: "/app/$", params: { _splat: `${selectedRole}/dashboard` } });
   };
 
   return (
