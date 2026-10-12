@@ -1394,10 +1394,10 @@ function AdminWebView({
   const [selectedTimeframe, setSelectedTimeframe] = useState("Monthly");
 
   return (
-    <div className="sf-admin-root">
-      {/* 1. TOP NAVBAR */}
-      <header className="sf-admin-navbar">
-        <div className="sf-admin-navbar-inner">
+    <div className="sf-admin-layout">
+      {/* 1. LEFT SIDEBAR NAVBAR */}
+      <aside className="sf-admin-sidebar">
+        <div className="sf-admin-sidebar-header">
           {/* Logo & Platform Badge */}
           <a href="/app/admin/dashboard" className="sf-admin-brand">
             <div className="sf-admin-brand-icon">
@@ -1406,113 +1406,105 @@ function AdminWebView({
             <span>SafeFood</span>
             <span className="sf-admin-brand-badge">Admin</span>
           </a>
+        </div>
 
-          {/* Navigation Tabs with Active Indicator (Analytics removed) */}
-          <nav className="sf-admin-tabs" aria-label="Admin Navigation Tabs">
-            <a
-              href={portalHref("admin", "dashboard")}
-              className={`sf-admin-tab ${activeSection === "dashboard" ? "sf-admin-tab-active" : ""}`}
-            >
-              <LayoutDashboard style={{ width: 15, height: 15 }} />
-              <span>Dashboard</span>
-            </a>
-            <a
-              href={portalHref("admin", "products")}
-              className={`sf-admin-tab ${activeSection === "products" ? "sf-admin-tab-active" : ""}`}
-            >
-              <Package style={{ width: 15, height: 15 }} />
-              <span>Food Catalog</span>
-            </a>
-            <a
-              href={portalHref("admin", "complaints")}
-              className={`sf-admin-tab ${activeSection === "complaints" ? "sf-admin-tab-active" : ""}`}
-            >
-              <ClipboardList style={{ width: 15, height: 15 }} />
-              <span>Grievances</span>
-            </a>
-            <a
-              href={portalHref("admin", "officers")}
-              className={`sf-admin-tab ${activeSection === "officers" ? "sf-admin-tab-active" : ""}`}
-            >
-              <Users style={{ width: 15, height: 15 }} />
-              <span>Officers Fleet</span>
-            </a>
-            <a
-              href={portalHref("admin", "users")}
-              className={`sf-admin-tab ${activeSection === "users" ? "sf-admin-tab-active" : ""}`}
-            >
-              <User style={{ width: 15, height: 15 }} />
-              <span>Citizens</span>
-            </a>
-            <a
-              href={portalHref("admin", "settings")}
-              className={`sf-admin-tab ${activeSection === "settings" ? "sf-admin-tab-active" : ""}`}
-            >
-              <SettingsIcon style={{ width: 15, height: 15 }} />
-              <span>Settings</span>
-            </a>
-          </nav>
+        {/* Vertical Navigation Links */}
+        <nav className="sf-admin-sidebar-nav" aria-label="Admin Sidebar Navigation">
+          <a
+            href={portalHref("admin", "dashboard")}
+            className={`sf-admin-sidebar-link ${activeSection === "dashboard" ? "sf-admin-sidebar-link-active" : ""}`}
+          >
+            <LayoutDashboard style={{ width: 17, height: 17 }} />
+            <span>Dashboard</span>
+          </a>
+          <a
+            href={portalHref("admin", "products")}
+            className={`sf-admin-sidebar-link ${activeSection === "products" ? "sf-admin-sidebar-link-active" : ""}`}
+          >
+            <Package style={{ width: 17, height: 17 }} />
+            <span>Food Catalog</span>
+          </a>
+          <a
+            href={portalHref("admin", "complaints")}
+            className={`sf-admin-sidebar-link ${activeSection === "complaints" ? "sf-admin-sidebar-link-active" : ""}`}
+          >
+            <ClipboardList style={{ width: 17, height: 17 }} />
+            <span>Grievances</span>
+          </a>
+          <a
+            href={portalHref("admin", "officers")}
+            className={`sf-admin-sidebar-link ${activeSection === "officers" ? "sf-admin-sidebar-link-active" : ""}`}
+          >
+            <Users style={{ width: 17, height: 17 }} />
+            <span>Officers Fleet</span>
+          </a>
+          <a
+            href={portalHref("admin", "users")}
+            className={`sf-admin-sidebar-link ${activeSection === "users" ? "sf-admin-sidebar-link-active" : ""}`}
+          >
+            <User style={{ width: 17, height: 17 }} />
+            <span>Citizens</span>
+          </a>
+          <a
+            href={portalHref("admin", "settings")}
+            className={`sf-admin-sidebar-link ${activeSection === "settings" ? "sf-admin-sidebar-link-active" : ""}`}
+          >
+            <SettingsIcon style={{ width: 17, height: 17 }} />
+            <span>Settings</span>
+          </a>
+        </nav>
 
-          {/* Right Profile & Persona Controls */}
-          <div className="sf-admin-nav-right">
-            <select
-              className="sf-admin-role-select"
-              value="admin"
-              onChange={(e) => switchRole(e.target.value as SafeFoodRole)}
-              aria-label="Switch persona"
-            >
-              <option value="user">🌿 Citizen View</option>
-              <option value="officer">🛡️ Officer Inspection</option>
-              <option value="admin">🏢 Regulatory Admin</option>
-            </select>
+        {/* Sidebar Footer Controls */}
+        <div className="sf-admin-sidebar-footer">
+          <select
+            className="sf-admin-role-select"
+            value="admin"
+            onChange={(e) => switchRole(e.target.value as SafeFoodRole)}
+            aria-label="Switch persona"
+            style={{ width: "100%" }}
+          >
+            <option value="user">🌿 Citizen View</option>
+            <option value="officer">🛡️ Officer Inspection</option>
+            <option value="admin">🏢 Regulatory Admin</option>
+          </select>
 
-            {/* Notification alert button */}
-            <button
-              type="button"
-              className="sf-admin-notif-btn"
-              title="Recent regulatory alerts"
-              onClick={() => alert("3 new Legal Metrology compliance notices pending verification.")}
-            >
-              <Bell style={{ width: 16, height: 16 }} />
-              <span className="sf-admin-notif-dot" />
-            </button>
-
-            {/* User Profile Capsule */}
-            <div className="sf-admin-user-profile" title="Signed in as State Director">
+          {/* User Profile Capsule */}
+          <div className="sf-admin-user-profile" title="Signed in as State Director" style={{ width: "100%", justifyContent: "space-between" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
               <div className="sf-admin-user-avatar">SK</div>
-              <span style={{ fontWeight: 700, color: "#0F172A" }}>Dr. Sandeep Kulkarni</span>
-              <ChevronDown style={{ width: 13, height: 13, color: "#64748B" }} />
+              <div style={{ display: "flex", flexDirection: "column", textAlign: "left", lineHeight: 1.2 }}>
+                <span style={{ fontWeight: 700, color: "#0F172A", fontSize: 12 }}>Dr. S. Kulkarni</span>
+                <span style={{ fontSize: 10, color: "#64748B" }}>State Director</span>
+              </div>
             </div>
-
-            <a href="/login" className="sf-admin-btn-outline" style={{ padding: "7px 12px" }} title="Sign out">
+            <a href="/login" style={{ color: "#64748B", display: "grid", placeItems: "center" }} title="Sign out">
               <LogOut style={{ width: 14, height: 14 }} />
             </a>
           </div>
         </div>
-      </header>
+      </aside>
 
-      {/* 2. MAIN ADMIN CANVAS */}
-      <main style={{ maxWidth: 1600, margin: "0 auto", padding: "0 32px 48px" }}>
-        {/* SUBHEADER BAR */}
-        <div className="sf-admin-subhead">
+      {/* 2. MAIN ADMIN CONTENT WRAPPER */}
+      <div className="sf-admin-main-wrap">
+        {/* TOPBAR / SUBHEAD */}
+        <div className="sf-admin-topbar">
           <div>
-            <h1>
+            <h1 style={{ margin: 0, fontSize: 22, fontWeight: 800, color: "#0F172A" }}>
               {activeSection === "dashboard" && "Food Safety & Metrology Dashboard"}
               {activeSection === "products" && "Packaged Food Catalog & Barcode Registry"}
               {activeSection === "complaints" && "Citizen Grievances & Violation Notices"}
               {activeSection === "officers" && "Officer Fleet & Field Oversight"}
               {activeSection === "users" && "Citizen Consumer Directory"}
-              {activeSection === "analytics" && "Statewide Compliance Analytics"}
               {activeSection === "settings" && "Regulatory Standards & Declarations Config"}
             </h1>
-            <p style={{ margin: "4px 0 0", fontSize: 13, color: "#64748B" }}>
+            <p style={{ margin: "2px 0 0", fontSize: 12, color: "#64748B" }}>
               National Legal Metrology & FSSAI Packaged Commodity Enforcement Console
             </p>
           </div>
 
           <div className="sf-admin-subhead-actions">
             <div className="sf-admin-search-box">
-              <Search style={{ width: 16, height: 16 }} />
+              <Search style={{ width: 15, height: 15 }} />
               <input
                 type="text"
                 placeholder="Search food item, barcode, packer..."
@@ -1538,8 +1530,22 @@ function AdminWebView({
               <Download style={{ width: 14, height: 14 }} />
               <span>Download Report</span>
             </button>
+
+            {/* Notification alert button */}
+            <button
+              type="button"
+              className="sf-admin-notif-btn"
+              title="Recent regulatory alerts"
+              onClick={() => alert("3 new Legal Metrology compliance notices pending verification.")}
+            >
+              <Bell style={{ width: 16, height: 16 }} />
+              <span className="sf-admin-notif-dot" />
+            </button>
           </div>
         </div>
+
+        {/* 3. MAIN CANVAS */}
+        <main style={{ padding: "28px 32px 48px", maxWidth: 1600 }}>
 
         {/* 3. DASHBOARD MAIN VIEW (SafeFood Domain Data) */}
         {activeSection === "dashboard" && (
@@ -2324,6 +2330,7 @@ function AdminWebView({
         )}
       </main>
     </div>
-  );
+  </div>
+);
 }
 
