@@ -163,21 +163,11 @@ function CitizenWebView({
 }: CitizenWebProps) {
   return (
     <div className="sf-web-root">
-      {/* Editorial Web Header */}
+      {/* Editorial Web Header with Symmetric Centered-Logo Layout */}
       <header className="sf-web-header">
         <div className="sf-web-header-inner">
-          <a href="/app/user/dashboard" className="sf-web-brand" aria-label="SafeFood Home">
-            <div className="sf-web-seal">
-              <ShieldCheck />
-            </div>
-            <div className="sf-web-brand-text">
-              <span className="sf-web-brand-title">SafeFood</span>
-              <span className="sf-web-brand-subtitle">Consumer Food Safety & Metrology</span>
-            </div>
-          </a>
-
-          {/* Navigation Links */}
-          <nav className="sf-web-nav-links" aria-label="Main Navigation">
+          {/* Left Navigation Links */}
+          <nav className="sf-web-nav-links" aria-label="Left Navigation">
             <a
               href={portalHref("user", "dashboard")}
               className={`sf-web-nav-link ${activeSection === "dashboard" ? "sf-web-nav-link-active" : ""}`}
@@ -196,22 +186,36 @@ function CitizenWebView({
             >
               My Scans
             </a>
-            <a
-              href={portalHref("user", "complaints")}
-              className={`sf-web-nav-link ${activeSection.startsWith("complaints") ? "sf-web-nav-link-active" : ""}`}
-            >
-              Grievances
-            </a>
-            <a
-              href={portalHref("user", "settings")}
-              className={`sf-web-nav-link ${activeSection === "settings" ? "sf-web-nav-link-active" : ""}`}
-            >
-              Profile
-            </a>
           </nav>
 
-          {/* User Controls & Role Switcher */}
+          {/* Center Brand Seal Emblem */}
+          <a href="/app/user/dashboard" className="sf-web-brand" aria-label="SafeFood Home">
+            <div className="sf-web-seal">
+              <ShieldCheck />
+            </div>
+            <div className="sf-web-brand-text">
+              <span className="sf-web-brand-title">SafeFood</span>
+              <span className="sf-web-brand-subtitle">Statutory Food Safety</span>
+            </div>
+          </a>
+
+          {/* Right Navigation & User Controls */}
           <div className="sf-web-header-right">
+            <nav className="sf-web-nav-links" aria-label="Right Navigation">
+              <a
+                href={portalHref("user", "complaints")}
+                className={`sf-web-nav-link ${activeSection.startsWith("complaints") ? "sf-web-nav-link-active" : ""}`}
+              >
+                Grievances
+              </a>
+              <a
+                href={portalHref("user", "settings")}
+                className={`sf-web-nav-link ${activeSection === "settings" ? "sf-web-nav-link-active" : ""}`}
+              >
+                Profile
+              </a>
+            </nav>
+
             <select
               className="sf-web-role-picker"
               value="user"
@@ -227,12 +231,12 @@ function CitizenWebView({
               <div className="sf-web-user-avatar">AS</div>
               <div className="sf-web-user-meta">
                 <strong>Aarav Sharma</strong>
-                <span>Dhule, Maharashtra</span>
+                <span>Dhule, MH</span>
               </div>
             </div>
 
             <a href="/login" className="sf-web-signout-btn" title="Sign out">
-              <LogOut style={{ width: 15, height: 15 }} />
+              <LogOut style={{ width: 14, height: 14 }} />
             </a>
           </div>
         </div>
@@ -243,83 +247,84 @@ function CitizenWebView({
         {/* SECTION: CITIZEN DASHBOARD (OVERVIEW) */}
         {activeSection === "dashboard" && (
           <>
-            {/* Editorial Hero Banner (matching user's reference image) */}
-            <section className="sf-web-hero">
-              <div>
-                <div className="sf-web-hero-kicker">
-                  <span className="sf-web-hero-kicker-dot" />
-                  Statutory Food Quality & Metrology Protection
-                </div>
-                <h1 className="sf-web-hero-title">
-                  VERIFIED PACKAGED <br />
-                  <em>Food Authenticity</em>
-                </h1>
-                <p className="sf-web-hero-lead">
-                  Experience complete peace of mind when buying packaged food. SafeFood uses Gemini AI to verify mandatory declarations, identify illegal microscopic fonts under PCR 2011 Rule 6, and lodge direct statutory grievances to district enforcement officers.
-                </p>
-
-                <div className="sf-web-hero-actions">
-                  <a href={portalHref("user", "scan")} className="sf-web-pill-btn">
-                    <span>Scan Packaging Now</span>
-                    <div className="sf-web-pill-arrow">
-                      <ArrowRight style={{ width: 16, height: 16 }} />
-                    </div>
-                  </a>
-
-                  <a href={portalHref("user", "complaints/new")} className="sf-web-pill-secondary">
-                    <FilePlus2 style={{ width: 16, height: 16, color: "#D35400" }} />
-                    <span>Lodge a Grievance</span>
-                  </a>
-                </div>
+            {/* Centered Editorial Hero Section (matching user's reference image) */}
+            <section className="sf-web-hero-centered">
+              <div className="sf-web-hero-tagline-float">
+                Indulge in certified safe,
+                <em>100% Genuine Foods</em>
               </div>
 
-              {/* Showcase Card on Right */}
-              <div className="sf-web-hero-card">
-                <div className="sf-web-hero-card-seal">
-                  <Award style={{ width: 26, height: 26 }} />
-                </div>
+              <div className="sf-web-hero-kicker" style={{ justifyContent: "center" }}>
+                <span className="sf-web-hero-kicker-dot" />
+                Statutory Consumer Protection · Legal Metrology Act 2009
+              </div>
 
-                <div style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: "11px", fontWeight: 800, color: "#2A5A48" }}>
-                  <Sparkles style={{ width: 14, height: 14 }} />
-                  AI METROLOGY AUDIT · LIVE SAMPLE
-                </div>
+              <h1 className="sf-web-hero-title">
+                STATUTORY <br />
+                FOOD SAFETY <em>Pure & Verified</em>
+              </h1>
 
-                <div>
-                  <h3 style={{ margin: "0 0 4px", fontSize: "18px", fontWeight: 800, color: "#201E1A" }}>
-                    Almond Oat Energy Bar (40 g)
-                  </h3>
-                  <span style={{ fontSize: "12px", color: "#7A6F5D" }}>
-                    Batch B-4029 · Category: Packaged Snack
-                  </span>
-                </div>
+              <p className="sf-web-hero-lead">
+                Experience complete peace of mind when buying packaged food. SafeFood uses Gemini AI to verify mandatory declarations, identify illegal microscopic fonts under PCR 2011 Rule 6, and lodge direct statutory grievances to district enforcement officers.
+              </p>
 
-                <div
-                  style={{
-                    border: "1px dashed #E8DEC8",
-                    borderRadius: 12,
-                    padding: "12px 14px",
-                    background: "#FAF5EA",
-                    fontSize: "12px",
-                    lineHeight: 1.5,
-                  }}
-                >
-                  <strong style={{ color: "#C85A32", display: "block", marginBottom: 2 }}>
-                    ⚠️ PCR 2011 Rule 6(1)(a) Warning:
-                  </strong>
-                  Manufacturer / packer address omits district and PIN code. Font height of mandatory declaration is under the statutory 2.0 mm limit.
-                </div>
+              <div className="sf-web-hero-actions">
+                <a href={portalHref("user", "scan")} className="sf-web-pill-btn">
+                  <span>Scan Packaging Now</span>
+                  <div className="sf-web-pill-arrow">
+                    <ArrowRight style={{ width: 16, height: 16 }} />
+                  </div>
+                </a>
 
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingTop: 6 }}>
-                  <span className="sf-web-badge sf-web-badge-warn">Audit Flagged</span>
-                  <a
-                    href={portalHref("user", "scan")}
-                    style={{ fontSize: "12px", fontWeight: 800, color: "#2A5A48", textDecoration: "none" }}
-                  >
-                    Inspect Full Audit &rarr;
-                  </a>
-                </div>
+                <a href={portalHref("user", "complaints/new")} className="sf-web-pill-secondary">
+                  <FilePlus2 style={{ width: 16, height: 16, color: "#D35400" }} />
+                  <span>Lodge a Grievance</span>
+                </a>
               </div>
             </section>
+
+            {/* Featured Sample Inspection Banner */}
+            <div
+              style={{
+                width: "100%",
+                maxWidth: 1040,
+                margin: "0 auto 36px",
+                background: "#FFFDF9",
+                border: "1px solid #E8DEC8",
+                borderRadius: 20,
+                padding: "18px 24px",
+                boxShadow: "0 6px 24px rgba(60, 48, 24, 0.04)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                flexWrap: "wrap",
+                gap: 16,
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+                <div style={{ width: 44, height: 44, borderRadius: "50%", background: "#FAF5EA", border: "1.5px dashed #C5A059", display: "grid", placeItems: "center", color: "#D35400", flexShrink: 0 }}>
+                  <AlertTriangle style={{ width: 20, height: 20 }} />
+                </div>
+                <div>
+                  <div style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: "11px", fontWeight: 800, color: "#C85A32", letterSpacing: "0.06em", textTransform: "uppercase" }}>
+                    AI METROLOGY AUDIT · LIVE SAMPLE VERDICT
+                  </div>
+                  <h4 style={{ margin: "2px 0", fontSize: "16px", fontWeight: 800, color: "#201E1A" }}>
+                    Almond Oat Energy Bar (Batch B-4029)
+                  </h4>
+                  <span style={{ fontSize: "12px", color: "#7A6F5D" }}>
+                    Breach: Incomplete packer address without district or PIN. Font height under statutory 2.0 mm limit.
+                  </span>
+                </div>
+              </div>
+
+              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <span className="sf-web-badge sf-web-badge-warn">Rule 6 Breach</span>
+                <a href={portalHref("user", "scan")} className="sf-web-pill-secondary">
+                  Inspect Full Audit &rarr;
+                </a>
+              </div>
+            </div>
 
             {/* Stats Highlights Strip */}
             <div className="sf-web-stats-strip">
@@ -911,20 +916,10 @@ function OfficerWebView({
 }: OfficerWebProps) {
   return (
     <div className="sf-web-root">
-      {/* Officer Header */}
+      {/* Officer Header with Symmetric Layout */}
       <header className="sf-web-header">
         <div className="sf-web-header-inner">
-          <a href="/app/officer/dashboard" className="sf-web-brand" aria-label="SafeFood Officer">
-            <div className="sf-web-seal" style={{ borderColor: "#2A5A48" }}>
-              <ShieldCheck />
-            </div>
-            <div className="sf-web-brand-text">
-              <span className="sf-web-brand-title">SafeFood Enforcement</span>
-              <span className="sf-web-brand-subtitle">Food Safety Enforcement Division</span>
-            </div>
-          </a>
-
-          <nav className="sf-web-nav-links" aria-label="Officer Navigation">
+          <nav className="sf-web-nav-links" aria-label="Officer Left Navigation">
             <a
               href={portalHref("officer", "dashboard")}
               className={`sf-web-nav-link ${activeSection === "dashboard" ? "sf-web-nav-link-active" : ""}`}
@@ -937,21 +932,34 @@ function OfficerWebView({
             >
               Field Audit Scan
             </a>
-            <a
-              href={portalHref("officer", "investigations")}
-              className={`sf-web-nav-link ${activeSection.startsWith("investigations") ? "sf-web-nav-link-active" : ""}`}
-            >
-              Assigned Cases
-            </a>
-            <a
-              href={portalHref("officer", "settings")}
-              className={`sf-web-nav-link ${activeSection === "settings" ? "sf-web-nav-link-active" : ""}`}
-            >
-              Officer Profile
-            </a>
           </nav>
 
+          <a href="/app/officer/dashboard" className="sf-web-brand" aria-label="SafeFood Officer">
+            <div className="sf-web-seal" style={{ borderColor: "#2A5A48" }}>
+              <ShieldCheck />
+            </div>
+            <div className="sf-web-brand-text">
+              <span className="sf-web-brand-title">SafeFood Enforcement</span>
+              <span className="sf-web-brand-subtitle">Dhule District Jurisdiction</span>
+            </div>
+          </a>
+
           <div className="sf-web-header-right">
+            <nav className="sf-web-nav-links" aria-label="Officer Right Navigation">
+              <a
+                href={portalHref("officer", "investigations")}
+                className={`sf-web-nav-link ${activeSection.startsWith("investigations") ? "sf-web-nav-link-active" : ""}`}
+              >
+                Assigned Cases
+              </a>
+              <a
+                href={portalHref("officer", "settings")}
+                className={`sf-web-nav-link ${activeSection === "settings" ? "sf-web-nav-link-active" : ""}`}
+              >
+                Profile
+              </a>
+            </nav>
+
             <select
               className="sf-web-role-picker"
               value="officer"
@@ -972,7 +980,7 @@ function OfficerWebView({
             </div>
 
             <a href="/login" className="sf-web-signout-btn" title="Sign out">
-              <LogOut style={{ width: 15, height: 15 }} />
+              <LogOut style={{ width: 14, height: 14 }} />
             </a>
           </div>
         </div>
@@ -1374,17 +1382,7 @@ function AdminWebView({
     <div className="sf-web-root">
       <header className="sf-web-header">
         <div className="sf-web-header-inner">
-          <a href="/app/admin/dashboard" className="sf-web-brand" aria-label="SafeFood Admin">
-            <div className="sf-web-seal" style={{ borderColor: "#D35400" }}>
-              <ShieldCheck />
-            </div>
-            <div className="sf-web-brand-text">
-              <span className="sf-web-brand-title">SafeFood Oversight</span>
-              <span className="sf-web-brand-subtitle">State Regulatory Administration</span>
-            </div>
-          </a>
-
-          <nav className="sf-web-nav-links" aria-label="Admin Navigation">
+          <nav className="sf-web-nav-links" aria-label="Admin Left Navigation">
             <a
               href={portalHref("admin", "dashboard")}
               className={`sf-web-nav-link ${activeSection === "dashboard" ? "sf-web-nav-link-active" : ""}`}
@@ -1397,21 +1395,34 @@ function AdminWebView({
             >
               Officer Fleet
             </a>
-            <a
-              href={portalHref("admin", "users")}
-              className={`sf-web-nav-link ${activeSection === "users" ? "sf-web-nav-link-active" : ""}`}
-            >
-              Citizens
-            </a>
-            <a
-              href={portalHref("admin", "complaints")}
-              className={`sf-web-nav-link ${activeSection === "complaints" ? "sf-web-nav-link-active" : ""}`}
-            >
-              All Grievances
-            </a>
           </nav>
 
+          <a href="/app/admin/dashboard" className="sf-web-brand" aria-label="SafeFood Admin">
+            <div className="sf-web-seal" style={{ borderColor: "#D35400" }}>
+              <ShieldCheck />
+            </div>
+            <div className="sf-web-brand-text">
+              <span className="sf-web-brand-title">SafeFood Oversight</span>
+              <span className="sf-web-brand-subtitle">State Regulatory Administration</span>
+            </div>
+          </a>
+
           <div className="sf-web-header-right">
+            <nav className="sf-web-nav-links" aria-label="Admin Right Navigation">
+              <a
+                href={portalHref("admin", "users")}
+                className={`sf-web-nav-link ${activeSection === "users" ? "sf-web-nav-link-active" : ""}`}
+              >
+                Citizens
+              </a>
+              <a
+                href={portalHref("admin", "complaints")}
+                className={`sf-web-nav-link ${activeSection === "complaints" ? "sf-web-nav-link-active" : ""}`}
+              >
+                All Grievances
+              </a>
+            </nav>
+
             <select
               className="sf-web-role-picker"
               value="admin"
@@ -1424,7 +1435,7 @@ function AdminWebView({
             </select>
 
             <a href="/login" className="sf-web-signout-btn" title="Sign out">
-              <LogOut style={{ width: 15, height: 15 }} />
+              <LogOut style={{ width: 14, height: 14 }} />
             </a>
           </div>
         </div>
