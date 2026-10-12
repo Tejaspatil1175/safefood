@@ -1,24 +1,32 @@
-# Project Spark
+# SafeFood Frontend
 
-i want make this
+AI-powered packaged food label inspection, Legal Metrology (PCR 2011) compliance verification, and regulatory enforcement portal.
 
-This project was built with [Lovable](https://lovable.dev).
+## Features
+- **Instant Label Inspection**: Scan packaged goods for MRP, net weight, expiry/best before, mandatory declarations, and tiny illegible fonts.
+- **Consumer Grievance Lodging**: File statutory complaints directly to district enforcement authorities.
+- **Field Officer Portal**: On-ground inspection logs, violation auto-verification, and statutory case management.
+- **District & State Administration**: District overview metrics, officer fleet management, and regulatory oversight.
 
-## Build with Lovable
+## Tech Stack
+- **Framework**: TanStack Start (Full-stack React 19)
+- **Routing**: TanStack Router with file-based routing
+- **Styling**: Tailwind CSS v4, Lucide Icons, Radix UI primitives
+- **Bundler**: Vite & Nitro
 
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/02a2a597-3cf9-4d25-8cad-7df27a449e4f).
+## Getting Started
 
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
-
-## Development
-
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
-
-```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
+```bash
+npm install
 npm run dev
 ```
+
+Server runs locally at `http://localhost:8080/`.
+
+## Key Routes
+- `/` — SafeFood Presentation & Interactive Scanner preview
+- `/login` — SafeFood Portal Authentication & Role Picker
+- `/register` — Account Registration (Citizen / Officer)
+- `/app/user/*` — Citizen Consumer Portal
+- `/app/officer/*` — Enforcement Officer Workspace
+- `/app/admin/*` — District & Platform Administration
