@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import {
   CheckCircle2,
@@ -26,7 +26,6 @@ export const Route = createFileRoute("/login")({
 });
 
 function LoginPage() {
-  const navigate = useNavigate();
   const [selectedRole, setSelectedRole] = useState<SafeFoodRole>("user");
   const [email, setEmail] = useState("user@test.com");
   const [password, setPassword] = useState("••••••••••••");
@@ -51,19 +50,19 @@ function LoginPage() {
       setError("Please enter an email address.");
       return;
     }
-    navigate({ to: "/app/$", params: { _splat: `${selectedRole}/dashboard` } });
+    window.location.href = `/app/${selectedRole}/dashboard`;
   };
 
   return (
     <div className="sf-demo sf-demo-public">
       {/* Left Branding Aside */}
       <aside className="sf-demo-aside">
-        <Link to="/" className="sf-demo-brand" aria-label="SafeFood Home">
+        <a href="/" className="sf-demo-brand" aria-label="SafeFood Home">
           <span className="sf-demo-brand-mark">
             <ShieldCheck />
           </span>
           <span>SafeFood</span>
-        </Link>
+        </a>
 
         <div className="sf-demo-aside-copy">
           <div className="sf-demo-kicker">
@@ -99,12 +98,12 @@ function LoginPage() {
       {/* Right Sign-in Form Pane */}
       <main className="sf-demo-auth-pane">
         <div className="sf-demo-auth-form">
-          <Link to="/" className="sf-demo-brand sf-demo-mobile-brand">
+          <a href="/" className="sf-demo-brand sf-demo-mobile-brand">
             <span className="sf-demo-brand-mark">
               <ShieldCheck />
             </span>
             <span>SafeFood</span>
-          </Link>
+          </a>
 
           <h2>Sign in to SafeFood</h2>
           <p className="sf-demo-subtitle">
@@ -201,13 +200,13 @@ function LoginPage() {
           <div className="sf-demo-auth-bottom">
             <span>
               Don't have an account?{" "}
-              <Link to="/register" className="sf-demo-text-link">
+              <a href="/register" className="sf-demo-text-link">
                 Register here
-              </Link>
+              </a>
             </span>
-            <Link to="/" className="sf-demo-text-link">
+            <a href="/" className="sf-demo-text-link">
               &larr; Back to home
-            </Link>
+            </a>
           </div>
         </div>
       </main>
