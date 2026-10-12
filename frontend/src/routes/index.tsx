@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import {
   Apple,
@@ -207,20 +207,20 @@ function Index() {
               <a href="#stories" className="nav-pill-link" onClick={() => setMobileMenu(false)}>Stories</a>
               <a href="#faq" className="nav-pill-link" onClick={() => setMobileMenu(false)}>FAQ</a>
               <div className="mobile-nav-actions">
-                <Link to="/login" className="mobile-portal-btn" onClick={() => setMobileMenu(false)}>
+                <a href="/login" className="mobile-portal-btn" onClick={() => setMobileMenu(false)}>
                   <User style={{ width: 15, height: 15 }} />
                   <span>Sign In to Role Portal</span>
-                </Link>
+                </a>
                 <button type="button" className="mobile-download-btn" onClick={() => open("download")}>
                   Download App <ArrowRight style={{ width: 15, height: 15 }} />
                 </button>
               </div>
             </nav>
             <div className="header-actions">
-              <Link to="/login" className="header-portal-btn" title="Sign in to SafeFood Portal">
+              <a href="/login" className="header-portal-btn" title="Sign in to SafeFood Portal">
                 <User style={{ width: 14, height: 14 }} />
                 <span>Sign In</span>
-              </Link>
+              </a>
               <Button variant="download" className="header-download" onClick={() => open("download")}>
                 <span>Download App</span> <ArrowRight className="download-arrow" />
               </Button>
@@ -359,9 +359,9 @@ function Index() {
                 <li><CheckCheck /> Family allergen danger alerts</li>
                 <li><CheckCheck /> Nutritional balance scorecard</li>
               </ul>
-              <Link to="/app/$" params={{ _splat: "user/dashboard" }} className="role-action-link">
+              <a href="/app/user/dashboard" className="role-action-link">
                 Launch Consumer Portal <ArrowRight style={{ width: 14, height: 14 }} />
-              </Link>
+              </a>
             </article>
 
             <article className="role-card role-card-featured">
@@ -377,9 +377,9 @@ function Index() {
                 <li><CheckCheck /> Mandatory packaging compliance audit</li>
                 <li><CheckCheck /> Violation report & digital seizure logging</li>
               </ul>
-              <Link to="/app/$" params={{ _splat: "officer/dashboard" }} className="role-action-link">
+              <a href="/app/officer/dashboard" className="role-action-link">
                 Launch Officer Portal <ArrowRight style={{ width: 14, height: 14 }} />
-              </Link>
+              </a>
             </article>
 
             <article className="role-card">
@@ -394,9 +394,9 @@ function Index() {
                 <li><CheckCheck /> Supplier authenticity certificates</li>
                 <li><CheckCheck /> Counterfeit incidence alerts</li>
               </ul>
-              <Link to="/app/$" params={{ _splat: "admin/dashboard" }} className="role-action-link">
+              <a href="/app/admin/dashboard" className="role-action-link">
                 Launch Admin Console <ArrowRight style={{ width: 14, height: 14 }} />
-              </Link>
+              </a>
             </article>
           </div>
         </div>
@@ -518,9 +518,9 @@ function Index() {
                 <Button variant="download" onClick={() => open("download")}>
                   Download App <ArrowRight style={{ width: 15, height: 15 }} />
                 </Button>
-                <Link to="/login" className="cta-portal-btn">
+                <a href="/login" className="cta-portal-btn">
                   Open Role Portal <ArrowRight style={{ width: 15, height: 15 }} />
-                </Link>
+                </a>
               </div>
             </div>
           </div>
@@ -560,11 +560,11 @@ function Index() {
             <div className="footer-nav-col">
               <h4>Role Portals</h4>
               <ul>
-                <li><Link to="/app/$" params={{ _splat: "user/dashboard" }}>Consumer App</Link></li>
-                <li><Link to="/app/$" params={{ _splat: "officer/dashboard" }}>Food Safety Officer</Link></li>
-                <li><Link to="/app/$" params={{ _splat: "admin/dashboard" }}>Supermarket Admin</Link></li>
-                <li><Link to="/login">Sign In / Switch Role</Link></li>
-                <li><Link to="/register">Create Account</Link></li>
+                <li><a href="/app/user/dashboard">Consumer App</a></li>
+                <li><a href="/app/officer/dashboard">Food Safety Officer</a></li>
+                <li><a href="/app/admin/dashboard">Supermarket Admin</a></li>
+                <li><a href="/login">Sign In / Switch Role</a></li>
+                <li><a href="/register">Create Account</a></li>
               </ul>
             </div>
 
