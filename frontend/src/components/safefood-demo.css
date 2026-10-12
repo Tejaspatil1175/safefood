@@ -923,9 +923,14 @@
   position: sticky;
   top: 0;
   z-index: 50;
-  background: #FFFFFF;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid #E2E8F0;
-  padding: 10px 24px;
+  padding: 0 32px;
+  height: 64px;
+  display: flex;
+  align-items: center;
 }
 
 .sf-admin-navbar-inner {
@@ -935,7 +940,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
+  gap: 24px;
+  height: 100%;
 }
 
 .sf-admin-brand {
@@ -945,59 +951,69 @@
   text-decoration: none !important;
   color: #0F172A;
   font-weight: 800;
-  font-size: 18px;
+  font-size: 17px;
+  letter-spacing: -0.02em;
 }
 
 .sf-admin-brand-icon {
   width: 34px;
   height: 34px;
   border-radius: 10px;
-  background: #0F172A;
+  background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
   color: #FFFFFF;
   display: grid;
   place-items: center;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.12);
+}
+
+.sf-admin-brand-badge {
+  font-size: 10px;
+  font-weight: 700;
+  color: #475569;
+  background: #F1F5F9;
+  border: 1px solid #E2E8F0;
+  padding: 2px 7px;
+  border-radius: 6px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
 .sf-admin-tabs {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
+  height: 100%;
 }
 
 .sf-admin-tab {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 16px;
-  border-radius: 10px;
+  padding: 0 16px;
+  height: 100%;
   font-size: 13px;
   font-weight: 600;
   color: #64748B !important;
   text-decoration: none !important;
-  transition: all 0.2s;
+  transition: all 0.18s ease;
   position: relative;
+  border-bottom: 2.5px solid transparent;
 }
 
 .sf-admin-tab:hover {
   color: #0F172A !important;
-  background: #F1F5F9;
+  background: rgba(241, 245, 249, 0.6);
 }
 
 .sf-admin-tab-active {
   color: #0F172A !important;
   font-weight: 700;
-  background: #F8FAFC;
+  border-bottom-color: #0F172A;
+  background: transparent;
 }
 
 .sf-admin-tab-active::after {
-  content: "";
-  position: absolute;
-  bottom: -11px;
-  left: 12px;
-  right: 12px;
-  height: 2.5px;
-  background: #0F172A;
-  border-radius: 2px;
+  display: none;
 }
 
 .sf-admin-nav-right {
@@ -1007,33 +1023,78 @@
 }
 
 .sf-admin-role-select {
-  padding: 6px 12px;
-  border-radius: 8px;
+  padding: 7px 14px;
+  border-radius: 20px;
   border: 1px solid #CBD5E1;
   background: #FFFFFF;
   color: #0F172A;
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.sf-admin-role-select:hover {
+  border-color: #94A3B8;
+}
+
+.sf-admin-notif-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid #E2E8F0;
+  background: #FFFFFF;
+  color: #475569;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s;
+  text-decoration: none !important;
+}
+
+.sf-admin-notif-btn:hover {
+  background: #F8FAFC;
+  color: #0F172A;
+  border-color: #CBD5E1;
+}
+
+.sf-admin-notif-dot {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  width: 7px;
+  height: 7px;
+  background: #16A34A;
+  border-radius: 50%;
+  border: 1.5px solid #FFFFFF;
 }
 
 .sf-admin-user-profile {
   display: flex;
   align-items: center;
-  gap: 9px;
-  padding: 4px 10px;
+  gap: 10px;
+  padding: 4px 12px 4px 5px;
   border-radius: 24px;
   background: #F8FAFC;
   border: 1px solid #E2E8F0;
   font-size: 12px;
   font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.sf-admin-user-profile:hover {
+  background: #F1F5F9;
+  border-color: #CBD5E1;
 }
 
 .sf-admin-user-avatar {
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background: #0F172A;
+  background: linear-gradient(135deg, #0F172A 0%, #334155 100%);
   color: #FFFFFF;
   display: grid;
   place-items: center;

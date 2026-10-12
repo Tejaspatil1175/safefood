@@ -1398,63 +1398,57 @@ function AdminWebView({
       {/* 1. TOP NAVBAR */}
       <header className="sf-admin-navbar">
         <div className="sf-admin-navbar-inner">
-          {/* Logo */}
+          {/* Logo & Platform Badge */}
           <a href="/app/admin/dashboard" className="sf-admin-brand">
             <div className="sf-admin-brand-icon">
-              <ShieldCheck style={{ width: 20, height: 20 }} />
+              <ShieldCheck style={{ width: 19, height: 19 }} />
             </div>
-            <span>SafeFood Admin</span>
+            <span>SafeFood</span>
+            <span className="sf-admin-brand-badge">Admin</span>
           </a>
 
-          {/* Navigation Tabs with Active Indicator */}
+          {/* Navigation Tabs with Active Indicator (Analytics removed) */}
           <nav className="sf-admin-tabs" aria-label="Admin Navigation Tabs">
             <a
               href={portalHref("admin", "dashboard")}
               className={`sf-admin-tab ${activeSection === "dashboard" ? "sf-admin-tab-active" : ""}`}
             >
-              <LayoutDashboard style={{ width: 16, height: 16 }} />
+              <LayoutDashboard style={{ width: 15, height: 15 }} />
               <span>Dashboard</span>
             </a>
             <a
               href={portalHref("admin", "products")}
               className={`sf-admin-tab ${activeSection === "products" ? "sf-admin-tab-active" : ""}`}
             >
-              <Package style={{ width: 16, height: 16 }} />
+              <Package style={{ width: 15, height: 15 }} />
               <span>Food Catalog</span>
             </a>
             <a
               href={portalHref("admin", "complaints")}
               className={`sf-admin-tab ${activeSection === "complaints" ? "sf-admin-tab-active" : ""}`}
             >
-              <ClipboardList style={{ width: 16, height: 16 }} />
+              <ClipboardList style={{ width: 15, height: 15 }} />
               <span>Grievances</span>
             </a>
             <a
               href={portalHref("admin", "officers")}
               className={`sf-admin-tab ${activeSection === "officers" ? "sf-admin-tab-active" : ""}`}
             >
-              <Users style={{ width: 16, height: 16 }} />
+              <Users style={{ width: 15, height: 15 }} />
               <span>Officers Fleet</span>
             </a>
             <a
               href={portalHref("admin", "users")}
               className={`sf-admin-tab ${activeSection === "users" ? "sf-admin-tab-active" : ""}`}
             >
-              <User style={{ width: 16, height: 16 }} />
+              <User style={{ width: 15, height: 15 }} />
               <span>Citizens</span>
-            </a>
-            <a
-              href={portalHref("admin", "analytics")}
-              className={`sf-admin-tab ${activeSection === "analytics" ? "sf-admin-tab-active" : ""}`}
-            >
-              <BarChart3 style={{ width: 16, height: 16 }} />
-              <span>Analytics</span>
             </a>
             <a
               href={portalHref("admin", "settings")}
               className={`sf-admin-tab ${activeSection === "settings" ? "sf-admin-tab-active" : ""}`}
             >
-              <SettingsIcon style={{ width: 16, height: 16 }} />
+              <SettingsIcon style={{ width: 15, height: 15 }} />
               <span>Settings</span>
             </a>
           </nav>
@@ -1472,13 +1466,25 @@ function AdminWebView({
               <option value="admin">🏢 Regulatory Admin</option>
             </select>
 
-            <div className="sf-admin-user-profile">
+            {/* Notification alert button */}
+            <button
+              type="button"
+              className="sf-admin-notif-btn"
+              title="Recent regulatory alerts"
+              onClick={() => alert("3 new Legal Metrology compliance notices pending verification.")}
+            >
+              <Bell style={{ width: 16, height: 16 }} />
+              <span className="sf-admin-notif-dot" />
+            </button>
+
+            {/* User Profile Capsule */}
+            <div className="sf-admin-user-profile" title="Signed in as State Director">
               <div className="sf-admin-user-avatar">SK</div>
-              <span>Dr. Sandeep Kulkarni</span>
-              <ChevronDown style={{ width: 14, height: 14, color: "#64748B" }} />
+              <span style={{ fontWeight: 700, color: "#0F172A" }}>Dr. Sandeep Kulkarni</span>
+              <ChevronDown style={{ width: 13, height: 13, color: "#64748B" }} />
             </div>
 
-            <a href="/login" className="sf-admin-btn-outline" style={{ padding: "6px 12px" }} title="Sign out">
+            <a href="/login" className="sf-admin-btn-outline" style={{ padding: "7px 12px" }} title="Sign out">
               <LogOut style={{ width: 14, height: 14 }} />
             </a>
           </div>
