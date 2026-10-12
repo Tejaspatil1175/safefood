@@ -32,6 +32,18 @@ import {
   Send,
   HelpCircle,
   Award,
+  LayoutDashboard,
+  Package,
+  ClipboardList,
+  BarChart3,
+  Settings as SettingsIcon,
+  Search,
+  MoreHorizontal,
+  ChevronDown,
+  TrendingUp,
+  TrendingDown,
+  Store,
+  Upload,
 } from "lucide-react";
 import {
   SafeFoodRole,
@@ -1378,114 +1390,735 @@ function AdminWebView({
   officerAddedMessage,
   setOfficerAddedMessage,
 }: AdminWebProps) {
+  const [adminSearchTerm, setAdminSearchTerm] = useState("");
+  const [selectedTimeframe, setSelectedTimeframe] = useState("Monthly");
+
   return (
-    <div className="sf-web-root">
-      <header className="sf-web-header">
-        <div className="sf-web-header-inner">
-          <nav className="sf-web-nav-links" aria-label="Admin Left Navigation">
+    <div className="sf-admin-root">
+      {/* 1. TOP NAVBAR (Matching Ecomora Reference Screenshot) */}
+      <header className="sf-admin-navbar">
+        <div className="sf-admin-navbar-inner">
+          {/* Logo */}
+          <a href="/app/admin/dashboard" className="sf-admin-brand">
+            <div className="sf-admin-brand-icon">
+              <ShieldCheck style={{ width: 20, height: 20 }} />
+            </div>
+            <span>SafeFood</span>
+          </a>
+
+          {/* Navigation Tabs with Active Indicator */}
+          <nav className="sf-admin-tabs" aria-label="Admin Navigation Tabs">
             <a
               href={portalHref("admin", "dashboard")}
-              className={`sf-web-nav-link ${activeSection === "dashboard" ? "sf-web-nav-link-active" : ""}`}
+              className={`sf-admin-tab ${activeSection === "dashboard" ? "sf-admin-tab-active" : ""}`}
             >
-              Overview
+              <LayoutDashboard style={{ width: 16, height: 16 }} />
+              <span>Dashboard</span>
+            </a>
+            <a
+              href={portalHref("admin", "products")}
+              className={`sf-admin-tab ${activeSection === "products" ? "sf-admin-tab-active" : ""}`}
+            >
+              <Package style={{ width: 16, height: 16 }} />
+              <span>Products</span>
+            </a>
+            <a
+              href={portalHref("admin", "complaints")}
+              className={`sf-admin-tab ${activeSection === "complaints" ? "sf-admin-tab-active" : ""}`}
+            >
+              <ClipboardList style={{ width: 16, height: 16 }} />
+              <span>Purchases</span>
             </a>
             <a
               href={portalHref("admin", "officers")}
-              className={`sf-web-nav-link ${activeSection === "officers" ? "sf-web-nav-link-active" : ""}`}
+              className={`sf-admin-tab ${activeSection === "officers" ? "sf-admin-tab-active" : ""}`}
             >
-              Officer Fleet
+              <Users style={{ width: 16, height: 16 }} />
+              <span>Customers</span>
+            </a>
+            <a
+              href={portalHref("admin", "analytics")}
+              className={`sf-admin-tab ${activeSection === "analytics" ? "sf-admin-tab-active" : ""}`}
+            >
+              <BarChart3 style={{ width: 16, height: 16 }} />
+              <span>Analytics</span>
+            </a>
+            <a
+              href={portalHref("admin", "settings")}
+              className={`sf-admin-tab ${activeSection === "settings" ? "sf-admin-tab-active" : ""}`}
+            >
+              <SettingsIcon style={{ width: 16, height: 16 }} />
+              <span>Settings</span>
             </a>
           </nav>
 
-          <a href="/app/admin/dashboard" className="sf-web-brand" aria-label="SafeFood Admin">
-            <div className="sf-web-seal" style={{ borderColor: "#D35400" }}>
-              <ShieldCheck />
-            </div>
-            <div className="sf-web-brand-text">
-              <span className="sf-web-brand-title">SafeFood Oversight</span>
-              <span className="sf-web-brand-subtitle">State Regulatory Administration</span>
-            </div>
-          </a>
-
-          <div className="sf-web-header-right">
-            <nav className="sf-web-nav-links" aria-label="Admin Right Navigation">
-              <a
-                href={portalHref("admin", "users")}
-                className={`sf-web-nav-link ${activeSection === "users" ? "sf-web-nav-link-active" : ""}`}
-              >
-                Citizens
-              </a>
-              <a
-                href={portalHref("admin", "complaints")}
-                className={`sf-web-nav-link ${activeSection === "complaints" ? "sf-web-nav-link-active" : ""}`}
-              >
-                All Grievances
-              </a>
-            </nav>
-
+          {/* Right Profile & Persona Controls */}
+          <div className="sf-admin-nav-right">
             <select
-              className="sf-web-role-picker"
+              className="sf-admin-role-select"
               value="admin"
               onChange={(e) => switchRole(e.target.value as SafeFoodRole)}
               aria-label="Switch persona"
             >
               <option value="user">🌿 Citizen View</option>
               <option value="officer">🛡️ Officer Inspection</option>
-              <option value="admin">🏢 Regulatory Oversight</option>
+              <option value="admin">🏢 Regulatory Admin</option>
             </select>
 
-            <a href="/login" className="sf-web-signout-btn" title="Sign out">
+            <div className="sf-admin-user-profile">
+              <div className="sf-admin-user-avatar">AD</div>
+              <span>Andriano Darwin</span>
+              <ChevronDown style={{ width: 14, height: 14, color: "#64748B" }} />
+            </div>
+
+            <a href="/login" className="sf-admin-btn-outline" style={{ padding: "6px 12px" }} title="Sign out">
               <LogOut style={{ width: 14, height: 14 }} />
             </a>
           </div>
         </div>
       </header>
 
-      <main className="sf-web-container" style={{ paddingTop: 32 }}>
-        <div className="sf-web-stats-strip">
-          <div className="sf-web-stat-card">
-            <span>Statewide Grievances</span>
-            <strong>142</strong>
-            <small>Across 9 administrative districts</small>
-          </div>
-          <div className="sf-web-stat-card">
-            <span>Active Field Officers</span>
-            <strong style={{ color: "#2A5A48" }}>34</strong>
-            <small>Enforcement fleet deployed</small>
-          </div>
-          <div className="sf-web-stat-card">
-            <span>Verified Violations</span>
-            <strong style={{ color: "#C85A32" }}>89</strong>
-            <small>Legal notices issued to packers</small>
-          </div>
-          <div className="sf-web-stat-card">
-            <span>Resolution Rate</span>
-            <strong style={{ color: "#1E6B4A" }}>84.2%</strong>
-            <small>Average turnaround: 3.2 days</small>
+      {/* 2. MAIN ADMIN CANVAS */}
+      <main style={{ maxWidth: 1600, margin: "0 auto", padding: "0 32px 48px" }}>
+        {/* SUBHEADER BAR */}
+        <div className="sf-admin-subhead">
+          <h1>
+            {activeSection === "dashboard" && "Dashboard"}
+            {activeSection === "products" && "Product Compliance Catalog"}
+            {activeSection === "complaints" && "Purchases & Grievances"}
+            {activeSection === "officers" && "Officer Fleet & Field Oversight"}
+            {activeSection === "users" && "Customer Accounts & Citizens"}
+            {activeSection === "analytics" && "Statewide Food Safety Analytics"}
+            {activeSection === "settings" && "Regulatory Settings"}
+          </h1>
+
+          <div className="sf-admin-subhead-actions">
+            <div className="sf-admin-search-box">
+              <Search style={{ width: 16, height: 16 }} />
+              <input
+                type="text"
+                placeholder="Search product..."
+                value={adminSearchTerm}
+                onChange={(e) => setAdminSearchTerm(e.target.value)}
+              />
+            </div>
+
+            <button
+              type="button"
+              className="sf-admin-btn-outline"
+              onClick={() => alert("Exporting CSV report for active dataset...")}
+            >
+              <Upload style={{ width: 14, height: 14 }} />
+              <span>Export CSV</span>
+            </button>
+
+            <button
+              type="button"
+              className="sf-admin-btn-outline"
+              onClick={() => alert("Downloading Statewide Compliance Summary Report (PDF)...")}
+            >
+              <Download style={{ width: 14, height: 14 }} />
+              <span>Download Report</span>
+            </button>
           </div>
         </div>
 
+        {/* 3. DASHBOARD MAIN VIEW (Exact match to reference image) */}
         {activeSection === "dashboard" && (
-          <div style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr", gap: 24 }}>
-            <div className="sf-web-card">
-              <h4 style={{ margin: "0 0 16px", fontSize: "18px", fontWeight: 800 }}>Recent Grievance Feed</h4>
-              <div style={{ display: "grid", gap: 12 }}>
-                {sampleComplaints.map((c) => (
-                  <div key={c.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 0", borderBottom: "1px solid #E8DEC8" }}>
-                    <div>
-                      <strong style={{ fontSize: "14px", display: "block" }}>{c.product}</strong>
-                      <span style={{ fontSize: "12px", color: "#7A6F5D" }}>{c.location} · {c.date}</span>
+          <>
+            {/* TOP 3 COLUMNS GRID */}
+            <div className="sf-admin-top-grid">
+              {/* COL 1: STACKED STAT CARDS */}
+              <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+                {/* Stat 1 */}
+                <div className="sf-admin-stat-card">
+                  <div className="sf-admin-stat-top">
+                    <span className="sf-admin-stat-title">Total Products Sales</span>
+                    <div className="sf-admin-stat-icon-wrap">
+                      <TrendingUp style={{ width: 18, height: 18 }} />
                     </div>
-                    <span className="sf-web-badge sf-web-badge-warn">{c.status}</span>
                   </div>
-                ))}
+                  <div className="sf-admin-stat-value-row">
+                    <span className="sf-admin-stat-value">202,324</span>
+                    <span className="sf-admin-badge-pill sf-admin-badge-pill-green">
+                      +10%
+                    </span>
+                  </div>
+                  <a href={portalHref("admin", "products")} className="sf-admin-stat-link">
+                    <span>View Sales Details</span>
+                    <ArrowRight style={{ width: 14, height: 14 }} />
+                  </a>
+                </div>
+
+                {/* Stat 2 */}
+                <div className="sf-admin-stat-card">
+                  <div className="sf-admin-stat-top">
+                    <span className="sf-admin-stat-title">Total Volume Of Products</span>
+                    <div className="sf-admin-stat-icon-wrap">
+                      <Store style={{ width: 18, height: 18 }} />
+                    </div>
+                  </div>
+                  <div className="sf-admin-stat-value-row">
+                    <span className="sf-admin-stat-value">123,726</span>
+                    <span className="sf-admin-badge-pill sf-admin-badge-pill-red">
+                      -12%
+                    </span>
+                  </div>
+                  <a href={portalHref("admin", "complaints")} className="sf-admin-stat-link">
+                    <span>View All Products</span>
+                    <ArrowRight style={{ width: 14, height: 14 }} />
+                  </a>
+                </div>
+              </div>
+
+              {/* COL 2: BAR CHART CARD (Hatched stripes & solid bars) */}
+              <div className="sf-admin-card">
+                <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
+                  <div>
+                    <span className="sf-admin-stat-title">Total Products Sales</span>
+                    <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 6 }}>
+                      <span className="sf-admin-stat-value">$500,324</span>
+                      <span className="sf-admin-badge-pill sf-admin-badge-pill-green">
+                        +45%
+                      </span>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    style={{ background: "transparent", border: "none", cursor: "pointer", color: "#64748B", padding: 4 }}
+                    aria-label="Options"
+                  >
+                    <MoreHorizontal style={{ width: 18, height: 18 }} />
+                  </button>
+                </div>
+
+                {/* Legend */}
+                <div style={{ display: "flex", alignItems: "center", gap: 18, marginTop: 14, fontSize: 12, color: "#64748B" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                    <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#0F172A" }} />
+                    <span>Total Revenue</span>
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                    <span
+                      style={{
+                        width: 10,
+                        height: 10,
+                        borderRadius: 2,
+                        background: "repeating-linear-gradient(45deg, #CBD5E1, #CBD5E1 2px, #F8FAFC 2px, #F8FAFC 4px)",
+                        border: "1px solid #94A3B8",
+                      }}
+                    />
+                    <span>Total Profit</span>
+                  </div>
+                </div>
+
+                {/* The Bar Chart */}
+                <div className="sf-admin-barchart-container">
+                  <div className="sf-admin-barchart-yaxis">
+                    <span>1000</span>
+                    <span>2000</span>
+                    <span>3000</span>
+                    <span>4000</span>
+                    <span>5000</span>
+                    <span>6000</span>
+                    <span>7000</span>
+                  </div>
+
+                  <div className="sf-admin-barchart-cols">
+                    {/* Jan */}
+                    <div className="sf-admin-barchart-col">
+                      <span className="sf-admin-bar-val">3400</span>
+                      <div className="sf-admin-bar-stack">
+                        <div className="sf-admin-bar-hatched" style={{ height: 42 }} />
+                        <div className="sf-admin-bar-solid" style={{ height: 60 }} />
+                      </div>
+                      <span className="sf-admin-bar-month sf-admin-bar-month-active">Jan</span>
+                    </div>
+
+                    {/* Feb */}
+                    <div className="sf-admin-barchart-col">
+                      <span className="sf-admin-bar-val">2800</span>
+                      <div className="sf-admin-bar-stack">
+                        <div className="sf-admin-bar-hatched" style={{ height: 48 }} />
+                        <div className="sf-admin-bar-solid" style={{ height: 45 }} />
+                      </div>
+                      <span className="sf-admin-bar-month">Feb</span>
+                    </div>
+
+                    {/* Mar */}
+                    <div className="sf-admin-barchart-col">
+                      <span className="sf-admin-bar-val">4000</span>
+                      <div className="sf-admin-bar-stack">
+                        <div className="sf-admin-bar-hatched" style={{ height: 35 }} />
+                        <div className="sf-admin-bar-solid" style={{ height: 75 }} />
+                      </div>
+                      <span className="sf-admin-bar-month">Mar</span>
+                    </div>
+
+                    {/* May */}
+                    <div className="sf-admin-barchart-col">
+                      <span className="sf-admin-bar-val">2500</span>
+                      <div className="sf-admin-bar-stack">
+                        <div className="sf-admin-bar-hatched" style={{ height: 50 }} />
+                        <div className="sf-admin-bar-solid" style={{ height: 40 }} />
+                      </div>
+                      <span className="sf-admin-bar-month">May</span>
+                    </div>
+
+                    {/* Apr */}
+                    <div className="sf-admin-barchart-col">
+                      <span className="sf-admin-bar-val">4500</span>
+                      <div className="sf-admin-bar-stack">
+                        <div className="sf-admin-bar-hatched" style={{ height: 26 }} />
+                        <div className="sf-admin-bar-solid" style={{ height: 95 }} />
+                      </div>
+                      <span className="sf-admin-bar-month">Apr</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* COL 3: RADIAL DONUT STATS CARD */}
+              <div className="sf-admin-card">
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                  <span className="sf-admin-stat-title" style={{ fontSize: 14, fontWeight: 700, color: "#0F172A" }}>
+                    Total Sales Statistics
+                  </span>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 4,
+                      fontSize: 12,
+                      color: "#64748B",
+                      cursor: "pointer",
+                      padding: "4px 8px",
+                      borderRadius: 8,
+                      border: "1px solid #E2E8F0",
+                    }}
+                  >
+                    <span>{selectedTimeframe}</span>
+                    <ChevronDown style={{ width: 13, height: 13 }} />
+                  </div>
+                </div>
+
+                {/* Donut Graphic */}
+                <div className="sf-admin-donut-container">
+                  <div className="sf-admin-donut-wrapper">
+                    <svg viewBox="0 0 100 100" style={{ width: "100%", height: "100%", transform: "rotate(-90deg)" }}>
+                      {/* Segment 1: Light Grey (Furniture) */}
+                      <circle
+                        cx="50"
+                        cy="50"
+                        r="38"
+                        fill="transparent"
+                        stroke="#E2E8F0"
+                        strokeWidth="14"
+                        strokeDasharray="238"
+                        strokeDashoffset="60"
+                      />
+                      {/* Segment 2: Medium Grey (Electronics) */}
+                      <circle
+                        cx="50"
+                        cy="50"
+                        r="38"
+                        fill="transparent"
+                        stroke="#94A3B8"
+                        strokeWidth="14"
+                        strokeDasharray="65 173"
+                        strokeDashoffset="0"
+                      />
+                      {/* Segment 3: Deep Slate (Clothes) */}
+                      <circle
+                        cx="50"
+                        cy="50"
+                        r="38"
+                        fill="transparent"
+                        stroke="#334155"
+                        strokeWidth="14"
+                        strokeDasharray="50 188"
+                        strokeDashoffset="-70"
+                      />
+                      {/* Segment 4: Solid Black (Shoes) */}
+                      <circle
+                        cx="50"
+                        cy="50"
+                        r="38"
+                        fill="transparent"
+                        stroke="#0F172A"
+                        strokeWidth="14"
+                        strokeDasharray="75 163"
+                        strokeDashoffset="-125"
+                      />
+                    </svg>
+
+                    <div className="sf-admin-donut-center">
+                      <strong>23,324</strong>
+                      <span className="sf-admin-badge-pill sf-admin-badge-pill-green">
+                        +45%
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Legend Grid */}
+                  <div className="sf-admin-donut-legend-row">
+                    <div className="sf-admin-donut-legend-item">
+                      <div className="sf-admin-donut-legend-label">
+                        <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#CBD5E1" }} />
+                        <span>Furniture</span>
+                      </div>
+                      <span className="sf-admin-donut-legend-val">89,532</span>
+                    </div>
+
+                    <div className="sf-admin-donut-legend-item" style={{ alignItems: "flex-end" }}>
+                      <div className="sf-admin-donut-legend-label">
+                        <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#0F172A" }} />
+                        <span>Shoes</span>
+                      </div>
+                      <span className="sf-admin-donut-legend-val">1,88,500</span>
+                    </div>
+
+                    <div className="sf-admin-donut-legend-item">
+                      <div className="sf-admin-donut-legend-label">
+                        <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#94A3B8" }} />
+                        <span>Electronics</span>
+                      </div>
+                      <span className="sf-admin-donut-legend-val">90,231</span>
+                    </div>
+
+                    <div className="sf-admin-donut-legend-item" style={{ alignItems: "flex-end" }}>
+                      <div className="sf-admin-donut-legend-label">
+                        <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#334155" }} />
+                        <span>Clothes</span>
+                      </div>
+                      <span className="sf-admin-donut-legend-val">88,865</span>
+                    </div>
+                  </div>
+
+                  <div className="sf-admin-donut-total" style={{ width: "100%" }}>
+                    <span>Total Number of Sales</span>
+                    <strong>3,44,031</strong>
+                  </div>
+                </div>
               </div>
             </div>
 
-            <div className="sf-web-card">
-              <h4 style={{ margin: "0 0 16px", fontSize: "18px", fontWeight: 800 }}>Deploy Field Officer</h4>
+            {/* BOTTOM 2 COLUMNS GRID */}
+            <div className="sf-admin-bottom-grid">
+              {/* COL 1: RECENT ORDERS TABLE */}
+              <div className="sf-admin-card">
+                <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 18 }}>
+                  <div>
+                    <h3 style={{ margin: "0 0 4px", fontSize: 18, fontWeight: 800, color: "#0F172A" }}>
+                      Recant Orders
+                    </h3>
+                    <p style={{ margin: 0, fontSize: 13, color: "#64748B" }}>
+                      Keep track of recant order data and others information.
+                    </p>
+                  </div>
+                  <a
+                    href={portalHref("admin", "complaints")}
+                    className="sf-admin-btn-outline"
+                    style={{ fontSize: 12, padding: "6px 14px" }}
+                  >
+                    <span>View All</span>
+                    <ArrowRight style={{ width: 13, height: 13 }} />
+                  </a>
+                </div>
+
+                <div style={{ overflowX: "auto" }}>
+                  <table className="sf-admin-table">
+                    <thead>
+                      <tr>
+                        <th>Order Id</th>
+                        <th>Product Name</th>
+                        <th>Date</th>
+                        <th>Payment</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th style={{ textAlign: "right" }}>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td style={{ fontWeight: 600, color: "#0F172A" }}>#202523</td>
+                        <td>
+                          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                            <div
+                              style={{
+                                width: 28,
+                                height: 28,
+                                borderRadius: 8,
+                                background: "#DCFCE7",
+                                display: "grid",
+                                placeItems: "center",
+                                fontSize: 14,
+                              }}
+                            >
+                              🎧
+                            </div>
+                            <span style={{ fontWeight: 600 }}>Airpods Pro Max</span>
+                          </div>
+                        </td>
+                        <td>28 Mar 2025</td>
+                        <td>Mastercard</td>
+                        <td style={{ fontWeight: 700, color: "#0F172A" }}>$1,230.00</td>
+                        <td>
+                          <span className="sf-admin-status-chip sf-admin-status-inprogress">
+                            In Progress
+                          </span>
+                        </td>
+                        <td style={{ textAlign: "right" }}>
+                          <button
+                            type="button"
+                            style={{ background: "transparent", border: "none", cursor: "pointer", color: "#94A3B8" }}
+                          >
+                            <MoreHorizontal style={{ width: 16, height: 16 }} />
+                          </button>
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td style={{ fontWeight: 600, color: "#0F172A" }}>#202522</td>
+                        <td>
+                          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                            <div
+                              style={{
+                                width: 28,
+                                height: 28,
+                                borderRadius: 8,
+                                background: "#FEF3C7",
+                                display: "grid",
+                                placeItems: "center",
+                                fontSize: 14,
+                              }}
+                            >
+                              👗
+                            </div>
+                            <span style={{ fontWeight: 600 }}>Summer Clothes</span>
+                          </div>
+                        </td>
+                        <td>27 Mar 2025</td>
+                        <td>Paypal</td>
+                        <td style={{ fontWeight: 700, color: "#0F172A" }}>$3,112.00</td>
+                        <td>
+                          <span className="sf-admin-status-chip sf-admin-status-complete">
+                            Complete
+                          </span>
+                        </td>
+                        <td style={{ textAlign: "right" }}>
+                          <button
+                            type="button"
+                            style={{ background: "transparent", border: "none", cursor: "pointer", color: "#94A3B8" }}
+                          >
+                            <MoreHorizontal style={{ width: 16, height: 16 }} />
+                          </button>
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td style={{ fontWeight: 600, color: "#0F172A" }}>#202521</td>
+                        <td>
+                          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                            <div
+                              style={{
+                                width: 28,
+                                height: 28,
+                                borderRadius: 8,
+                                background: "#E0F2FE",
+                                display: "grid",
+                                placeItems: "center",
+                                fontSize: 14,
+                              }}
+                            >
+                              👟
+                            </div>
+                            <span style={{ fontWeight: 600 }}>Nike Shoes</span>
+                          </div>
+                        </td>
+                        <td>26 Mar 2025</td>
+                        <td>Mastercard</td>
+                        <td style={{ fontWeight: 700, color: "#0F172A" }}>$1,211.00</td>
+                        <td>
+                          <span className="sf-admin-status-chip sf-admin-status-waiting">
+                            Waiting
+                          </span>
+                        </td>
+                        <td style={{ textAlign: "right" }}>
+                          <button
+                            type="button"
+                            style={{ background: "transparent", border: "none", cursor: "pointer", color: "#94A3B8" }}
+                          >
+                            <MoreHorizontal style={{ width: 16, height: 16 }} />
+                          </button>
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td style={{ fontWeight: 600, color: "#0F172A" }}>#202520</td>
+                        <td>
+                          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                            <div
+                              style={{
+                                width: 28,
+                                height: 28,
+                                borderRadius: 8,
+                                background: "#F1F5F9",
+                                display: "grid",
+                                placeItems: "center",
+                                fontSize: 14,
+                              }}
+                            >
+                              🪑
+                            </div>
+                            <span style={{ fontWeight: 600 }}>Front Table CSS</span>
+                          </div>
+                        </td>
+                        <td>25 Mar 2025</td>
+                        <td>Visa</td>
+                        <td style={{ fontWeight: 700, color: "#0F172A" }}>$42,121.00</td>
+                        <td>
+                          <span className="sf-admin-status-chip sf-admin-status-inprogress">
+                            In Progress
+                          </span>
+                        </td>
+                        <td style={{ textAlign: "right" }}>
+                          <button
+                            type="button"
+                            style={{ background: "transparent", border: "none", cursor: "pointer", color: "#94A3B8" }}
+                          >
+                            <MoreHorizontal style={{ width: 16, height: 16 }} />
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              {/* COL 2: TOP SELLING PRODUCTS & MINI BARS */}
+              <div className="sf-admin-card">
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
+                  <span style={{ fontSize: 16, fontWeight: 800, color: "#0F172A" }}>
+                    Top Selling Products
+                  </span>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 4,
+                      fontSize: 12,
+                      color: "#64748B",
+                      cursor: "pointer",
+                      padding: "4px 8px",
+                      borderRadius: 8,
+                      border: "1px solid #E2E8F0",
+                    }}
+                  >
+                    <span>Monthly</span>
+                    <ChevronDown style={{ width: 13, height: 13 }} />
+                  </div>
+                </div>
+
+                {/* Highlight Product Box */}
+                <div className="sf-admin-product-highlight">
+                  <div className="sf-admin-product-info">
+                    <div className="sf-admin-product-thumb">
+                      ⌚
+                    </div>
+                    <div className="sf-admin-product-meta">
+                      <h5>Apple Watch Series 10 46mm GPS</h5>
+                      <p>Brand Apple · 10.2k Stock Available</p>
+                      <div className="sf-price">$799.00</div>
+                    </div>
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 3, alignItems: "center" }}>
+                    <span style={{ width: 4, height: 4, borderRadius: "50%", background: "#0F172A" }} />
+                    <span style={{ width: 4, height: 4, borderRadius: "50%", background: "#CBD5E1" }} />
+                    <span style={{ width: 4, height: 4, borderRadius: "50%", background: "#CBD5E1" }} />
+                  </div>
+                </div>
+
+                {/* Mini Bars Chart */}
+                <div className="sf-admin-minibars">
+                  <div className="sf-admin-minibar-col">
+                    <span className="sf-admin-minibar-val">840</span>
+                    <div className="sf-admin-minibar-pillar" style={{ height: 14 }} />
+                    <span className="sf-admin-minibar-day">Tue</span>
+                  </div>
+
+                  <div className="sf-admin-minibar-col">
+                    <span className="sf-admin-minibar-val">2000</span>
+                    <div className="sf-admin-minibar-pillar" style={{ height: 45 }} />
+                    <span className="sf-admin-minibar-day">Wed</span>
+                  </div>
+
+                  <div className="sf-admin-minibar-col">
+                    <span className="sf-admin-minibar-val">6000</span>
+                    <div className="sf-admin-minibar-pillar" style={{ height: 95 }} />
+                    <span className="sf-admin-minibar-day">Thu</span>
+                  </div>
+
+                  <div className="sf-admin-minibar-col">
+                    <span className="sf-admin-minibar-val">1200</span>
+                    <div className="sf-admin-minibar-pillar" style={{ height: 30 }} />
+                    <span className="sf-admin-minibar-day">Fri</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+
+        {/* 4. OFFICERS SECTION */}
+        {activeSection === "officers" && (
+          <div style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr", gap: 24 }}>
+            <div className="sf-admin-card">
+              <h3 style={{ margin: "0 0 16px", fontSize: 18, fontWeight: 800, color: "#0F172A" }}>
+                Enforcement Fleet Directory
+              </h3>
+              <table className="sf-admin-table">
+                <thead>
+                  <tr>
+                    <th>Officer ID</th>
+                    <th>Name</th>
+                    <th>Jurisdiction</th>
+                    <th>Active Cases</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>#OFF-901</td>
+                    <td><strong>Insp. Rajesh Patil</strong></td>
+                    <td>Dhule Urban</td>
+                    <td>14</td>
+                    <td><span className="sf-admin-status-chip sf-admin-status-complete">Active On-Duty</span></td>
+                  </tr>
+                  <tr>
+                    <td>#OFF-902</td>
+                    <td><strong>Insp. Sneha Deshmukh</strong></td>
+                    <td>Pune Central</td>
+                    <td>9</td>
+                    <td><span className="sf-admin-status-chip sf-admin-status-complete">Active On-Duty</span></td>
+                  </tr>
+                  <tr>
+                    <td>#OFF-903</td>
+                    <td><strong>Insp. Amit Kulkarni</strong></td>
+                    <td>Mumbai Metro</td>
+                    <td>22</td>
+                    <td><span className="sf-admin-status-chip sf-admin-status-waiting">In Transit</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div className="sf-admin-card">
+              <h3 style={{ margin: "0 0 16px", fontSize: 18, fontWeight: 800, color: "#0F172A" }}>
+                Deploy Field Officer
+              </h3>
               {officerAddedMessage && (
-                <div style={{ background: "#EBF5F0", border: "1px solid #C4E2D3", borderRadius: 10, padding: 12, color: "#1E6B4A", fontSize: "12px", marginBottom: 14 }}>
+                <div style={{ background: "#DCFCE7", border: "1px solid #BBF7D0", borderRadius: 10, padding: 12, color: "#15803D", fontSize: 13, marginBottom: 14 }}>
                   Officer deployed to district {newOfficerDistrict}!
                 </div>
               )}
@@ -1498,34 +2131,178 @@ function AdminWebView({
                 style={{ display: "flex", flexDirection: "column", gap: 14 }}
               >
                 <div className="sf-demo-field">
-                  <label>Officer Full Name</label>
+                  <label style={{ fontSize: 12, fontWeight: 700, color: "#475569" }}>Officer Full Name</label>
                   <input
                     type="text"
                     required
+                    style={{ padding: 10, borderRadius: 10, border: "1px solid #CBD5E1", outline: "none" }}
                     value={newOfficerName}
                     onChange={(e) => setNewOfficerName(e.target.value)}
                     placeholder="e.g. Inspector Anil Shinde"
                   />
                 </div>
                 <div className="sf-demo-field">
-                  <label>Assigned District</label>
-                  <select value={newOfficerDistrict} onChange={(e) => setNewOfficerDistrict(e.target.value)}>
+                  <label style={{ fontSize: 12, fontWeight: 700, color: "#475569" }}>Assigned District</label>
+                  <select
+                    style={{ padding: 10, borderRadius: 10, border: "1px solid #CBD5E1", outline: "none" }}
+                    value={newOfficerDistrict}
+                    onChange={(e) => setNewOfficerDistrict(e.target.value)}
+                  >
                     <option value="DHULE">DHULE</option>
                     <option value="PUNE">PUNE</option>
                     <option value="MUMBAI">MUMBAI</option>
                   </select>
                 </div>
-                <button type="submit" className="sf-web-pill-btn">
+                <button
+                  type="submit"
+                  className="sf-admin-btn-outline"
+                  style={{ background: "#0F172A", color: "#FFFFFF", justifyContent: "center", marginTop: 8 }}
+                >
                   <span>Deploy Officer</span>
-                  <div className="sf-web-pill-arrow">
-                    <ArrowRight style={{ width: 15, height: 15 }} />
-                  </div>
+                  <ArrowRight style={{ width: 14, height: 14 }} />
                 </button>
               </form>
             </div>
+          </div>
+        )}
+
+        {/* 5. PURCHASES & GRIEVANCES SECTION */}
+        {activeSection === "complaints" && (
+          <div className="sf-admin-card">
+            <h3 style={{ margin: "0 0 16px", fontSize: 18, fontWeight: 800, color: "#0F172A" }}>
+              All Filed Grievances & Audit Actions
+            </h3>
+            <table className="sf-admin-table">
+              <thead>
+                <tr>
+                  <th>Case Id</th>
+                  <th>Product</th>
+                  <th>Date</th>
+                  <th>Location</th>
+                  <th>Violation Type</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {sampleComplaints.map((c) => (
+                  <tr key={c.id}>
+                    <td style={{ fontWeight: 700, color: "#0F172A" }}>{c.id}</td>
+                    <td><strong>{c.product}</strong></td>
+                    <td>{c.date}</td>
+                    <td>{c.location}</td>
+                    <td>Legal Metrology Decl. Missing</td>
+                    <td>
+                      <span className="sf-admin-status-chip sf-admin-status-inprogress">
+                        {c.status}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {/* 6. PRODUCTS CATALOG SECTION */}
+        {activeSection === "products" && (
+          <div className="sf-admin-card">
+            <h3 style={{ margin: "0 0 16px", fontSize: 18, fontWeight: 800, color: "#0F172A" }}>
+              Packaged Food Products Compliance Registry
+            </h3>
+            <table className="sf-admin-table">
+              <thead>
+                <tr>
+                  <th>Barcode</th>
+                  <th>Product Name</th>
+                  <th>Manufacturer / Packer</th>
+                  <th>Net Quantity</th>
+                  <th>Compliance Score</th>
+                </tr>
+              </thead>
+              <tbody>
+                {sampleScans.map((s) => (
+                  <tr key={s.id}>
+                    <td style={{ fontWeight: 700 }}>{s.id}</td>
+                    <td><strong>{s.product}</strong></td>
+                    <td>{s.category}</td>
+                    <td>{s.date}</td>
+                    <td>
+                      <span className={`sf-admin-badge-pill ${s.warning ? "sf-admin-badge-pill-red" : "sf-admin-badge-pill-green"}`}>
+                        {s.warning ? "Flagged for Audit" : "100% Compliant"}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {/* 7. CITIZENS SECTION */}
+        {activeSection === "users" && (
+          <div className="sf-admin-card">
+            <h3 style={{ margin: "0 0 16px", fontSize: 18, fontWeight: 800, color: "#0F172A" }}>
+              Citizen Consumer Profiles
+            </h3>
+            <p style={{ color: "#64748B", fontSize: 13, marginBottom: 16 }}>
+              Registered citizens actively scanning food labels and submitting statutory reports.
+            </p>
+            <table className="sf-admin-table">
+              <thead>
+                <tr>
+                  <th>User ID</th>
+                  <th>Citizen Name</th>
+                  <th>District</th>
+                  <th>Scans Submitted</th>
+                  <th>Verified Reports</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>#CIT-401</td>
+                  <td><strong>Rohan Sharma</strong></td>
+                  <td>Dhule</td>
+                  <td>28</td>
+                  <td><span className="sf-admin-status-chip sf-admin-status-complete">6 Verified</span></td>
+                </tr>
+                <tr>
+                  <td>#CIT-402</td>
+                  <td><strong>Pooja Deshmukh</strong></td>
+                  <td>Pune</td>
+                  <td>45</td>
+                  <td><span className="sf-admin-status-chip sf-admin-status-complete">11 Verified</span></td>
+                </tr>
+                <tr>
+                  <td>#CIT-403</td>
+                  <td><strong>Karan Joshi</strong></td>
+                  <td>Mumbai</td>
+                  <td>19</td>
+                  <td><span className="sf-admin-status-chip sf-admin-status-complete">4 Verified</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {/* 8. ANALYTICS & SETTINGS FALLBACKS */}
+        {(activeSection === "analytics" || activeSection === "settings") && (
+          <div className="sf-admin-card" style={{ textAlign: "center", padding: "48px 24px" }}>
+            <div style={{ width: 48, height: 48, borderRadius: "50%", background: "#F1F5F9", display: "grid", placeItems: "center", margin: "0 auto 16px" }}>
+              <SettingsIcon style={{ width: 24, height: 24, color: "#0F172A" }} />
+            </div>
+            <h3 style={{ margin: "0 0 8px", fontSize: 18, fontWeight: 800 }}>
+              {activeSection === "analytics" ? "Statewide Analytical Intelligence" : "Regulatory System Configuration"}
+            </h3>
+            <p style={{ color: "#64748B", maxWidth: 500, margin: "0 auto 20px", fontSize: 13 }}>
+              Full operational parameters, automated legal metrology audit rules, and compliance thresholds are configured and operating in real-time.
+            </p>
+            <a href={portalHref("admin", "dashboard")} className="sf-admin-btn-outline">
+              Return to Dashboard
+            </a>
           </div>
         )}
       </main>
     </div>
   );
 }
+
