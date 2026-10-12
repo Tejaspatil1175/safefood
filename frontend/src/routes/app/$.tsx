@@ -1395,7 +1395,7 @@ function AdminWebView({
 
   return (
     <div className="sf-admin-root">
-      {/* 1. TOP NAVBAR (Matching Ecomora Reference Screenshot) */}
+      {/* 1. TOP NAVBAR */}
       <header className="sf-admin-navbar">
         <div className="sf-admin-navbar-inner">
           {/* Logo */}
@@ -1403,7 +1403,7 @@ function AdminWebView({
             <div className="sf-admin-brand-icon">
               <ShieldCheck style={{ width: 20, height: 20 }} />
             </div>
-            <span>SafeFood</span>
+            <span>SafeFood Admin</span>
           </a>
 
           {/* Navigation Tabs with Active Indicator */}
@@ -1420,21 +1420,28 @@ function AdminWebView({
               className={`sf-admin-tab ${activeSection === "products" ? "sf-admin-tab-active" : ""}`}
             >
               <Package style={{ width: 16, height: 16 }} />
-              <span>Products</span>
+              <span>Food Catalog</span>
             </a>
             <a
               href={portalHref("admin", "complaints")}
               className={`sf-admin-tab ${activeSection === "complaints" ? "sf-admin-tab-active" : ""}`}
             >
               <ClipboardList style={{ width: 16, height: 16 }} />
-              <span>Purchases</span>
+              <span>Grievances</span>
             </a>
             <a
               href={portalHref("admin", "officers")}
               className={`sf-admin-tab ${activeSection === "officers" ? "sf-admin-tab-active" : ""}`}
             >
               <Users style={{ width: 16, height: 16 }} />
-              <span>Customers</span>
+              <span>Officers Fleet</span>
+            </a>
+            <a
+              href={portalHref("admin", "users")}
+              className={`sf-admin-tab ${activeSection === "users" ? "sf-admin-tab-active" : ""}`}
+            >
+              <User style={{ width: 16, height: 16 }} />
+              <span>Citizens</span>
             </a>
             <a
               href={portalHref("admin", "analytics")}
@@ -1466,8 +1473,8 @@ function AdminWebView({
             </select>
 
             <div className="sf-admin-user-profile">
-              <div className="sf-admin-user-avatar">AD</div>
-              <span>Andriano Darwin</span>
+              <div className="sf-admin-user-avatar">SK</div>
+              <span>Dr. Sandeep Kulkarni</span>
               <ChevronDown style={{ width: 14, height: 14, color: "#64748B" }} />
             </div>
 
@@ -1482,22 +1489,27 @@ function AdminWebView({
       <main style={{ maxWidth: 1600, margin: "0 auto", padding: "0 32px 48px" }}>
         {/* SUBHEADER BAR */}
         <div className="sf-admin-subhead">
-          <h1>
-            {activeSection === "dashboard" && "Dashboard"}
-            {activeSection === "products" && "Product Compliance Catalog"}
-            {activeSection === "complaints" && "Purchases & Grievances"}
-            {activeSection === "officers" && "Officer Fleet & Field Oversight"}
-            {activeSection === "users" && "Customer Accounts & Citizens"}
-            {activeSection === "analytics" && "Statewide Food Safety Analytics"}
-            {activeSection === "settings" && "Regulatory Settings"}
-          </h1>
+          <div>
+            <h1>
+              {activeSection === "dashboard" && "Food Safety & Metrology Dashboard"}
+              {activeSection === "products" && "Packaged Food Catalog & Barcode Registry"}
+              {activeSection === "complaints" && "Citizen Grievances & Violation Notices"}
+              {activeSection === "officers" && "Officer Fleet & Field Oversight"}
+              {activeSection === "users" && "Citizen Consumer Directory"}
+              {activeSection === "analytics" && "Statewide Compliance Analytics"}
+              {activeSection === "settings" && "Regulatory Standards & Declarations Config"}
+            </h1>
+            <p style={{ margin: "4px 0 0", fontSize: 13, color: "#64748B" }}>
+              National Legal Metrology & FSSAI Packaged Commodity Enforcement Console
+            </p>
+          </div>
 
           <div className="sf-admin-subhead-actions">
             <div className="sf-admin-search-box">
               <Search style={{ width: 16, height: 16 }} />
               <input
                 type="text"
-                placeholder="Search product..."
+                placeholder="Search food item, barcode, packer..."
                 value={adminSearchTerm}
                 onChange={(e) => setAdminSearchTerm(e.target.value)}
               />
@@ -1506,7 +1518,7 @@ function AdminWebView({
             <button
               type="button"
               className="sf-admin-btn-outline"
-              onClick={() => alert("Exporting CSV report for active dataset...")}
+              onClick={() => alert("Exporting Legal Metrology audit CSV dataset...")}
             >
               <Upload style={{ width: 14, height: 14 }} />
               <span>Export CSV</span>
@@ -1515,7 +1527,7 @@ function AdminWebView({
             <button
               type="button"
               className="sf-admin-btn-outline"
-              onClick={() => alert("Downloading Statewide Compliance Summary Report (PDF)...")}
+              onClick={() => alert("Downloading Statewide Food Safety Compliance Report (PDF)...")}
             >
               <Download style={{ width: 14, height: 14 }} />
               <span>Download Report</span>
@@ -1523,7 +1535,7 @@ function AdminWebView({
           </div>
         </div>
 
-        {/* 3. DASHBOARD MAIN VIEW (Exact match to reference image) */}
+        {/* 3. DASHBOARD MAIN VIEW (SafeFood Domain Data) */}
         {activeSection === "dashboard" && (
           <>
             {/* TOP 3 COLUMNS GRID */}
@@ -1533,7 +1545,7 @@ function AdminWebView({
                 {/* Stat 1 */}
                 <div className="sf-admin-stat-card">
                   <div className="sf-admin-stat-top">
-                    <span className="sf-admin-stat-title">Total Products Sales</span>
+                    <span className="sf-admin-stat-title">Packaged Products Audited</span>
                     <div className="sf-admin-stat-icon-wrap">
                       <TrendingUp style={{ width: 18, height: 18 }} />
                     </div>
@@ -1545,7 +1557,7 @@ function AdminWebView({
                     </span>
                   </div>
                   <a href={portalHref("admin", "products")} className="sf-admin-stat-link">
-                    <span>View Sales Details</span>
+                    <span>View Audit Details</span>
                     <ArrowRight style={{ width: 14, height: 14 }} />
                   </a>
                 </div>
@@ -1553,19 +1565,19 @@ function AdminWebView({
                 {/* Stat 2 */}
                 <div className="sf-admin-stat-card">
                   <div className="sf-admin-stat-top">
-                    <span className="sf-admin-stat-title">Total Volume Of Products</span>
+                    <span className="sf-admin-stat-title">Flagged Metrology Violations</span>
                     <div className="sf-admin-stat-icon-wrap">
                       <Store style={{ width: 18, height: 18 }} />
                     </div>
                   </div>
                   <div className="sf-admin-stat-value-row">
-                    <span className="sf-admin-stat-value">123,726</span>
+                    <span className="sf-admin-stat-value">12,726</span>
                     <span className="sf-admin-badge-pill sf-admin-badge-pill-red">
                       -12%
                     </span>
                   </div>
                   <a href={portalHref("admin", "complaints")} className="sf-admin-stat-link">
-                    <span>View All Products</span>
+                    <span>View Flagged Grievances</span>
                     <ArrowRight style={{ width: 14, height: 14 }} />
                   </a>
                 </div>
@@ -1575,9 +1587,9 @@ function AdminWebView({
               <div className="sf-admin-card">
                 <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
                   <div>
-                    <span className="sf-admin-stat-title">Total Products Sales</span>
+                    <span className="sf-admin-stat-title">Statutory Penalties & Fines Tracked</span>
                     <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 6 }}>
-                      <span className="sf-admin-stat-value">$500,324</span>
+                      <span className="sf-admin-stat-value">₹5,00,324</span>
                       <span className="sf-admin-badge-pill sf-admin-badge-pill-green">
                         +45%
                       </span>
@@ -1596,7 +1608,7 @@ function AdminWebView({
                 <div style={{ display: "flex", alignItems: "center", gap: 18, marginTop: 14, fontSize: 12, color: "#64748B" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                     <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#0F172A" }} />
-                    <span>Total Revenue</span>
+                    <span>Verified Compliant</span>
                   </div>
                   <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                     <span
@@ -1608,7 +1620,7 @@ function AdminWebView({
                         border: "1px solid #94A3B8",
                       }}
                     />
-                    <span>Total Profit</span>
+                    <span>Flagged Discrepancies</span>
                   </div>
                 </div>
 
@@ -1682,7 +1694,7 @@ function AdminWebView({
               <div className="sf-admin-card">
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                   <span className="sf-admin-stat-title" style={{ fontSize: 14, fontWeight: 700, color: "#0F172A" }}>
-                    Total Sales Statistics
+                    Category Audit Distribution
                   </span>
                   <div
                     style={{
@@ -1706,7 +1718,7 @@ function AdminWebView({
                 <div className="sf-admin-donut-container">
                   <div className="sf-admin-donut-wrapper">
                     <svg viewBox="0 0 100 100" style={{ width: "100%", height: "100%", transform: "rotate(-90deg)" }}>
-                      {/* Segment 1: Light Grey (Furniture) */}
+                      {/* Segment 1: Light Grey (Dairy) */}
                       <circle
                         cx="50"
                         cy="50"
@@ -1717,7 +1729,7 @@ function AdminWebView({
                         strokeDasharray="238"
                         strokeDashoffset="60"
                       />
-                      {/* Segment 2: Medium Grey (Electronics) */}
+                      {/* Segment 2: Medium Grey (Edible Oils) */}
                       <circle
                         cx="50"
                         cy="50"
@@ -1728,7 +1740,7 @@ function AdminWebView({
                         strokeDasharray="65 173"
                         strokeDashoffset="0"
                       />
-                      {/* Segment 3: Deep Slate (Clothes) */}
+                      {/* Segment 3: Deep Slate (Beverages) */}
                       <circle
                         cx="50"
                         cy="50"
@@ -1739,7 +1751,7 @@ function AdminWebView({
                         strokeDasharray="50 188"
                         strokeDashoffset="-70"
                       />
-                      {/* Segment 4: Solid Black (Shoes) */}
+                      {/* Segment 4: Solid Black (Packaged Snacks) */}
                       <circle
                         cx="50"
                         cy="50"
@@ -1765,7 +1777,7 @@ function AdminWebView({
                     <div className="sf-admin-donut-legend-item">
                       <div className="sf-admin-donut-legend-label">
                         <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#CBD5E1" }} />
-                        <span>Furniture</span>
+                        <span>Dairy & Milk</span>
                       </div>
                       <span className="sf-admin-donut-legend-val">89,532</span>
                     </div>
@@ -1773,7 +1785,7 @@ function AdminWebView({
                     <div className="sf-admin-donut-legend-item" style={{ alignItems: "flex-end" }}>
                       <div className="sf-admin-donut-legend-label">
                         <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#0F172A" }} />
-                        <span>Shoes</span>
+                        <span>Packaged Snacks</span>
                       </div>
                       <span className="sf-admin-donut-legend-val">1,88,500</span>
                     </div>
@@ -1781,7 +1793,7 @@ function AdminWebView({
                     <div className="sf-admin-donut-legend-item">
                       <div className="sf-admin-donut-legend-label">
                         <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#94A3B8" }} />
-                        <span>Electronics</span>
+                        <span>Edible Oils</span>
                       </div>
                       <span className="sf-admin-donut-legend-val">90,231</span>
                     </div>
@@ -1789,14 +1801,14 @@ function AdminWebView({
                     <div className="sf-admin-donut-legend-item" style={{ alignItems: "flex-end" }}>
                       <div className="sf-admin-donut-legend-label">
                         <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#334155" }} />
-                        <span>Clothes</span>
+                        <span>Flour & Staples</span>
                       </div>
                       <span className="sf-admin-donut-legend-val">88,865</span>
                     </div>
                   </div>
 
                   <div className="sf-admin-donut-total" style={{ width: "100%" }}>
-                    <span>Total Number of Sales</span>
+                    <span>Total Statutory Audits Conducted</span>
                     <strong>3,44,031</strong>
                   </div>
                 </div>
@@ -1805,15 +1817,15 @@ function AdminWebView({
 
             {/* BOTTOM 2 COLUMNS GRID */}
             <div className="sf-admin-bottom-grid">
-              {/* COL 1: RECENT ORDERS TABLE */}
+              {/* COL 1: RECENT GRIEVANCES & VIOLATIONS TABLE */}
               <div className="sf-admin-card">
                 <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 18 }}>
                   <div>
                     <h3 style={{ margin: "0 0 4px", fontSize: 18, fontWeight: 800, color: "#0F172A" }}>
-                      Recant Orders
+                      Recent Violations & Grievances
                     </h3>
                     <p style={{ margin: 0, fontSize: 13, color: "#64748B" }}>
-                      Keep track of recant order data and others information.
+                      Live feed of citizen scans, label discrepancies, and legal metrology enforcement actions.
                     </p>
                   </div>
                   <a
@@ -1830,18 +1842,18 @@ function AdminWebView({
                   <table className="sf-admin-table">
                     <thead>
                       <tr>
-                        <th>Order Id</th>
-                        <th>Product Name</th>
-                        <th>Date</th>
-                        <th>Payment</th>
-                        <th>Amount</th>
+                        <th>Docket ID</th>
+                        <th>Packaged Food Item</th>
+                        <th>Filing Date</th>
+                        <th>Jurisdiction</th>
+                        <th>Statutory Penalty</th>
                         <th>Status</th>
                         <th style={{ textAlign: "right" }}>Action</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr>
-                        <td style={{ fontWeight: 600, color: "#0F172A" }}>#202523</td>
+                        <td style={{ fontWeight: 600, color: "#0F172A" }}>#GRV-20841</td>
                         <td>
                           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                             <div
@@ -1855,14 +1867,14 @@ function AdminWebView({
                                 fontSize: 14,
                               }}
                             >
-                              🎧
+                              🫒
                             </div>
-                            <span style={{ fontWeight: 600 }}>Airpods Pro Max</span>
+                            <span style={{ fontWeight: 600 }}>Almond Oat Energy Bar 40g</span>
                           </div>
                         </td>
                         <td>28 Mar 2025</td>
-                        <td>Mastercard</td>
-                        <td style={{ fontWeight: 700, color: "#0F172A" }}>$1,230.00</td>
+                        <td>Dhule Urban</td>
+                        <td style={{ fontWeight: 700, color: "#0F172A" }}>₹25,000.00</td>
                         <td>
                           <span className="sf-admin-status-chip sf-admin-status-inprogress">
                             In Progress
@@ -1879,7 +1891,7 @@ function AdminWebView({
                       </tr>
 
                       <tr>
-                        <td style={{ fontWeight: 600, color: "#0F172A" }}>#202522</td>
+                        <td style={{ fontWeight: 600, color: "#0F172A" }}>#GRV-20835</td>
                         <td>
                           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                             <div
@@ -1893,14 +1905,14 @@ function AdminWebView({
                                 fontSize: 14,
                               }}
                             >
-                              👗
+                              🥛
                             </div>
-                            <span style={{ fontWeight: 600 }}>Summer Clothes</span>
+                            <span style={{ fontWeight: 600 }}>Farm Fresh Toned Milk 500ml</span>
                           </div>
                         </td>
                         <td>27 Mar 2025</td>
-                        <td>Paypal</td>
-                        <td style={{ fontWeight: 700, color: "#0F172A" }}>$3,112.00</td>
+                        <td>Pune Central</td>
+                        <td style={{ fontWeight: 700, color: "#0F172A" }}>₹15,000.00</td>
                         <td>
                           <span className="sf-admin-status-chip sf-admin-status-complete">
                             Complete
@@ -1917,7 +1929,7 @@ function AdminWebView({
                       </tr>
 
                       <tr>
-                        <td style={{ fontWeight: 600, color: "#0F172A" }}>#202521</td>
+                        <td style={{ fontWeight: 600, color: "#0F172A" }}>#GRV-20819</td>
                         <td>
                           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                             <div
@@ -1931,14 +1943,14 @@ function AdminWebView({
                                 fontSize: 14,
                               }}
                             >
-                              👟
+                              🌾
                             </div>
-                            <span style={{ fontWeight: 600 }}>Nike Shoes</span>
+                            <span style={{ fontWeight: 600 }}>Golden Harvest Basmati Rice 5kg</span>
                           </div>
                         </td>
                         <td>26 Mar 2025</td>
-                        <td>Mastercard</td>
-                        <td style={{ fontWeight: 700, color: "#0F172A" }}>$1,211.00</td>
+                        <td>Mumbai Metro</td>
+                        <td style={{ fontWeight: 700, color: "#0F172A" }}>₹10,000.00</td>
                         <td>
                           <span className="sf-admin-status-chip sf-admin-status-waiting">
                             Waiting
@@ -1955,7 +1967,7 @@ function AdminWebView({
                       </tr>
 
                       <tr>
-                        <td style={{ fontWeight: 600, color: "#0F172A" }}>#202520</td>
+                        <td style={{ fontWeight: 600, color: "#0F172A" }}>#GRV-20798</td>
                         <td>
                           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                             <div
@@ -1969,17 +1981,17 @@ function AdminWebView({
                                 fontSize: 14,
                               }}
                             >
-                              🪑
+                              🍟
                             </div>
-                            <span style={{ fontWeight: 600 }}>Front Table CSS</span>
+                            <span style={{ fontWeight: 600 }}>Crispy Masala Chips 50g</span>
                           </div>
                         </td>
                         <td>25 Mar 2025</td>
-                        <td>Visa</td>
-                        <td style={{ fontWeight: 700, color: "#0F172A" }}>$42,121.00</td>
+                        <td>Nashik Rural</td>
+                        <td style={{ fontWeight: 700, color: "#0F172A" }}>₹50,000.00</td>
                         <td>
-                          <span className="sf-admin-status-chip sf-admin-status-inprogress">
-                            In Progress
+                          <span className="sf-admin-status-chip sf-admin-status-notice">
+                            Notice Issued
                           </span>
                         </td>
                         <td style={{ textAlign: "right" }}>
@@ -1996,11 +2008,11 @@ function AdminWebView({
                 </div>
               </div>
 
-              {/* COL 2: TOP SELLING PRODUCTS & MINI BARS */}
+              {/* COL 2: TOP FLAGGED PRODUCT & MINI BARS */}
               <div className="sf-admin-card">
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
                   <span style={{ fontSize: 16, fontWeight: 800, color: "#0F172A" }}>
-                    Top Selling Products
+                    Top Flagged Category
                   </span>
                   <div
                     style={{
@@ -2024,12 +2036,12 @@ function AdminWebView({
                 <div className="sf-admin-product-highlight">
                   <div className="sf-admin-product-info">
                     <div className="sf-admin-product-thumb">
-                      ⌚
+                      🛢️
                     </div>
                     <div className="sf-admin-product-meta">
-                      <h5>Apple Watch Series 10 46mm GPS</h5>
-                      <p>Brand Apple · 10.2k Stock Available</p>
-                      <div className="sf-price">$799.00</div>
+                      <h5>Refined Mustard Oil 1L Pouch</h5>
+                      <p>Brand Swastik · Missing Packer Address & Customer Care</p>
+                      <div className="sf-price">₹45,000 Penalty Notice</div>
                     </div>
                   </div>
                   <div style={{ display: "flex", flexDirection: "column", gap: 3, alignItems: "center" }}>
@@ -2040,6 +2052,9 @@ function AdminWebView({
                 </div>
 
                 {/* Mini Bars Chart */}
+                <div style={{ marginBottom: 6, fontSize: 11, fontWeight: 600, color: "#64748B" }}>
+                  Weekly Enforcements Dispatched:
+                </div>
                 <div className="sf-admin-minibars">
                   <div className="sf-admin-minibar-col">
                     <span className="sf-admin-minibar-val">840</span>
