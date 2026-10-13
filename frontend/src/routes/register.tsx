@@ -32,6 +32,8 @@ const DISTRICTS = [
   "DELHI NCR",
 ];
 
+import { authApi } from "@/lib/api";
+
 function RegisterPage() {
   const navigate = useNavigate();
   const [name, setName] = useState("");
@@ -41,14 +43,30 @@ function RegisterPage() {
   const [password, setPassword] = useState("");
   const [badgeNumber, setBadgeNumber] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !email || !password) {
       setError("Please fill in all required fields.");
       return;
     }
-    navigate({ to: `/app/${role}/dashboard` });
+    setLoading(true);
+    setError(null);
+    try {
+      await authApi.register({
+        name,
+        email,
+        password,
+        district,
+        role,
+      });
+      window.location.href = `/app/${role}/dashboard`;
+    } catch (err: any) {
+      setError(err?.message || "Registration failed. Please check inputs.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

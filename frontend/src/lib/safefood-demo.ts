@@ -119,8 +119,9 @@ export function portalHref(role: SafeFoodRole, path: string) {
 }
 
 export function roleForDemoEmail(email: string): SafeFoodRole {
-  if (email.trim().toLowerCase() === "officer@test.com") return "officer";
-  if (email.trim().toLowerCase() === "admin@test.com") return "admin";
+  const clean = email.trim().toLowerCase();
+  if (clean.includes("officer") || clean.includes("inspector")) return "officer";
+  if (clean.includes("admin") || clean.includes("regulatory") || clean.includes("gov")) return "admin";
   return "user";
 }
 

@@ -25,7 +25,7 @@ export async function googleLogin(req, res, next) {
 
 export async function register(req, res, next) {
   try {
-    const { email, password, name, district, address, state, pincode, phoneNumber } = req.body || {};
+    const { email, password, name, district, address, state, pincode, phoneNumber, role } = req.body || {};
     const result = await registerCitizen({
       email,
       password,
@@ -35,6 +35,7 @@ export async function register(req, res, next) {
       state,
       pincode,
       phoneNumber,
+      role,
     });
     return res.status(201).json(result);
   } catch (err) {

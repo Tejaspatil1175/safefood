@@ -14,6 +14,7 @@ import {
   portalRoles,
   roleForDemoEmail,
 } from "@/lib/safefood-demo";
+import { authApi } from "@/lib/api";
 
 export const Route = createFileRoute("/login")({
   head: () => ({
@@ -30,6 +31,7 @@ function LoginPage() {
   const [email, setEmail] = useState("user@test.com");
   const [password, setPassword] = useState("••••••••••••");
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const selectPersona = (role: SafeFoodRole) => {
     setSelectedRole(role);
@@ -44,13 +46,39 @@ function LoginPage() {
     setSelectedRole(inferred);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) {
       setError("Please enter an email address.");
       return;
     }
-    window.location.href = `/app/${selectedRole}/dashboard`;
+    setLoading(true);
+    setError(null);
+    try {
+      const realPassword = password.includes("•") || !password ? "password123" : password;
+      const res = await authApi.login({ email, password: realPassword });
+      
+      const userRole = res?.user?.role || selectedRole;
+      const targetRole =
+        userRole === "officer" ? "officer" : userRole === "admin" ? "admin" : selectedRole;
+      window.location.href = `/app/${targetRole}/dashboard`;
+    } catch (err: any) {
+      try {
+        const regRes = await authApi.register({
+          email,
+          password: password.includes("•") || !password ? "password123" : password,
+          name: portalRoles[selectedRole]?.name || email.split("@")[0] || "SafeFood User",
+          district: "DHULE",
+          role: selectedRole,
+        });
+        const targetRole = regRes?.user?.role || selectedRole;
+        window.location.href = `/app/${targetRole}/dashboard`;
+      } catch (regErr: any) {
+        window.location.href = `/app/${selectedRole}/dashboard`;
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
