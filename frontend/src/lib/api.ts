@@ -423,4 +423,12 @@ export const districtsApi = {
       method: 'POST',
       body: JSON.stringify(data),
     }),
+
+  listUsers: (params?: { role?: string }) => {
+    const query = new URLSearchParams();
+    if (params?.role) query.set('role', params.role);
+    const qs = query.toString();
+    return request<{ success: boolean; count: number; users: any[] }>(`/districts/users${qs ? `?${qs}` : ''}`);
+  },
 };
+

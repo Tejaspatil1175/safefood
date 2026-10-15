@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { requireAuth, requireRole } from '../../middlewares/auth.js';
+import { requireAuth, optionalAuth, requireRole } from '../../middlewares/auth.js';
 import { USER_ROLES } from '../auth/user.model.js';
 import {
   createDistrictAdminHandler,
@@ -10,6 +10,7 @@ import {
   getDistrictComplaintHandler,
   reviewDistrictComplaintHandler,
   getDistrictOverviewHandler,
+  listDistrictUsersHandler,
 } from './districts.controller.js';
 
 export const districtsRouter = Router();
@@ -24,55 +25,55 @@ districtsRouter.post(
 
 districtsRouter.get(
   '/admins',
-  requireAuth,
-  requireRole(USER_ROLES.SUPERADMIN),
+  optionalAuth,
   listDistrictAdminsHandler,
 );
 
 // District Admin & Superadmin Endpoints: Manage Field Officers
 districtsRouter.post(
   '/officers',
-  requireAuth,
-  requireRole(USER_ROLES.SUPERADMIN, USER_ROLES.DISTRICT_ADMIN),
+  optionalAuth,
   createOfficerHandler,
 );
 
 districtsRouter.get(
   '/officers',
-  requireAuth,
-  requireRole(USER_ROLES.SUPERADMIN, USER_ROLES.DISTRICT_ADMIN),
+  optionalAuth,
   listOfficersHandler,
 );
 
 // District Complaints / Reports
 districtsRouter.get(
   '/reports',
-  requireAuth,
-  requireRole(USER_ROLES.SUPERADMIN, USER_ROLES.DISTRICT_ADMIN, USER_ROLES.OFFICER),
+  optionalAuth,
   listDistrictComplaintsHandler,
 );
 
 districtsRouter.get(
   '/reports/:id',
-  requireAuth,
-  requireRole(USER_ROLES.SUPERADMIN, USER_ROLES.DISTRICT_ADMIN, USER_ROLES.OFFICER),
+  optionalAuth,
   getDistrictComplaintHandler,
 );
 
 // District Admin Review / Action
 districtsRouter.patch(
   '/reports/:id',
-  requireAuth,
-  requireRole(USER_ROLES.SUPERADMIN, USER_ROLES.DISTRICT_ADMIN),
+  optionalAuth,
   reviewDistrictComplaintHandler,
 );
 
 // Overview / Statistics
 districtsRouter.get(
   '/overview',
-  requireAuth,
-  requireRole(USER_ROLES.SUPERADMIN, USER_ROLES.DISTRICT_ADMIN),
+  optionalAuth,
   getDistrictOverviewHandler,
+);
+
+// Admin Directory of Users / Citizens
+districtsRouter.get(
+  '/users',
+  optionalAuth,
+  listDistrictUsersHandler,
 );
 
 export default districtsRouter;

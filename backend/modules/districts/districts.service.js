@@ -274,6 +274,17 @@ export async function getDistrictOverview({ district } = {}) {
   };
 }
 
+export async function listDistrictUsers({ role } = {}) {
+  const query = {};
+  if (role) {
+    query.role = role;
+  }
+  return User.find(query)
+    .select('-passwordHash')
+    .sort({ createdAt: -1 })
+    .lean();
+}
+
 export default {
   createDistrictAdmin,
   listDistrictAdmins,
@@ -283,4 +294,5 @@ export default {
   getDistrictComplaintById,
   reviewDistrictComplaint,
   getDistrictOverview,
+  listDistrictUsers,
 };

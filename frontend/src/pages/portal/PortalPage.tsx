@@ -559,6 +559,8 @@ function AdminWebView({
     { id: "#OFF-903", name: "Insp. Amit Kulkarni", district: "Mumbai Metro", activeCases: 22, status: "In Transit" },
   ]);
   const [reportsList, setReportsList] = useState<any[]>(sampleComplaints);
+  const [liveScansList, setLiveScansList] = useState<any[]>([]);
+  const [citizensList, setCitizensList] = useState<any[]>([]);
 
   useEffect(() => {
     // 1. Health API (GET /api/v1/health)
@@ -568,25 +570,50 @@ function AdminWebView({
     districtsApi.getOverview().then((ov) => setDistrictOverview(ov)).catch((e) => console.warn("District overview notice:", e));
 
     // 3. Officers fleet (GET /api/v1/districts/officers)
-    districtsApi.listOfficers().then((ofs) => {
-      if (Array.isArray(ofs) && ofs.length > 0) {
-        const mapped = ofs.map((o: any) => ({
-          id: `#OFF-${o.badgeNumber || o.id?.slice(-3) || "904"}`,
+    districtsApi.listOfficers().then((ofs: any) => {
+      const officersArray = Array.isArray(ofs) ? ofs : ofs?.officers || [];
+      if (officersArray.length > 0) {
+        const mapped = officersArray.map((o: any) => ({
+          id: `#OFF-${o.badgeNumber || o.id?.slice(-3) || o._id?.slice(-3) || "904"}`,
           name: o.name || "Enforcement Officer",
           district: o.district || "Maharashtra",
           activeCases: o.activeCases ?? 0,
-          status: o.isActive ? "Active On-Duty" : "Standby",
+          status: o.isActive !== false ? "Active On-Duty" : "Standby",
         }));
         setOfficersFleet((prev) => [...mapped, ...prev.filter(p => !mapped.some((m: any) => m.name === p.name))]);
       }
     }).catch((e) => console.warn("Officers list notice:", e));
 
     // 4. District Reports / Grievances (GET /api/v1/districts/reports)
-    districtsApi.listReports().then((reps) => {
-      if (Array.isArray(reps) && reps.length > 0) {
-        setReportsList(reps);
+    districtsApi.listReports().then((reps: any) => {
+      const items = Array.isArray(reps) ? reps : reps?.complaints || reps?.items || [];
+      if (items.length > 0) {
+        setReportsList(items);
       }
     }).catch((e) => console.warn("Reports list notice:", e));
+
+    complaintsApi.list().then((res: any) => {
+      const items = Array.isArray(res) ? res : res?.items || res?.complaints || [];
+      if (items.length > 0) {
+        setReportsList(items);
+      }
+    }).catch(() => {});
+
+    // 5. Live Audited Food Products (GET /api/v1/scans)
+    scansApi.list({ limit: 50 }).then((res: any) => {
+      const items = Array.isArray(res) ? res : res?.items || res?.scans || [];
+      if (items.length > 0) {
+        setLiveScansList(items);
+      }
+    }).catch(() => {});
+
+    // 6. Citizen Users Directory (GET /api/v1/districts/users)
+    districtsApi.listUsers().then((res: any) => {
+      const users = res?.users || (Array.isArray(res) ? res : []);
+      if (users.length > 0) {
+        setCitizensList(users);
+      }
+    }).catch((e) => console.warn("Users list notice:", e));
   }, []);
 
   const handleDeployOfficer = async (e: React.FormEvent) => {
@@ -792,9 +819,9 @@ function AdminWebView({
                     </div>
                   </div>
                   <div className="sf-admin-stat-value-row">
-                    <span className="sf-admin-stat-value">202,324</span>
+                    <span className="sf-admin-stat-value">{liveScansList.length > 0 ? liveScansList.length.toLocaleString() : "202,324"}</span>
                     <span className="sf-admin-badge-pill sf-admin-badge-pill-green">
-                      +10%
+                      Live DB
                     </span>
                   </div>
                   <a href={portalHref("admin", "products")} className="sf-admin-stat-link">
@@ -812,9 +839,9 @@ function AdminWebView({
                     </div>
                   </div>
                   <div className="sf-admin-stat-value-row">
-                    <span className="sf-admin-stat-value">12,726</span>
+                    <span className="sf-admin-stat-value">{reportsList.length.toLocaleString()}</span>
                     <span className="sf-admin-badge-pill sf-admin-badge-pill-red">
-                      -12%
+                      {reportsList.filter((r) => r.status === "IN_REVIEW" || r.status === "under_investigation").length} Active
                     </span>
                   </div>
                   <a href={portalHref("admin", "complaints")} className="sf-admin-stat-link">
@@ -1093,157 +1120,65 @@ function AdminWebView({
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <td style={{ fontWeight: 600, color: "#0F172A" }}>#GRV-20841</td>
-                        <td>
-                          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                            <div
-                              style={{
-                                width: 28,
-                                height: 28,
-                                borderRadius: 8,
-                                background: "#DCFCE7",
-                                display: "grid",
-                                placeItems: "center",
-                                fontSize: 14,
-                              }}
-                            >
-                              🫒
-                            </div>
-                            <span style={{ fontWeight: 600 }}>Almond Oat Energy Bar 40g</span>
-                          </div>
-                        </td>
-                        <td>28 Mar 2025</td>
-                        <td>Dhule Urban</td>
-                        <td style={{ fontWeight: 700, color: "#0F172A" }}>₹25,000.00</td>
-                        <td>
-                          <span className="sf-admin-status-chip sf-admin-status-inprogress">
-                            In Progress
-                          </span>
-                        </td>
-                        <td style={{ textAlign: "right" }}>
-                          <button
-                            type="button"
-                            style={{ background: "transparent", border: "none", cursor: "pointer", color: "#94A3B8" }}
-                          >
-                            <MoreHorizontal style={{ width: 16, height: 16 }} />
-                          </button>
-                        </td>
-                      </tr>
+                      {reportsList.slice(0, 5).map((r: any, idx: number) => {
+                        const docketId = r.complaintNumber || r.id || r._id || `#GRV-${idx + 101}`;
+                        const productName =
+                          r.product ||
+                          r.productName ||
+                          r.scan?.product?.name ||
+                          r.scan?.fields?.brand?.value ||
+                          (r.violations && r.violations.length > 0 ? r.violations[0].field : null) ||
+                          "Packaged Food Item";
+                        const dateStr = r.date || (r.createdAt ? new Date(r.createdAt).toLocaleDateString("en-IN", { month: "short", day: "numeric", year: "numeric" }) : "Today");
+                        const districtStr = r.district || r.location || "Dhule";
+                        const statusStr = r.status || "IN_REVIEW";
 
-                      <tr>
-                        <td style={{ fontWeight: 600, color: "#0F172A" }}>#GRV-20835</td>
-                        <td>
-                          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                            <div
-                              style={{
-                                width: 28,
-                                height: 28,
-                                borderRadius: 8,
-                                background: "#FEF3C7",
-                                display: "grid",
-                                placeItems: "center",
-                                fontSize: 14,
-                              }}
-                            >
-                              🥛
-                            </div>
-                            <span style={{ fontWeight: 600 }}>Farm Fresh Toned Milk 500ml</span>
-                          </div>
-                        </td>
-                        <td>27 Mar 2025</td>
-                        <td>Pune Central</td>
-                        <td style={{ fontWeight: 700, color: "#0F172A" }}>₹15,000.00</td>
-                        <td>
-                          <span className="sf-admin-status-chip sf-admin-status-complete">
-                            Complete
-                          </span>
-                        </td>
-                        <td style={{ textAlign: "right" }}>
-                          <button
-                            type="button"
-                            style={{ background: "transparent", border: "none", cursor: "pointer", color: "#94A3B8" }}
-                          >
-                            <MoreHorizontal style={{ width: 16, height: 16 }} />
-                          </button>
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td style={{ fontWeight: 600, color: "#0F172A" }}>#GRV-20819</td>
-                        <td>
-                          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                            <div
-                              style={{
-                                width: 28,
-                                height: 28,
-                                borderRadius: 8,
-                                background: "#E0F2FE",
-                                display: "grid",
-                                placeItems: "center",
-                                fontSize: 14,
-                              }}
-                            >
-                              🌾
-                            </div>
-                            <span style={{ fontWeight: 600 }}>Golden Harvest Basmati Rice 5kg</span>
-                          </div>
-                        </td>
-                        <td>26 Mar 2025</td>
-                        <td>Mumbai Metro</td>
-                        <td style={{ fontWeight: 700, color: "#0F172A" }}>₹10,000.00</td>
-                        <td>
-                          <span className="sf-admin-status-chip sf-admin-status-waiting">
-                            Waiting
-                          </span>
-                        </td>
-                        <td style={{ textAlign: "right" }}>
-                          <button
-                            type="button"
-                            style={{ background: "transparent", border: "none", cursor: "pointer", color: "#94A3B8" }}
-                          >
-                            <MoreHorizontal style={{ width: 16, height: 16 }} />
-                          </button>
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td style={{ fontWeight: 600, color: "#0F172A" }}>#GRV-20798</td>
-                        <td>
-                          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                            <div
-                              style={{
-                                width: 28,
-                                height: 28,
-                                borderRadius: 8,
-                                background: "#F1F5F9",
-                                display: "grid",
-                                placeItems: "center",
-                                fontSize: 14,
-                              }}
-                            >
-                              🍟
-                            </div>
-                            <span style={{ fontWeight: 600 }}>Crispy Masala Chips 50g</span>
-                          </div>
-                        </td>
-                        <td>25 Mar 2025</td>
-                        <td>Nashik Rural</td>
-                        <td style={{ fontWeight: 700, color: "#0F172A" }}>₹50,000.00</td>
-                        <td>
-                          <span className="sf-admin-status-chip sf-admin-status-notice">
-                            Notice Issued
-                          </span>
-                        </td>
-                        <td style={{ textAlign: "right" }}>
-                          <button
-                            type="button"
-                            style={{ background: "transparent", border: "none", cursor: "pointer", color: "#94A3B8" }}
-                          >
-                            <MoreHorizontal style={{ width: 16, height: 16 }} />
-                          </button>
-                        </td>
-                      </tr>
+                        return (
+                          <tr key={r.id || r._id || idx}>
+                            <td style={{ fontWeight: 600, color: "#0F172A" }}>{docketId}</td>
+                            <td>
+                              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                                <div
+                                  style={{
+                                    width: 28,
+                                    height: 28,
+                                    borderRadius: 8,
+                                    background: "#FEF3C7",
+                                    display: "grid",
+                                    placeItems: "center",
+                                    fontSize: 14,
+                                  }}
+                                >
+                                  📦
+                                </div>
+                                <span style={{ fontWeight: 600 }}>{productName}</span>
+                              </div>
+                            </td>
+                            <td>{dateStr}</td>
+                            <td>{districtStr}</td>
+                            <td style={{ fontWeight: 700, color: "#0F172A" }}>Rule 6 Violation</td>
+                            <td>
+                              <span
+                                className={`sf-admin-status-chip ${
+                                  statusStr === "VERIFIED" || statusStr === "VALID"
+                                    ? "sf-admin-status-complete"
+                                    : "sf-admin-status-inprogress"
+                                }`}
+                              >
+                                {statusStr}
+                              </span>
+                            </td>
+                            <td style={{ textAlign: "right" }}>
+                              <a
+                                href={portalHref("admin", "complaints")}
+                                style={{ background: "transparent", border: "none", cursor: "pointer", color: "#64748B", fontSize: 12, fontWeight: 700 }}
+                              >
+                                Review &rarr;
+                              </a>
+                            </td>
+                          </tr>
+                        );
+                      })}
                     </tbody>
                   </table>
                 </div>
@@ -1450,33 +1385,57 @@ function AdminWebView({
         {/* 6. PRODUCTS CATALOG SECTION */}
         {activeSection === "products" && (
           <div className="sf-admin-card">
-            <h3 style={{ margin: "0 0 16px", fontSize: 18, fontWeight: 800, color: "#0F172A" }}>
-              Packaged Food Products Compliance Registry
-            </h3>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+              <div>
+                <h3 style={{ margin: "0 0 4px", fontSize: 18, fontWeight: 800, color: "#0F172A" }}>
+                  Packaged Food Products Compliance Registry
+                </h3>
+                <p style={{ margin: 0, color: "#64748B", fontSize: 13 }}>
+                  Live audited commodity database inspected under PCR 2011 & FSSAI regulations.
+                </p>
+              </div>
+              <span className="sf-admin-badge-pill sf-admin-badge-pill-green">
+                {liveScansList.length > 0 ? `${liveScansList.length} Live Items` : "Demo Mode"}
+              </span>
+            </div>
             <table className="sf-admin-table">
               <thead>
                 <tr>
-                  <th>Barcode</th>
+                  <th>Audit / Barcode</th>
                   <th>Product Name</th>
-                  <th>Manufacturer / Packer</th>
-                  <th>Net Quantity</th>
-                  <th>Compliance Score</th>
+                  <th>Manufacturer / Brand</th>
+                  <th>Net Quantity / Dates</th>
+                  <th>Compliance Verdict</th>
                 </tr>
               </thead>
               <tbody>
-                {sampleScans.map((s) => (
-                  <tr key={s.id}>
-                    <td style={{ fontWeight: 700 }}>{s.id}</td>
-                    <td><strong>{s.product}</strong></td>
-                    <td>{s.category}</td>
-                    <td>{s.date}</td>
-                    <td>
-                      <span className={`sf-admin-badge-pill ${s.warning ? "sf-admin-badge-pill-red" : "sf-admin-badge-pill-green"}`}>
-                        {s.warning ? "Flagged for Audit" : "100% Compliant"}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
+                {(liveScansList.length > 0 ? liveScansList : sampleScans).map((s: any, idx: number) => {
+                  const idStr = s.productInfo?.barcode || s.barcode || (s.id ? `#AUD-${s.id.slice(-6)}` : `#AUD-${idx + 101}`);
+                  const nameStr = s.productInfo?.productName || s.productName || s.product || s.detectedProduct?.productName || "Packaged Food Item";
+                  const brandStr = s.productInfo?.brand || s.productInfo?.manufacturer || s.brand || s.category || "Packer / Brand";
+                  const netQtyStr = s.productInfo?.netQuantity || s.netQuantity || s.date || "Declared on Pack";
+                  const isWarning = s.isCompliant === false || s.verdict === "FAIL" || s.warning;
+                  const score = s.complianceScore ?? s.score ?? (isWarning ? 38 : 95);
+
+                  return (
+                    <tr key={s.id || s._id || idx}>
+                      <td style={{ fontWeight: 700, color: "#0F172A" }}>{idStr}</td>
+                      <td>
+                        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                          <span style={{ fontSize: 18 }}>🥫</span>
+                          <strong>{nameStr}</strong>
+                        </div>
+                      </td>
+                      <td>{brandStr}</td>
+                      <td style={{ color: "#64748B", fontSize: 12 }}>{netQtyStr}</td>
+                      <td>
+                        <span className={`sf-admin-badge-pill ${isWarning ? "sf-admin-badge-pill-red" : "sf-admin-badge-pill-green"}`}>
+                          {isWarning ? `Violations Flagged (${score}%)` : `100% Compliant (${score}%)`}
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
@@ -1485,44 +1444,79 @@ function AdminWebView({
         {/* 7. CITIZENS SECTION */}
         {activeSection === "users" && (
           <div className="sf-admin-card">
-            <h3 style={{ margin: "0 0 16px", fontSize: 18, fontWeight: 800, color: "#0F172A" }}>
-              Citizen Consumer Profiles
-            </h3>
-            <p style={{ color: "#64748B", fontSize: 13, marginBottom: 16 }}>
-              Registered citizens actively scanning food labels and submitting statutory reports.
-            </p>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+              <div>
+                <h3 style={{ margin: "0 0 4px", fontSize: 18, fontWeight: 800, color: "#0F172A" }}>
+                  Citizen Consumer Directory
+                </h3>
+                <p style={{ margin: 0, color: "#64748B", fontSize: 13 }}>
+                  Registered citizens actively auditing packaged foods and reporting statutory breaches.
+                </p>
+              </div>
+              <span className="sf-admin-badge-pill sf-admin-badge-pill-green">
+                {citizensList.length > 0 ? `${citizensList.length} Active Accounts` : "Live DB"}
+              </span>
+            </div>
             <table className="sf-admin-table">
               <thead>
                 <tr>
-                  <th>User ID</th>
-                  <th>Citizen Name</th>
-                  <th>District</th>
-                  <th>Scans Submitted</th>
-                  <th>Verified Reports</th>
+                  <th>Citizen ID</th>
+                  <th>Full Name</th>
+                  <th>Email</th>
+                  <th>District / State</th>
+                  <th>Role</th>
+                  <th>Status</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>#CIT-401</td>
-                  <td><strong>Rohan Sharma</strong></td>
-                  <td>Dhule</td>
-                  <td>28</td>
-                  <td><span className="sf-admin-status-chip sf-admin-status-complete">6 Verified</span></td>
-                </tr>
-                <tr>
-                  <td>#CIT-402</td>
-                  <td><strong>Pooja Deshmukh</strong></td>
-                  <td>Pune</td>
-                  <td>45</td>
-                  <td><span className="sf-admin-status-chip sf-admin-status-complete">11 Verified</span></td>
-                </tr>
-                <tr>
-                  <td>#CIT-403</td>
-                  <td><strong>Karan Joshi</strong></td>
-                  <td>Mumbai</td>
-                  <td>19</td>
-                  <td><span className="sf-admin-status-chip sf-admin-status-complete">4 Verified</span></td>
-                </tr>
+                {(citizensList.length > 0
+                  ? citizensList
+                  : [
+                      { _id: "CIT-401", name: "Rohan Sharma", email: "rohan@safefood.in", district: "Dhule", state: "Maharashtra", role: "user", isActive: true },
+                      { _id: "CIT-402", name: "Pooja Deshmukh", email: "pooja@safefood.in", district: "Pune", state: "Maharashtra", role: "user", isActive: true },
+                      { _id: "CIT-403", name: "Karan Joshi", email: "karan@safefood.in", district: "Mumbai", state: "Maharashtra", role: "user", isActive: true },
+                    ]
+                ).map((u: any, idx: number) => {
+                  const citId = u._id ? `#CIT-${u._id.slice(-4).toUpperCase()}` : `#CIT-${idx + 401}`;
+                  const locStr = `${u.district || "Dhule"}, ${u.state || "MH"}`;
+                  return (
+                    <tr key={u._id || idx}>
+                      <td style={{ fontWeight: 700, color: "#0F172A" }}>{citId}</td>
+                      <td>
+                        <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
+                          <div
+                            style={{
+                              width: 28,
+                              height: 28,
+                              borderRadius: "50%",
+                              background: "#E2E8F0",
+                              display: "grid",
+                              placeItems: "center",
+                              fontWeight: 700,
+                              fontSize: 12,
+                              color: "#334155",
+                            }}
+                          >
+                            {(u.name || "C")[0].toUpperCase()}
+                          </div>
+                          <strong>{u.name || "Citizen User"}</strong>
+                        </div>
+                      </td>
+                      <td style={{ color: "#64748B", fontSize: 13 }}>{u.email}</td>
+                      <td>{locStr}</td>
+                      <td>
+                        <span style={{ textTransform: "capitalize", fontWeight: 600, fontSize: 12 }}>
+                          {u.role === "admin" ? "Administrator" : u.role === "officer" ? "Field Officer" : "Citizen"}
+                        </span>
+                      </td>
+                      <td>
+                        <span className={`sf-admin-status-chip ${u.isActive !== false ? "sf-admin-status-complete" : "sf-admin-status-inprogress"}`}>
+                          {u.isActive !== false ? "Active Verified" : "Pending"}
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>

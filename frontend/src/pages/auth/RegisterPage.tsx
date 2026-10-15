@@ -106,7 +106,6 @@ export default function RegisterPage() {
                 >
                   <option value="user">Citizen / Consumer</option>
                   <option value="officer">Food Safety Enforcement Officer</option>
-                  <option value="admin">District / Supermarket Administrator</option>
                 </select>
                 <ChevronDown className="sf-auth-select-icon" />
               </div>
