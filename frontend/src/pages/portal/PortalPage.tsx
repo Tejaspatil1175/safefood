@@ -241,17 +241,6 @@ function OfficerWebView({
               </a>
             </nav>
 
-            <select
-              className="sf-web-role-picker"
-              value="officer"
-              onChange={(e) => switchRole(e.target.value as SafeFoodRole)}
-              aria-label="Switch persona"
-            >
-              <option value="user">🌿 Citizen View</option>
-              <option value="officer">🛡️ Officer Inspection</option>
-              <option value="admin">🏢 Regulatory Oversight</option>
-            </select>
-
             <div className="sf-web-user-chip">
               <div className="sf-web-user-avatar" style={{ background: "#201E1A" }}>MI</div>
               <div className="sf-web-user-meta">

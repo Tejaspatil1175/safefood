@@ -238,18 +238,6 @@ export function AdminWebView({
 
         {/* Sidebar Footer Controls */}
         <div className="sf-admin-sidebar-footer">
-          <select
-            className="sf-admin-role-select"
-            value="admin"
-            onChange={(e) => switchRole(e.target.value as SafeFoodRole)}
-            aria-label="Switch persona"
-            style={{ width: "100%" }}
-          >
-            <option value="user">🌿 Citizen View</option>
-            <option value="officer">🛡️ Officer Inspection</option>
-            <option value="admin">🏢 Regulatory Admin</option>
-          </select>
-
           {/* User Profile Capsule */}
           {(() => {
             const displayName = adminUser?.name || "Dr. S. Kulkarni";
