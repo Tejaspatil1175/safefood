@@ -1,12 +1,53 @@
-import React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, View, Text, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
 import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import { theme } from '../theme/theme';
 import { HeroCard } from '../components/HeroCard';
 import { ScanFeedItem, CaseFeedItem } from '../components/FeedCards';
+import { ScanDetailModal } from '../components/ScanDetailModal';
+import { fetchLiveScans } from '../data/api';
 import { userMockScans, officerMockCases } from '../data/mockData';
 
-export function HomeScreen({ role, onNavigateTab }) {
+export function HomeScreen({ role, user, token, onNavigateTab }) {
+  const [liveScans, setLiveScans] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [selectedScan, setSelectedScan] = useState(null);
+
+  // Fetch real scans from MongoDB cloud
+  useEffect(() => {
+    let isMounted = true;
+    (async () => {
+      try {
+        setLoading(true);
+        const scans = await fetchLiveScans(token, role);
+        if (isMounted && Array.isArray(scans) && scans.length > 0) {
+          // Normalize server schema to app feed format
+          const formatted = scans.map((s, idx) => ({
+            id: s._id ? `#AUD-${s._id.slice(-4).toUpperCase()}` : `#AUD-${1000 + idx}`,
+            name: s.productInfo?.name || s.product?.name || s.fields?.productName?.value || 'Packaged Commodity',
+            brand: s.productInfo?.brand || s.product?.brand || 'Verified FMCG',
+            category: s.productInfo?.category || (s.barcode ? `Barcode: ${s.barcode}` : 'Packaged Goods'),
+            verdict: s.verdict === 'PASS' ? 'PASS' : 'FAIL',
+            score: s.score ? `${Math.round(s.score)}%` : '85%',
+            time: s.createdAt ? new Date(s.createdAt).toLocaleDateString() : 'Recent',
+            raw: s,
+          }));
+          setLiveScans(formatted);
+        }
+      } catch (err) {
+        console.warn('Live scan fetch notice:', err.message);
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    })();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [token, role]);
+
+  const displayScans = liveScans.length > 0 ? liveScans : userMockScans;
+
   return (
     <View style={styles.container}>
       {/* 1. Sticky Hero Card (stays fixed at top) */}
@@ -54,11 +95,33 @@ export function HomeScreen({ role, onNavigateTab }) {
           </TouchableOpacity>
         </View>
 
+        {/* Live Indicator Bar */}
+        {loading && (
+          <View style={{ paddingVertical: 12, alignItems: 'center' }}>
+            <ActivityIndicator size="small" color={theme.colors.lime} />
+          </View>
+        )}
+
         {/* Feed List */}
         {role === 'user'
-          ? userMockScans.map((item) => <ScanFeedItem key={item.id} item={item} />)
+          ? displayScans.map((item) => (
+              <ScanFeedItem
+                key={item.id}
+                item={item}
+                onSelectItem={(selected) => setSelectedScan(selected)}
+              />
+            ))
           : officerMockCases.map((item) => <CaseFeedItem key={item.id} item={item} />)}
       </ScrollView>
+
+      {/* Product Detail, Grievance Application, and PDF Modal */}
+      <ScanDetailModal
+        visible={Boolean(selectedScan)}
+        scanItem={selectedScan}
+        onClose={() => setSelectedScan(null)}
+        token={token}
+        user={user}
+      />
     </View>
   );
 }

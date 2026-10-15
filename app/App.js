@@ -24,6 +24,7 @@ export default function App() {
   const [role, setRole] = useState('user');
   const [activeTab, setActiveTab] = useState('home');
   const [user, setUser] = useState(null);
+  const [token, setToken] = useState(null);
   const [loadingSession, setLoadingSession] = useState(true);
 
   // Restore authenticated session from phone storage on launch
@@ -35,6 +36,7 @@ export default function App() {
           const parsed = JSON.parse(savedData);
           if (parsed && parsed.user) {
             setUser(parsed.user);
+            setToken(parsed.token || null);
             setRole(parsed.role || (parsed.user.role === 'officer' ? 'officer' : 'user'));
           }
         }
@@ -98,28 +100,55 @@ export default function App() {
       <StatusBar barStyle="dark-content" backgroundColor={theme.colors.bg} />
 
       {/* 2. Main Screen Area */}
-      {activeTab === 'home' ? (
+      {activeTab === 'home' && (
         <View style={styles.homeTabWrapper}>
-          <HomeScreen role={role} onNavigateTab={setActiveTab} />
+          <HomeScreen
+            role={role}
+            user={user}
+            token={token}
+            onNavigateTab={setActiveTab}
+          />
         </View>
-      ) : (
+      )}
+
+      {activeTab === 'history' && (
+        <View style={styles.homeTabWrapper}>
+          <HistoryScreen
+            role={role}
+            user={user}
+            token={token}
+          />
+        </View>
+      )}
+
+      {activeTab === 'cases' && (
+        <View style={styles.homeTabWrapper}>
+          <CasesScreen role={role} user={user} token={token} />
+        </View>
+      )}
+
+      {activeTab === 'scan' && (
+        <View style={styles.homeTabWrapper}>
+          <ScanScreen
+            role={role}
+            user={user}
+            token={token}
+            onCompleteScan={() => setActiveTab('history')}
+          />
+        </View>
+      )}
+
+      {activeTab === 'profile' && (
         <ScrollView
           style={styles.scrollContent}
           contentContainerStyle={styles.scrollContainer}
           showsVerticalScrollIndicator={false}
         >
-          {activeTab === 'scan' && (
-            <ScanScreen role={role} onCompleteScan={() => setActiveTab('home')} />
-          )}
-          {activeTab === 'history' && <HistoryScreen />}
-          {activeTab === 'cases' && <CasesScreen role={role} />}
-          {activeTab === 'profile' && (
-            <ProfileScreen
-              role={role}
-              user={user}
-              onLogout={handleLogout}
-            />
-          )}
+          <ProfileScreen
+            role={role}
+            user={user}
+            onLogout={handleLogout}
+          />
         </ScrollView>
       )}
 

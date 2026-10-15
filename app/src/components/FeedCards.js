@@ -3,11 +3,15 @@ import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons, Feather } from '@expo/vector-icons';
 import { theme } from '../theme/theme';
 
-export function ScanFeedItem({ item }) {
+export function ScanFeedItem({ item, onSelectItem }) {
   const isPass = item.verdict === 'PASS';
 
   return (
-    <View style={styles.feedCard}>
+    <TouchableOpacity
+      style={styles.feedCard}
+      onPress={() => onSelectItem && onSelectItem(item)}
+      activeOpacity={0.82}
+    >
       <View style={styles.feedCardTop}>
         <View style={styles.feedProductInfo}>
           <View
@@ -59,13 +63,20 @@ export function ScanFeedItem({ item }) {
         </Text>
         <Text style={styles.idLabel}>{item.id}</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 
-export function CaseFeedItem({ item }) {
+export function CaseFeedItem({ item, onSelectItem }) {
+  const isActionTaken = item.status === 'Action Taken' || item.status === 'ACTION_TAKEN';
+  const isResolved = item.status === 'RESOLVED' || item.status === 'Resolved';
+
   return (
-    <View style={styles.feedCard}>
+    <TouchableOpacity
+      style={styles.feedCard}
+      onPress={() => onSelectItem && onSelectItem(item)}
+      activeOpacity={0.82}
+    >
       <View style={styles.feedCardTop}>
         <View style={{ flex: 1 }}>
           <Text style={styles.caseBadge}>
@@ -74,8 +85,24 @@ export function CaseFeedItem({ item }) {
           <Text style={styles.productName}>{item.product}</Text>
           <Text style={styles.productSub}>Retailer: {item.retailer}</Text>
         </View>
-        <View style={[styles.verdictChip, styles.verdictPending]}>
-          <Text style={[styles.verdictChipText, { color: theme.colors.amber }]}>
+        <View
+          style={[
+            styles.verdictChip,
+            isActionTaken
+              ? { backgroundColor: theme.colors.limeLight }
+              : isResolved
+              ? { backgroundColor: theme.colors.limeLight }
+              : styles.verdictPending,
+          ]}
+        >
+          <Text
+            style={[
+              styles.verdictChipText,
+              isActionTaken || isResolved
+                ? { color: theme.colors.limeDark }
+                : { color: theme.colors.amber },
+            ]}
+          >
             {item.status}
           </Text>
         </View>
@@ -84,10 +111,10 @@ export function CaseFeedItem({ item }) {
       <View style={styles.feedDivider} />
 
       <View style={styles.feedCardBottom}>
-        <Text style={styles.ruleNotice}>{item.rule}</Text>
+        <Text style={styles.ruleNotice} numberOfLines={1}>{item.rule}</Text>
         <Text style={styles.timeLabel}>{item.time}</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 

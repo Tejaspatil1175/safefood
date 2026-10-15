@@ -62,8 +62,8 @@ export async function listComplaintsHandler(req, res, next) {
 export async function exportComplaintPdfHandler(req, res, next) {
   try {
     const pdfBuffer = await generateComplaintPdf(req.params.id, {
-      userId: req.user.sub,
-      role: req.user.role,
+      userId: req.user?.sub || req.user?._id || req.user?.id || null,
+      role: req.user?.role || 'user',
     });
 
     res.setHeader('Content-Type', 'application/pdf');
