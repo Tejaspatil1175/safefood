@@ -102,15 +102,15 @@ export function AdminWebView({
     // 5. Live Audited Food Products (GET /api/v1/scans)
     scansApi.list({ limit: 50 }).then((res: any) => {
       const items = Array.isArray(res) ? res : res?.items || res?.scans || [];
-      if (items.length > 0) {
+      if (Array.isArray(items) && items.length > 0) {
         setLiveScansList(items);
       }
-    }).catch(() => {});
+    }).catch((e) => console.warn("Scans list notice:", e));
 
     // 6. Citizen Users Directory (GET /api/v1/districts/users)
     districtsApi.listUsers().then((res: any) => {
       const users = res?.users || (Array.isArray(res) ? res : []);
-      if (users.length > 0) {
+      if (Array.isArray(users) && users.length > 0) {
         setCitizensList(users);
       }
     }).catch((e) => console.warn("Users list notice:", e));

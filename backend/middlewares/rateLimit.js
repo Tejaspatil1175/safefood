@@ -1,13 +1,14 @@
 import rateLimit from 'express-rate-limit';
 import { env } from '../config/env.js';
 
+const isDev = env.NODE_ENV === 'development';
 const isTest = env.NODE_ENV === 'test';
 
 // General API rate limiter
 export const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: isTest ? 0 : 300,
-  skip: () => isTest,
+  max: isTest || isDev ? 10000 : 300,
+  skip: () => isTest || isDev,
   standardHeaders: true,
   legacyHeaders: false,
   message: {
