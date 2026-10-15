@@ -47,10 +47,10 @@ export function Header({ role, onToggleRole }) {
 
 const STATUSBAR_HEIGHT =
   Platform.OS === 'android'
-    ? (StatusBar.currentHeight || 24) + 16
+    ? (StatusBar.currentHeight || 28) + 26
     : Platform.OS === 'ios'
-    ? 20
-    : 16;
+    ? 30
+    : 24;
 
 const styles = StyleSheet.create({
   header: {
