@@ -11,7 +11,6 @@ import { CitizenComplaintsView } from "./CitizenComplaintsView";
 import { CitizenSettingsView } from "./CitizenSettingsView";
 import { TrustLabelDetailModal } from "./TrustLabelDetailModal";
 import { printTrustLabelPdf } from "./TrustLabelPdf";
-import { AppFloatingFooter } from "./AppFloatingFooter";
 
 type CitizenWebProps = {
   activeSection: string;
@@ -287,9 +286,6 @@ export function CitizenWebView({
           onSelectScanForGrievance={(scan) => setSelectedScanItem(scan)}
         />
       )}
-
-      {/* 4. Modern Mobile App Floating Bottom Bar */}
-      <AppFloatingFooter role="user" activeSection={activeSection} />
     </div>
   );
 }
