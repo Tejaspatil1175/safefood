@@ -269,46 +269,81 @@ export function AdminOfficersView({
   handleDeployOfficer,
 }: AdminOfficersViewProps) {
   return (
-    <div style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr", gap: 24 }}>
+    <div style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr", gap: 24, alignItems: "start" }}>
       <div className="sf-admin-card">
-        <h3 style={{ margin: "0 0 16px", fontSize: 18, fontWeight: 800, color: "#0F172A" }}>
-          Enforcement Fleet Directory
-        </h3>
-        <table className="sf-admin-table">
-          <thead>
-            <tr>
-              <th>Officer ID</th>
-              <th>Name</th>
-              <th>Jurisdiction</th>
-              <th>Active Cases</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {officersFleet.map((officer: any, idx: number) => (
-              <tr key={officer.id || idx}>
-                <td>{officer.id}</td>
-                <td><strong>{officer.name}</strong></td>
-                <td>{officer.district}</td>
-                <td>{officer.activeCases ?? 0}</td>
-                <td>
-                  <span className={`sf-admin-status-chip ${officer.status?.includes('Active') ? 'sf-admin-status-complete' : 'sf-admin-status-waiting'}`}>
-                    {officer.status}
-                  </span>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+          <div>
+            <h3 style={{ margin: "0 0 4px", fontSize: 18, fontWeight: 800, color: "#0F172A" }}>
+              Enforcement Fleet Directory
+            </h3>
+            <p style={{ margin: 0, color: "#64748B", fontSize: 13 }}>
+              Authorized Legal Metrology & FSSAI field inspection officers in active service.
+            </p>
+          </div>
+          <span className="sf-admin-badge-pill sf-admin-badge-pill-green">
+            {officersFleet.length} Active Officers
+          </span>
+        </div>
+
+        {officersFleet.length === 0 ? (
+          <div style={{ padding: "40px 20px", textAlign: "center", color: "#64748B" }}>
+            <p style={{ margin: "0 0 10px", fontSize: 14, fontWeight: 600 }}>No field officers deployed yet.</p>
+            <p style={{ margin: 0, fontSize: 12 }}>Use the deployment console on the right to assign an enforcement officer to a district.</p>
+          </div>
+        ) : (
+          <div style={{ overflowX: "auto" }}>
+            <table className="sf-admin-table">
+              <thead>
+                <tr>
+                  <th>Officer ID</th>
+                  <th>Name & Credentials</th>
+                  <th>Jurisdiction</th>
+                  <th>Active Cases</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {officersFleet.map((officer: any, idx: number) => (
+                  <tr key={officer.id || idx}>
+                    <td style={{ fontWeight: 700, color: "#0F172A" }}>{officer.id}</td>
+                    <td>
+                      <div style={{ display: "flex", flexDirection: "column" }}>
+                        <strong style={{ color: "#0F172A" }}>{officer.name}</strong>
+                        {officer.email && (
+                          <span style={{ fontSize: 11, color: "#64748B" }}>{officer.email}</span>
+                        )}
+                      </div>
+                    </td>
+                    <td>
+                      <span style={{ display: "inline-block", padding: "2px 8px", background: "#F1F5F9", borderRadius: 4, fontSize: 12, fontWeight: 600, color: "#334155" }}>
+                        {officer.district}
+                      </span>
+                    </td>
+                    <td style={{ fontWeight: 600, color: "#0F172A" }}>{officer.activeCases ?? 0}</td>
+                    <td>
+                      <span className={`sf-admin-status-chip ${officer.status?.includes('Active') ? 'sf-admin-status-complete' : 'sf-admin-status-waiting'}`}>
+                        {officer.status}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
 
       <div className="sf-admin-card">
-        <h3 style={{ margin: "0 0 16px", fontSize: 18, fontWeight: 800, color: "#0F172A" }}>
+        <h3 style={{ margin: "0 0 4px", fontSize: 18, fontWeight: 800, color: "#0F172A" }}>
           Deploy Field Officer
         </h3>
+        <p style={{ margin: "0 0 16px", color: "#64748B", fontSize: 13 }}>
+          Commission a certified enforcement officer and provision database credentials.
+        </p>
+
         {officerAddedMessage && (
           <div style={{ background: "#DCFCE7", border: "1px solid #BBF7D0", borderRadius: 10, padding: 12, color: "#15803D", fontSize: 13, marginBottom: 14 }}>
-            Officer deployed to district {newOfficerDistrict} via Districts API!
+            ✓ Field officer successfully commissioned and assigned to district!
           </div>
         )}
         <form
@@ -320,30 +355,33 @@ export function AdminOfficersView({
             <input
               type="text"
               required
-              style={{ padding: 10, borderRadius: 10, border: "1px solid #CBD5E1", outline: "none" }}
+              style={{ padding: 10, borderRadius: 10, border: "1px solid #CBD5E1", outline: "none", fontSize: 13 }}
               value={newOfficerName}
               onChange={(e) => setNewOfficerName(e.target.value)}
               placeholder="e.g. Inspector Anil Shinde"
             />
           </div>
           <div className="sf-demo-field">
-            <label style={{ fontSize: 12, fontWeight: 700, color: "#475569" }}>Assigned District</label>
+            <label style={{ fontSize: 12, fontWeight: 700, color: "#475569" }}>Assigned District Jurisdiction</label>
             <select
-              style={{ padding: 10, borderRadius: 10, border: "1px solid #CBD5E1", outline: "none" }}
+              style={{ padding: 10, borderRadius: 10, border: "1px solid #CBD5E1", outline: "none", fontSize: 13 }}
               value={newOfficerDistrict}
               onChange={(e) => setNewOfficerDistrict(e.target.value)}
             >
               <option value="DHULE">DHULE</option>
               <option value="PUNE">PUNE</option>
               <option value="MUMBAI">MUMBAI</option>
+              <option value="NASHIK">NASHIK</option>
+              <option value="NAGPUR">NAGPUR</option>
+              <option value="AURANGABAD">AURANGABAD</option>
             </select>
           </div>
           <button
             type="submit"
             className="sf-admin-btn-outline"
-            style={{ background: "#0F172A", color: "#FFFFFF", justifyContent: "center", marginTop: 8 }}
+            style={{ background: "#0F172A", color: "#FFFFFF", justifyContent: "center", marginTop: 8, padding: "10px 16px", cursor: "pointer", border: "none" }}
           >
-            <span>Deploy Officer</span>
+            <span>Commission & Deploy Officer</span>
             <ArrowRight style={{ width: 14, height: 14 }} />
           </button>
         </form>

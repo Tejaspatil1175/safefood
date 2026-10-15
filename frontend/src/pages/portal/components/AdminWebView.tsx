@@ -53,14 +53,30 @@ export function AdminWebView({
   const [selectedTimeframe, setSelectedTimeframe] = useState("Monthly");
   const [systemHealth, setSystemHealth] = useState<{ status: string; uptime: number; timestamp?: string } | null>(null);
   const [districtOverview, setDistrictOverview] = useState<any>(null);
-  const [officersFleet, setOfficersFleet] = useState<any[]>([
-    { id: "#OFF-901", name: "Insp. Rajesh Patil", district: "Dhule Urban", activeCases: 14, status: "Active On-Duty" },
-    { id: "#OFF-902", name: "Insp. Sneha Deshmukh", district: "Pune Central", activeCases: 9, status: "Active On-Duty" },
-    { id: "#OFF-903", name: "Insp. Amit Kulkarni", district: "Mumbai Metro", activeCases: 22, status: "In Transit" },
-  ]);
+  const [officersFleet, setOfficersFleet] = useState<any[]>([]);
   const [reportsList, setReportsList] = useState<any[]>([]);
   const [liveScansList, setLiveScansList] = useState<any[]>([]);
   const [citizensList, setCitizensList] = useState<any[]>([]);
+
+  const fetchLiveOfficers = async () => {
+    try {
+      const ofs: any = await districtsApi.listOfficers();
+      const officersArray = Array.isArray(ofs) ? ofs : ofs?.officers || [];
+      const mapped = officersArray.map((o: any) => ({
+        id: o.badgeNumber || `#OFF-${o.id?.slice(-3) || o._id?.slice(-3) || "901"}`,
+        name: o.name || "Enforcement Officer",
+        district: o.district || "Maharashtra",
+        email: o.email,
+        phone: o.phoneNumber,
+        activeCases: o.activeCases ?? 0,
+        status: o.isActive !== false ? "Active On-Duty" : "Standby",
+        createdAt: o.createdAt,
+      }));
+      setOfficersFleet(mapped);
+    } catch (e) {
+      console.warn("Officers list notice:", e);
+    }
+  };
 
   useEffect(() => {
     // 1. Health API (GET /api/v1/health)
@@ -70,19 +86,7 @@ export function AdminWebView({
     districtsApi.getOverview().then((ov) => setDistrictOverview(ov)).catch((e) => console.warn("District overview notice:", e));
 
     // 3. Officers fleet (GET /api/v1/districts/officers)
-    districtsApi.listOfficers().then((ofs: any) => {
-      const officersArray = Array.isArray(ofs) ? ofs : ofs?.officers || [];
-      if (officersArray.length > 0) {
-        const mapped = officersArray.map((o: any) => ({
-          id: `#OFF-${o.badgeNumber || o.id?.slice(-3) || o._id?.slice(-3) || "904"}`,
-          name: o.name || "Enforcement Officer",
-          district: o.district || "Maharashtra",
-          activeCases: o.activeCases ?? 0,
-          status: o.isActive !== false ? "Active On-Duty" : "Standby",
-        }));
-        setOfficersFleet((prev) => [...mapped, ...prev.filter(p => !mapped.some((m: any) => m.name === p.name))]);
-      }
-    }).catch((e) => console.warn("Officers list notice:", e));
+    fetchLiveOfficers();
 
     // 4. District Reports / Grievances (GET /api/v1/districts/reports)
     districtsApi.listReports().then((reps: any) => {
@@ -141,26 +145,19 @@ export function AdminWebView({
     if (!newOfficerName) return;
     try {
       await districtsApi.createOfficer({
-        name: newOfficerName,
+        name: newOfficerName.trim(),
         email: `${newOfficerName.toLowerCase().replace(/[^a-z0-9]/g, "")}@safefood.in`,
         district: newOfficerDistrict,
-        badgeNumber: `OFF-${Math.floor(100 + Math.random() * 900)}`,
+        badgeNumber: `OFF-${newOfficerDistrict.slice(0, 3)}-${Math.floor(100 + Math.random() * 900)}`,
       });
-      setOfficersFleet((prev) => [
-        {
-          id: `#OFF-${Math.floor(100 + Math.random() * 900)}`,
-          name: newOfficerName,
-          district: newOfficerDistrict,
-          activeCases: 0,
-          status: "Active On-Duty",
-        },
-        ...prev,
-      ]);
-    } catch (err) {
+      await fetchLiveOfficers();
+      setOfficerAddedMessage(true);
+      setNewOfficerName("");
+      setTimeout(() => setOfficerAddedMessage(false), 4000);
+    } catch (err: any) {
       console.warn("Deploy officer API notice:", err);
+      alert(err.message || "Failed to deploy officer");
     }
-    setOfficerAddedMessage(true);
-    setNewOfficerName("");
   };
 
   return (
