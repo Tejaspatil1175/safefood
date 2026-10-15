@@ -7,8 +7,6 @@ interface AdminProductsViewProps {
 }
 
 export function AdminProductsView({ liveScansList }: AdminProductsViewProps) {
-  const displayList = liveScansList.length > 0 ? liveScansList : sampleScans;
-
   return (
     <div className="sf-admin-card">
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
@@ -21,47 +19,69 @@ export function AdminProductsView({ liveScansList }: AdminProductsViewProps) {
           </p>
         </div>
         <span className="sf-admin-badge-pill sf-admin-badge-pill-green">
-          {liveScansList.length > 0 ? `${liveScansList.length} Live Items` : "Demo Mode"}
+          {liveScansList.length} Live Database Items
         </span>
       </div>
       <table className="sf-admin-table">
         <thead>
           <tr>
-            <th>Audit / Barcode</th>
+            <th>Audit ID</th>
             <th>Product Name</th>
             <th>Manufacturer / Brand</th>
-            <th>Net Quantity / Dates</th>
+            <th>Net Quantity / Barcode</th>
             <th>Compliance Verdict</th>
           </tr>
         </thead>
         <tbody>
-          {displayList.map((s: any, idx: number) => {
-            const idStr = s.productInfo?.barcode || s.barcode || (s.id ? `#AUD-${s.id.slice(-6)}` : `#AUD-${idx + 101}`);
-            const nameStr = s.productInfo?.productName || s.productName || s.product || s.detectedProduct?.productName || "Packaged Food Item";
-            const brandStr = s.productInfo?.brand || s.productInfo?.manufacturer || s.brand || s.category || "Packer / Brand";
-            const netQtyStr = s.productInfo?.netQuantity || s.netQuantity || s.date || "Declared on Pack";
-            const isWarning = s.isCompliant === false || s.verdict === "FAIL" || s.warning;
-            const score = s.complianceScore ?? s.score ?? (isWarning ? 38 : 95);
+          {liveScansList.length === 0 ? (
+            <tr>
+              <td colSpan={5} style={{ textAlign: "center", padding: "36px 16px", color: "#64748B" }}>
+                Loading live audited food products from MongoDB...
+              </td>
+            </tr>
+          ) : (
+            liveScansList.map((s: any, idx: number) => {
+              const idStr = s._id ? `#AUD-${s._id.slice(-6).toUpperCase()}` : (s.id ? `#AUD-${s.id.slice(-6).toUpperCase()}` : `#AUD-${idx + 101}`);
+              const nameStr =
+                s.productInfo?.productName ||
+                s.product?.name ||
+                s.detectedProduct?.productName ||
+                s.productName ||
+                "Packaged Food Item";
+              const brandStr =
+                s.productInfo?.brand ||
+                s.productInfo?.manufacturer ||
+                s.product?.brand ||
+                s.detectedProduct?.brand ||
+                "Brand / Manufacturer";
+              const netQtyStr =
+                s.productInfo?.netQuantity ||
+                (s.product?.netQuantity ? `${s.product.netQuantity.value} ${s.product.netQuantity.unit}` : null) ||
+                s.productInfo?.barcode ||
+                "Declared on Pack";
+              const isWarning = s.isCompliant === false || s.verdict === "FAIL" || s.warning;
+              const score = s.complianceScore ?? s.score ?? (isWarning ? 38 : 95);
 
-            return (
-              <tr key={s.id || s._id || idx}>
-                <td style={{ fontWeight: 700, color: "#0F172A" }}>{idStr}</td>
-                <td>
-                  <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                    <span style={{ fontSize: 18 }}>🥫</span>
-                    <strong>{nameStr}</strong>
-                  </div>
-                </td>
-                <td>{brandStr}</td>
-                <td style={{ color: "#64748B", fontSize: 12 }}>{netQtyStr}</td>
-                <td>
-                  <span className={`sf-admin-badge-pill ${isWarning ? "sf-admin-badge-pill-red" : "sf-admin-badge-pill-green"}`}>
-                    {isWarning ? `Violations Flagged (${score}%)` : `100% Compliant (${score}%)`}
-                  </span>
-                </td>
-              </tr>
-            );
-          })}
+              return (
+                <tr key={s._id || s.id || idx}>
+                  <td style={{ fontWeight: 700, color: "#0F172A" }}>{idStr}</td>
+                  <td>
+                    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                      <span style={{ fontSize: 18 }}>🥫</span>
+                      <strong>{nameStr}</strong>
+                    </div>
+                  </td>
+                  <td>{brandStr}</td>
+                  <td style={{ color: "#64748B", fontSize: 12 }}>{netQtyStr}</td>
+                  <td>
+                    <span className={`sf-admin-badge-pill ${isWarning ? "sf-admin-badge-pill-red" : "sf-admin-badge-pill-green"}`}>
+                      {isWarning ? `Violations Flagged (${score}%)` : `100% Compliant (${score}%)`}
+                    </span>
+                  </td>
+                </tr>
+              );
+            })
+          )}
         </tbody>
       </table>
     </div>
@@ -235,13 +255,7 @@ interface AdminUsersViewProps {
 }
 
 export function AdminUsersView({ citizensList }: AdminUsersViewProps) {
-  const displayUsers = citizensList.length > 0
-    ? citizensList
-    : [
-        { _id: "CIT-401", name: "Rohan Sharma", email: "rohan@safefood.in", district: "Dhule", state: "Maharashtra", role: "user", isActive: true },
-        { _id: "CIT-402", name: "Pooja Deshmukh", email: "pooja@safefood.in", district: "Pune", state: "Maharashtra", role: "user", isActive: true },
-        { _id: "CIT-403", name: "Karan Joshi", email: "karan@safefood.in", district: "Mumbai", state: "Maharashtra", role: "user", isActive: true },
-      ];
+  const displayUsers = citizensList;
 
   return (
     <div className="sf-admin-card">
