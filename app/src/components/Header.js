@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Platform } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Platform, StatusBar } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme } from '../theme/theme';
 
@@ -45,13 +45,20 @@ export function Header({ role, onToggleRole }) {
   );
 }
 
+const STATUSBAR_HEIGHT =
+  Platform.OS === 'android'
+    ? (StatusBar.currentHeight || 24) + 16
+    : Platform.OS === 'ios'
+    ? 20
+    : 16;
+
 const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
-    paddingTop: Platform.OS === 'android' ? 36 : 12,
+    paddingTop: STATUSBAR_HEIGHT,
     paddingBottom: 14,
     backgroundColor: theme.colors.bg,
   },
