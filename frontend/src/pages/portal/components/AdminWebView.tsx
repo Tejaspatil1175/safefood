@@ -116,6 +116,26 @@ export function AdminWebView({
     }).catch((e) => console.warn("Users list notice:", e));
   }, []);
 
+  const handleUpdateReportStatus = async (reportId: string, newStatus: string) => {
+    try {
+      await districtsApi.reviewReport(reportId, {
+        action: newStatus,
+        note: `Status updated to ${newStatus} by Regulatory Administrator`,
+      });
+
+      // Update local state instantly
+      setReportsList((prev) =>
+        prev.map((r) =>
+          (r.id === reportId || r._id === reportId)
+            ? { ...r, status: newStatus }
+            : r
+        )
+      );
+    } catch (err) {
+      console.warn("Failed to update complaint status:", err);
+    }
+  };
+
   const handleDeployOfficer = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newOfficerName) return;
@@ -307,6 +327,7 @@ export function AdminWebView({
               districtOverview={districtOverview}
               selectedTimeframe={selectedTimeframe}
               setSelectedTimeframe={setSelectedTimeframe}
+              onUpdateReportStatus={handleUpdateReportStatus}
             />
           )}
 
@@ -315,7 +336,10 @@ export function AdminWebView({
           )}
 
           {activeSection === "complaints" && (
-            <AdminComplaintsView reportsList={reportsList} />
+            <AdminComplaintsView
+              reportsList={reportsList}
+              onUpdateReportStatus={handleUpdateReportStatus}
+            />
           )}
 
           {activeSection === "officers" && (

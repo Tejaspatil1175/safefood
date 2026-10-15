@@ -16,6 +16,7 @@ interface AdminDashboardViewProps {
   districtOverview: any;
   selectedTimeframe: string;
   setSelectedTimeframe: (v: string) => void;
+  onUpdateReportStatus?: (reportId: string, newStatus: string) => void;
 }
 
 export function AdminDashboardView({
@@ -24,6 +25,7 @@ export function AdminDashboardView({
   districtOverview,
   selectedTimeframe,
   setSelectedTimeframe,
+  onUpdateReportStatus,
 }: AdminDashboardViewProps) {
   // 1. Dynamic Calculations from Live MongoDB APIs
   const totalAudited = liveScansList.length;
@@ -424,6 +426,7 @@ export function AdminDashboardView({
             </thead>
             <tbody>
               {reportsList.slice(0, 6).map((r: any, idx: number) => {
+                const reportId = r._id || r.id;
                 const docketId = r.complaintNumber || r.id || r._id || `#GRV-${idx + 101}`;
                 const productName =
                   r.product ||
@@ -476,12 +479,41 @@ export function AdminDashboardView({
                       </span>
                     </td>
                     <td style={{ textAlign: "right" }}>
-                      <a
-                        href={portalHref("admin", "complaints")}
-                        style={{ background: "transparent", border: "none", cursor: "pointer", color: "#64748B", fontSize: 12, fontWeight: 700 }}
-                      >
-                        Review &rarr;
-                      </a>
+                      {statusStr === "ACTION_TAKEN" || statusStr === "DONE" || statusStr === "RESOLVED" ? (
+                        <span style={{ display: "inline-flex", alignItems: "center", gap: 4, color: "#16a34a", fontSize: 12, fontWeight: 700 }}>
+                          <CheckCircle2 size={13} /> Resolved
+                        </span>
+                      ) : (
+                        <div style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                          {onUpdateReportStatus && (
+                            <button
+                              onClick={() => onUpdateReportStatus(reportId, "ACTION_TAKEN")}
+                              style={{
+                                display: "inline-flex",
+                                alignItems: "center",
+                                gap: 4,
+                                padding: "4px 8px",
+                                borderRadius: 6,
+                                background: "#16a34a",
+                                color: "#fff",
+                                border: "none",
+                                fontSize: 11,
+                                fontWeight: 700,
+                                cursor: "pointer",
+                              }}
+                              title="Mark grievance resolved / action taken"
+                            >
+                              <CheckCircle2 size={12} /> Mark Done
+                            </button>
+                          )}
+                          <a
+                            href={portalHref("admin", "complaints")}
+                            style={{ background: "transparent", border: "none", cursor: "pointer", color: "#64748B", fontSize: 12, fontWeight: 700 }}
+                          >
+                            Review &rarr;
+                          </a>
+                        </div>
+                      )}
                     </td>
                   </tr>
                 );

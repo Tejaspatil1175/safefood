@@ -90,9 +90,22 @@ export function AdminProductsView({ liveScansList }: AdminProductsViewProps) {
 
 interface AdminComplaintsViewProps {
   reportsList: any[];
+  onUpdateReportStatus?: (reportId: string, newStatus: string) => void;
 }
 
-export function AdminComplaintsView({ reportsList }: AdminComplaintsViewProps) {
+export function AdminComplaintsView({ reportsList, onUpdateReportStatus }: AdminComplaintsViewProps) {
+  const [updatingId, setUpdatingId] = React.useState<string | null>(null);
+
+  const handleAction = async (reportId: string, status: string) => {
+    if (!onUpdateReportStatus) return;
+    setUpdatingId(reportId);
+    try {
+      await onUpdateReportStatus(reportId, status);
+    } finally {
+      setUpdatingId(null);
+    }
+  };
+
   return (
     <div className="sf-admin-card">
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
@@ -101,11 +114,11 @@ export function AdminComplaintsView({ reportsList }: AdminComplaintsViewProps) {
             All Filed Grievances & Statutory Audit Actions
           </h3>
           <p style={{ margin: 0, color: "#64748B", fontSize: 13 }}>
-            Consumer reports filed under Legal Metrology Act, 2009 & PCR 2011 Rule 6.
+            Review, verify, and resolve consumer reports filed under Legal Metrology Act, 2009 & PCR 2011.
           </p>
         </div>
         <span className="sf-admin-badge-pill sf-admin-badge-pill-red">
-          {reportsList.length} Active Dockets
+          {reportsList.length} Total Dockets
         </span>
       </div>
       <table className="sf-admin-table">
@@ -117,30 +130,119 @@ export function AdminComplaintsView({ reportsList }: AdminComplaintsViewProps) {
             <th>Jurisdiction</th>
             <th>Violation Type</th>
             <th>Status</th>
+            <th style={{ textAlign: "right" }}>Administrative Action</th>
           </tr>
         </thead>
         <tbody>
-          {reportsList.map((c: any, idx: number) => {
-            const docket = c.complaintNumber || c.id || c._id || `#GRV-${idx + 101}`;
-            const prod = c.product || c.productName || c.scan?.product?.name || "Packaged Product";
-            const dateStr = c.date || (c.createdAt ? new Date(c.createdAt).toLocaleDateString("en-IN") : "Today");
-            const loc = c.location || `${c.district || "Dhule"}, MH`;
+          {reportsList.length === 0 ? (
+            <tr>
+              <td colSpan={7} style={{ textAlign: "center", padding: "36px 16px", color: "#64748B" }}>
+                No active complaints filed in the database.
+              </td>
+            </tr>
+          ) : (
+            reportsList.map((c: any, idx: number) => {
+              const docket = c.complaintNumber || c.id || c._id || `#GRV-${idx + 101}`;
+              const reportId = c._id || c.id;
+              const prod = c.product || c.productName || c.scan?.product?.name || "Packaged Product";
+              const dateStr = c.date || (c.createdAt ? new Date(c.createdAt).toLocaleDateString("en-IN") : "Today");
+              const loc = c.location || `${c.district || "Dhule"}, MH`;
+              const statusStr = c.status || "IN_REVIEW";
+              const isDone = statusStr === "ACTION_TAKEN" || statusStr === "VERIFIED" || statusStr === "VALID";
 
-            return (
-              <tr key={c.id || c._id || idx}>
-                <td style={{ fontWeight: 700, color: "#0F172A" }}>{docket}</td>
-                <td><strong>{prod}</strong></td>
-                <td>{dateStr}</td>
-                <td>{loc}</td>
-                <td>Legal Metrology Decl. Missing</td>
-                <td>
-                  <span className="sf-admin-status-chip sf-admin-status-inprogress">
-                    {c.status || "Under Review"}
-                  </span>
-                </td>
-              </tr>
-            );
-          })}
+              return (
+                <tr key={reportId || idx}>
+                  <td style={{ fontWeight: 700, color: "#0F172A" }}>{docket}</td>
+                  <td><strong>{prod}</strong></td>
+                  <td>{dateStr}</td>
+                  <td>{loc}</td>
+                  <td>Legal Metrology Decl. Missing</td>
+                  <td>
+                    <span
+                      className={`sf-admin-status-chip ${
+                        isDone
+                          ? "sf-admin-status-complete"
+                          : statusStr === "REJECTED"
+                          ? "sf-admin-status-waiting"
+                          : "sf-admin-status-inprogress"
+                      }`}
+                    >
+                      {statusStr}
+                    </span>
+                  </td>
+                  <td style={{ textAlign: "right" }}>
+                    <div style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+                      {statusStr !== "ACTION_TAKEN" ? (
+                        <button
+                          type="button"
+                          className="sf-admin-btn-outline"
+                          disabled={updatingId === reportId}
+                          onClick={() => handleAction(reportId, "ACTION_TAKEN")}
+                          style={{
+                            background: "#0F172A",
+                            color: "#FFFFFF",
+                            padding: "6px 12px",
+                            fontSize: 12,
+                            borderRadius: 8,
+                            cursor: "pointer",
+                            border: "none",
+                            fontWeight: 600,
+                          }}
+                        >
+                          {updatingId === reportId ? "Updating..." : "Mark Done ✓"}
+                        </button>
+                      ) : (
+                        <span style={{ color: "#16A34A", fontSize: 12, fontWeight: 700 }}>
+                          Resolved ✓
+                        </span>
+                      )}
+
+                      {statusStr !== "VERIFIED" && statusStr !== "ACTION_TAKEN" && (
+                        <button
+                          type="button"
+                          className="sf-admin-btn-outline"
+                          disabled={updatingId === reportId}
+                          onClick={() => handleAction(reportId, "VERIFIED")}
+                          style={{
+                            background: "#F1F5F9",
+                            color: "#0F172A",
+                            padding: "6px 10px",
+                            fontSize: 11,
+                            borderRadius: 8,
+                            cursor: "pointer",
+                            border: "1px solid #CBD5E1",
+                            fontWeight: 600,
+                          }}
+                        >
+                          Verify
+                        </button>
+                      )}
+
+                      {statusStr !== "REJECTED" && (
+                        <button
+                          type="button"
+                          disabled={updatingId === reportId}
+                          onClick={() => handleAction(reportId, "REJECTED")}
+                          style={{
+                            background: "transparent",
+                            color: "#EF4444",
+                            padding: "6px 8px",
+                            fontSize: 11,
+                            borderRadius: 8,
+                            cursor: "pointer",
+                            border: "none",
+                            fontWeight: 600,
+                          }}
+                        >
+                          Dismiss
+                        </button>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              );
+            })
+          )}
         </tbody>
       </table>
     </div>
