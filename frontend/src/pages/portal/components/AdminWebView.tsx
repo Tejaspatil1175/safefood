@@ -19,6 +19,8 @@ import {
   scansApi,
   complaintsApi,
   districtsApi,
+  authApi,
+  getStoredUser,
 } from "@/lib/api";
 import { AdminDashboardView } from "./AdminDashboardView";
 import {
@@ -57,6 +59,20 @@ export function AdminWebView({
   const [reportsList, setReportsList] = useState<any[]>([]);
   const [liveScansList, setLiveScansList] = useState<any[]>([]);
   const [citizensList, setCitizensList] = useState<any[]>([]);
+  const [adminUser, setAdminUser] = useState<any>(null);
+
+  useEffect(() => {
+    // 0. Fetch logged-in admin user info
+    authApi
+      .getMe()
+      .then((u: any) => {
+        if (u) setAdminUser(u);
+      })
+      .catch(() => {
+        const stored = getStoredUser();
+        if (stored) setAdminUser(stored);
+      });
+  }, []);
 
   const fetchLiveOfficers = async () => {
     try {
@@ -235,18 +251,37 @@ export function AdminWebView({
           </select>
 
           {/* User Profile Capsule */}
-          <div className="sf-admin-user-profile" title="Signed in as State Director" style={{ width: "100%", justifyContent: "space-between" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
-              <div className="sf-admin-user-avatar">SK</div>
-              <div style={{ display: "flex", flexDirection: "column", textAlign: "left", lineHeight: 1.2 }}>
-                <span style={{ fontWeight: 700, color: "#0F172A", fontSize: 12 }}>Dr. S. Kulkarni</span>
-                <span style={{ fontSize: 10, color: "#64748B" }}>State Director</span>
+          {(() => {
+            const displayName = adminUser?.name || "Dr. S. Kulkarni";
+            const roleDesignation =
+              adminUser?.role === "superadmin"
+                ? "State Director"
+                : adminUser?.role === "admin"
+                ? `${adminUser?.district ? `${adminUser.district} District Admin` : "Regulatory Director"}`
+                : "State Director";
+            const initials = displayName
+              .split(" ")
+              .filter(Boolean)
+              .map((w: string) => (w && w.length > 0 ? w.charAt(0).toUpperCase() : ""))
+              .filter(Boolean)
+              .slice(0, 2)
+              .join("") || "SK";
+
+            return (
+              <div className="sf-admin-user-profile" title={`Signed in as ${displayName}`} style={{ width: "100%", justifyContent: "space-between" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
+                  <div className="sf-admin-user-avatar">{initials}</div>
+                  <div style={{ display: "flex", flexDirection: "column", textAlign: "left", lineHeight: 1.2 }}>
+                    <span style={{ fontWeight: 700, color: "#0F172A", fontSize: 12 }}>{displayName}</span>
+                    <span style={{ fontSize: 10, color: "#64748B" }}>{roleDesignation}</span>
+                  </div>
+                </div>
+                <a href="/login" style={{ color: "#64748B", display: "grid", placeItems: "center" }} title="Sign out">
+                  <LogOut style={{ width: 14, height: 14 }} />
+                </a>
               </div>
-            </div>
-            <a href="/login" style={{ color: "#64748B", display: "grid", placeItems: "center" }} title="Sign out">
-              <LogOut style={{ width: 14, height: 14 }} />
-            </a>
-          </div>
+            );
+          })()}
         </div>
       </aside>
 
