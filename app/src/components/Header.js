@@ -52,10 +52,10 @@ export function Header({ role, onToggleRole }) {
 
 const STATUSBAR_HEIGHT =
   Platform.OS === 'android'
-    ? (StatusBar.currentHeight || 28) + 12
+    ? (StatusBar.currentHeight || 24) + 6
     : Platform.OS === 'ios'
-    ? 24
-    : 16;
+    ? 16
+    : 10;
 
 const styles = StyleSheet.create({
   headerContainer: {
@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.08)',
     marginHorizontal: 20,
-    marginBottom: 10,
+    marginBottom: 6,
     borderRadius: 1,
   },
   header: {
@@ -74,8 +74,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
-    paddingTop: STATUSBAR_HEIGHT,
-    paddingBottom: 14,
+    paddingTop: 4,
+    paddingBottom: 10,
     backgroundColor: theme.colors.bg,
   },
   userInfo: {

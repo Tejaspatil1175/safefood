@@ -1,7 +1,7 @@
 export const userMockScans = [
   {
-    id: '#AUD-8921',
-    name: 'Good Day Butter Cookies',
+    id: '#AUD-891',
+    name: 'ood Day Butter Cookies',
     category: 'Packaged Biscuits',
     verdict: 'FAIL',
     score: '38%',
