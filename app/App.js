@@ -21,8 +21,8 @@ const { width } = Dimensions.get('window');
 
 export default function App() {
   // Toggle between Citizen (user) and Officer mode
-  const [role, setRole] = useState<'user' | 'officer'>('user');
-  const [activeTab, setActiveTab] = useState<'home' | 'history' | 'scan' | 'cases' | 'profile'>('home');
+  const [role, setRole] = useState('user');
+  const [activeTab, setActiveTab] = useState('home');
   const [isScanning, setIsScanning] = useState(false);
 
   // User Mock Data
@@ -266,7 +266,7 @@ export default function App() {
                           ]}
                         >
                           <MaterialCommunityIcons
-                            name={item.icon as any}
+                            name={item.icon}
                             size={22}
                             color={item.verdict === 'PASS' ? '#4D880E' : '#DC2626'}
                           />
