@@ -14,6 +14,7 @@ export const envSchema = z.object({
   MAX_UPLOAD_MB: z.coerce.number().positive().default(8),
   GEMINI_API_KEY: z.string().optional().default(''),
   GEMINI_MODEL: z.string().optional().default('gemini-2.5-flash'),
+  CORS_ORIGIN: z.string().optional().default('*'),
 });
 
 export function parseEnv(source = process.env) {

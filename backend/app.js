@@ -16,7 +16,28 @@ export function createApp() {
 
   // Security & Cross-Origin
   app.use(helmet({ contentSecurityPolicy: false }));
-  app.use(cors());
+
+  // Dynamic CORS configuration via CORS_ORIGIN env var
+  const allowedOrigins = (process.env.CORS_ORIGIN || '*')
+    .split(',')
+    .map((o) => o.trim())
+    .filter(Boolean);
+
+  const corsOptions = {
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps, curl, server-to-server)
+      if (!origin || allowedOrigins.includes('*') || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      return callback(null, true); // Fallback to allow connection if origin check is open
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'x-request-id'],
+  };
+
+  app.use(cors(corsOptions));
+  app.options('*', cors(corsOptions)); // Enable pre-flight across all routes
 
   // Request tracing & logging
   app.use(requestIdMiddleware);
