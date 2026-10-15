@@ -1,13 +1,13 @@
 export const theme = {
   colors: {
-    bg: '#DCEAC8',          // Deeper, richer pastel lime/pistachio green
-    bgSoft: '#E6F2D5',      // Secondary surface
+    bg: '#E2EFD0',          // Slightly lighter soft pastel pistachio green
+    bgSoft: '#ECF5E0',      // Soft secondary surface
     card: '#FFFFFF',
-    cardAlt: '#EFF8E5',
+    cardAlt: '#F5FAEC',
     navy: '#0C2014',        // Deep forest emerald dark text
     navySub: '#223E2E',
-    muted: '#4E6C58',       // Rich botanical green-slate
-    border: '#C6DCB0',      // Balanced organic green border
+    muted: '#52705C',       // Rich botanical green-slate
+    border: '#CDDFB8',      // Gentle organic green border
     lime: '#00B14F',        // Grab signature vibrant green
     limeDark: '#00873D',
     limeLight: '#D2EED9',

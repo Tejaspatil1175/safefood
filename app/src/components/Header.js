@@ -3,26 +3,38 @@ import { StyleSheet, View, Text, TouchableOpacity, Platform, StatusBar } from 'r
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme } from '../theme/theme';
 
-export function Header({ role, onToggleRole }) {
+export function Header({ role, onToggleRole, user, onOpenAuth }) {
+  const displayName = user?.name || (role === 'user' ? 'Tejas Patil' : 'Insp. Rajesh Patil');
+  const initials = displayName
+    .split(' ')
+    .map((n) => n[0])
+    .join('')
+    .substring(0, 2)
+    .toUpperCase();
+
   return (
     <View style={styles.headerContainer}>
       {/* Sleek separator strip between status bar and content */}
       <View style={styles.statusBarSeparator} />
 
       <View style={styles.header}>
-        <View style={styles.userInfo}>
+        <TouchableOpacity
+          style={styles.userInfo}
+          onPress={onOpenAuth}
+          activeOpacity={0.8}
+        >
           <View style={styles.avatarCircle}>
-            <Text style={styles.avatarText}>{role === 'user' ? 'CP' : 'RP'}</Text>
+            <Text style={styles.avatarText}>{initials}</Text>
           </View>
           <View>
             <Text style={styles.greetingSub}>
               {role === 'user' ? 'Good morning, Citizen' : 'Enforcement Division'}
             </Text>
             <Text style={styles.greetingName}>
-              {role === 'user' ? 'Tejas Patil' : 'Insp. Rajesh Patil'}
+              {displayName}
             </Text>
           </View>
-        </View>
+        </TouchableOpacity>
 
         <View style={styles.headerRight}>
           {/* Persona Switch Pill */}
@@ -52,10 +64,10 @@ export function Header({ role, onToggleRole }) {
 
 const STATUSBAR_HEIGHT =
   Platform.OS === 'android'
-    ? (StatusBar.currentHeight || 24) + 6
+    ? Math.max((StatusBar.currentHeight || 24) - 6, 14)
     : Platform.OS === 'ios'
-    ? 16
-    : 10;
+    ? 6
+    : 4;
 
 const styles = StyleSheet.create({
   headerContainer: {
@@ -66,7 +78,7 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.08)',
     marginHorizontal: 20,
-    marginBottom: 6,
+    marginBottom: 2,
     borderRadius: 1,
   },
   header: {
@@ -74,8 +86,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
-    paddingTop: 4,
-    paddingBottom: 10,
+    paddingTop: 0,
+    paddingBottom: 8,
     backgroundColor: theme.colors.bg,
   },
   userInfo: {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import { theme } from '../theme/theme';
 import { HeroCard } from '../components/HeroCard';
@@ -9,53 +9,72 @@ import { userMockScans, officerMockCases } from '../data/mockData';
 export function HomeScreen({ role, onNavigateTab }) {
   return (
     <View style={styles.container}>
-      {/* 1. Hero Card */}
-      <HeroCard role={role} />
-
-      {/* 2. Quick Action Electric Lime Scan Banner */}
-      <TouchableOpacity
-        style={styles.quickScanCard}
-        onPress={() => onNavigateTab('scan')}
-        activeOpacity={0.88}
-      >
-        <View style={styles.quickScanLeft}>
-          <View style={styles.quickScanIconSq}>
-            <MaterialCommunityIcons name="qrcode-scan" size={24} color="#FFFFFF" />
-          </View>
-          <View>
-            <Text style={styles.quickScanTitle}>
-              {role === 'user' ? 'Point camera to audit' : 'Launch field inspector'}
-            </Text>
-            <Text style={styles.quickScanSub}>
-              Instant OCR check of mandatory label declarations
-            </Text>
-          </View>
-        </View>
-        <View style={styles.arrowCircle}>
-          <Ionicons name="chevron-forward" size={18} color="#FFFFFF" />
-        </View>
-      </TouchableOpacity>
-
-      {/* 3. Section Title */}
-      <View style={styles.sectionHeader}>
-        <Text style={styles.sectionTitle}>
-          {role === 'user' ? 'Recent audited items' : 'Assigned investigation dockets'}
-        </Text>
-        <TouchableOpacity onPress={() => onNavigateTab(role === 'user' ? 'history' : 'cases')}>
-          <Text style={styles.sectionViewAll}>View all</Text>
-        </TouchableOpacity>
+      {/* 1. Sticky Hero Card (stays fixed at top) */}
+      <View style={styles.stickyHeader}>
+        <HeroCard role={role} />
       </View>
 
-      {/* 4. Feed List */}
-      {role === 'user'
-        ? userMockScans.map((item) => <ScanFeedItem key={item.id} item={item} />)
-        : officerMockCases.map((item) => <CaseFeedItem key={item.id} item={item} />)}
+      {/* 2. Scrollable Body Content */}
+      <ScrollView
+        style={styles.scrollBody}
+        contentContainerStyle={styles.scrollBodyContent}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Quick Action Electric Lime Scan Banner */}
+        <TouchableOpacity
+          style={styles.quickScanCard}
+          onPress={() => onNavigateTab('scan')}
+          activeOpacity={0.88}
+        >
+          <View style={styles.quickScanLeft}>
+            <View style={styles.quickScanIconSq}>
+              <MaterialCommunityIcons name="qrcode-scan" size={24} color="#FFFFFF" />
+            </View>
+            <View>
+              <Text style={styles.quickScanTitle}>
+                {role === 'user' ? 'Point camera to audit' : 'Launch field inspector'}
+              </Text>
+              <Text style={styles.quickScanSub}>
+                Instant OCR check of mandatory label declarations
+              </Text>
+            </View>
+          </View>
+          <View style={styles.arrowCircle}>
+            <Ionicons name="chevron-forward" size={18} color="#FFFFFF" />
+          </View>
+        </TouchableOpacity>
+
+        {/* Section Title */}
+        <View style={styles.sectionHeader}>
+          <Text style={styles.sectionTitle}>
+            {role === 'user' ? 'Recent audited items' : 'Assigned investigation dockets'}
+          </Text>
+          <TouchableOpacity onPress={() => onNavigateTab(role === 'user' ? 'history' : 'cases')}>
+            <Text style={styles.sectionViewAll}>View all</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Feed List */}
+        {role === 'user'
+          ? userMockScans.map((item) => <ScanFeedItem key={item.id} item={item} />)
+          : officerMockCases.map((item) => <CaseFeedItem key={item.id} item={item} />)}
+      </ScrollView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+  },
+  stickyHeader: {
+    paddingBottom: 10,
+    backgroundColor: theme.colors.bg,
+  },
+  scrollBody: {
+    flex: 1,
+  },
+  scrollBodyContent: {
     paddingBottom: 20,
   },
   quickScanCard: {
