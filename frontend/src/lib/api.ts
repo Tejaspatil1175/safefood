@@ -3,9 +3,13 @@
  * Connects frontend directly to all backend API endpoints mounted on /api/v1
  */
 
-const API_BASE = typeof window !== 'undefined'
-  ? (window.location.port === '3000' ? 'http://localhost:4000/api/v1' : '/api/v1')
-  : 'http://localhost:4000/api/v1';
+// Read single backend URL from frontend environment (.env: VITE_API_URL)
+const RAW_BACKEND_URL = String(import.meta.env['VITE_API_URL'] || '').replace(/\/+$/, '');
+const API_BASE = RAW_BACKEND_URL
+  ? `${RAW_BACKEND_URL}/api/v1`
+  : (typeof window !== 'undefined' && window.location.port === '3000'
+      ? 'http://localhost:4000/api/v1'
+      : '/api/v1');
 
 export type ApiResponse<T> = {
   data?: T;
