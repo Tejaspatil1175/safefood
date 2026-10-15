@@ -174,25 +174,90 @@ function OfficerWebView({
   setOfficerActionSaved,
   switchRole,
 }: OfficerWebProps) {
+  const [officerUser, setOfficerUser] = useState<any>(null);
+  const [liveInvestigations, setLiveInvestigations] = useState<any[]>([]);
+  const [loadingCases, setLoadingCases] = useState(false);
   const [officerStats, setOfficerStats] = useState({
-    totalScans: 48,
-    compliantProducts: 12,
-    productsWithIssues: 16,
-    pendingInvestigations: 5,
+    totalScans: 0,
+    compliantProducts: 0,
+    productsWithIssues: 0,
+    pendingInvestigations: 0,
   });
 
-  useEffect(() => {
-    // Fetch live officer statistics (GET /api/v1/officer/stats)
-    officerApi.getStats().then((data) => {
+  const fetchOfficerData = async () => {
+    // 1. Fetch authenticated officer profile
+    try {
+      const u: any = await authApi.getMe();
+      if (u) setOfficerUser(u);
+    } catch {
+      const stored = getStoredUser();
+      if (stored) setOfficerUser(stored);
+    }
+
+    // 2. Fetch live cases / grievances from MongoDB complaints API
+    setLoadingCases(true);
+    try {
+      const res: any = await complaintsApi.list();
+      const rawComplaints = Array.isArray(res) ? res : res?.items || res?.complaints || [];
+      const mapped = rawComplaints.map((c: any, idx: number) => {
+        const productName =
+          c.productName ||
+          c.product ||
+          c.scan?.product?.name ||
+          c.scan?.fields?.brand?.value ||
+          (c.violations && c.violations.length > 0 ? c.violations[0].field : null) ||
+          "Packaged Food Item";
+
+        const invId = `INV-${c.complaintNumber?.replace(/[^0-9]/g, "") || String(c._id || c.id || idx).slice(-4)}`;
+        const complaintRef = c.complaintNumber || `#GRV-${String(c._id || c.id || idx).slice(-4)}`;
+        const districtStr = c.district || "DHULE";
+        const assignedDate = c.createdAt
+          ? new Date(c.createdAt).toLocaleDateString("en-IN", {
+              month: "short",
+              day: "numeric",
+              year: "numeric",
+            })
+          : "Recently";
+
+        return {
+          id: invId,
+          complaintId: c._id || c.id,
+          complaint: complaintRef,
+          product: productName,
+          district: `${districtStr}, Maharashtra`,
+          rawDistrict: districtStr,
+          assigned: assignedDate,
+          status: c.status || "IN_REVIEW",
+          violations: c.violations || [],
+          userNote: c.userNote || c.description,
+          raw: c,
+        };
+      });
+      setLiveInvestigations(mapped);
+    } catch (err) {
+      console.warn("Officer complaints fetch notice:", err);
+    } finally {
+      setLoadingCases(false);
+    }
+
+    // 3. Fetch live officer statistics
+    try {
+      const data = await officerApi.getStats();
       if (data) {
         setOfficerStats({
-          totalScans: data.totalScans || 48,
-          compliantProducts: data.compliantProducts || 12,
-          productsWithIssues: data.productsWithIssues || 16,
-          pendingInvestigations: data.pendingInvestigations || 5,
+          totalScans: data.totalScans ?? 0,
+          compliantProducts: data.compliantProducts ?? 0,
+          productsWithIssues: data.productsWithIssues ?? 0,
+          pendingInvestigations: data.pendingInvestigations ?? 0,
         });
       }
-    }).catch((err) => console.warn("Officer stats fetch notice:", err));
+    } catch (err) {
+      console.warn("Officer stats fetch notice:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchOfficerData();
   }, []);
 
   return (
@@ -242,10 +307,17 @@ function OfficerWebView({
             </nav>
 
             <div className="sf-web-user-chip">
-              <div className="sf-web-user-avatar" style={{ background: "#201E1A" }}>MI</div>
+              <div className="sf-web-user-avatar" style={{ background: "#201E1A" }}>
+                {(officerUser?.name || "Inspector Rajesh Patil")
+                  .split(" ")
+                  .filter(Boolean)
+                  .map((w: string) => w.charAt(0).toUpperCase())
+                  .slice(0, 2)
+                  .join("") || "RP"}
+              </div>
               <div className="sf-web-user-meta">
-                <strong>Inspector Meera Iyer</strong>
-                <span>OFF-DHU-4921 · Dhule</span>
+                <strong>{officerUser?.name || "Inspector Rajesh Patil"}</strong>
+                <span>{officerUser?.badgeNumber || "OFF-DHL-101"} · {officerUser?.district || "Dhule"}</span>
               </div>
             </div>
 
@@ -266,7 +338,7 @@ function OfficerWebView({
                   Legal Metrology Enforcement Command
                 </span>
                 <h2 style={{ margin: "4px 0", fontSize: "24px", fontWeight: 900, color: "#FAF5EA" }}>
-                  Dhule District Enforcement Division
+                  {officerUser?.district ? `${officerUser.district} District Enforcement Division` : "Dhule District Enforcement Division"}
                 </h2>
                 <p style={{ margin: 0, fontSize: "13px", color: "#C5A059" }}>
                   Authorized Food Safety Officer · Auto-Verification Authority: <strong>ACTIVE</strong> (All inspection logs are tagged VERIFIED immediately)
@@ -293,7 +365,7 @@ function OfficerWebView({
               <div className="sf-web-stat-card">
                 <span>Market Inspections</span>
                 <strong>{officerStats.totalScans}</strong>
-                <small>In assigned district (Dhule)</small>
+                <small>In assigned district ({officerUser?.district || "Dhule"})</small>
               </div>
               <div className="sf-web-stat-card">
                 <span>Statutory Violations</span>
@@ -302,7 +374,7 @@ function OfficerWebView({
               </div>
               <div className="sf-web-stat-card">
                 <span>Assigned Cases</span>
-                <strong style={{ color: "#D35400" }}>{officerStats.pendingInvestigations}</strong>
+                <strong style={{ color: "#D35400" }}>{liveInvestigations.length}</strong>
                 <small>Pending physical visits</small>
               </div>
               <div className="sf-web-stat-card">
@@ -322,30 +394,40 @@ function OfficerWebView({
                 <a href={portalHref("officer", "investigations")}>View All Cases &rarr;</a>
               </div>
 
-              <div style={{ display: "grid", gap: 16 }}>
-                {sampleInvestigations.map((inv) => (
-                  <div key={inv.id} className="sf-web-card" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 16 }}>
-                    <div>
-                      <span style={{ fontSize: "11px", fontWeight: 800, color: "#D35400" }}>{inv.id} · Ref: {inv.complaint}</span>
-                      <h4 style={{ margin: "3px 0", fontSize: "18px", fontWeight: 800, color: "#201E1A" }}>{inv.product}</h4>
-                      <span style={{ fontSize: "12px", color: "#7A6F5D" }}>Jurisdiction: {inv.district} · Assigned on {inv.assigned}</span>
-                    </div>
+              {loadingCases ? (
+                <div style={{ padding: "30px", textAlign: "center", color: "#7A6F5D" }}>
+                  Loading assigned cases from live database...
+                </div>
+              ) : liveInvestigations.length === 0 ? (
+                <div className="sf-web-card" style={{ padding: "30px", textAlign: "center", color: "#7A6F5D" }}>
+                  No active investigations assigned in your district right now.
+                </div>
+              ) : (
+                <div style={{ display: "grid", gap: 16 }}>
+                  {liveInvestigations.map((inv) => (
+                    <div key={inv.id} className="sf-web-card" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 16 }}>
+                      <div>
+                        <span style={{ fontSize: "11px", fontWeight: 800, color: "#D35400" }}>{inv.id} · Ref: {inv.complaint}</span>
+                        <h4 style={{ margin: "3px 0", fontSize: "18px", fontWeight: 800, color: "#201E1A" }}>{inv.product}</h4>
+                        <span style={{ fontSize: "12px", color: "#7A6F5D" }}>Jurisdiction: {inv.district} · Assigned on {inv.assigned}</span>
+                      </div>
 
-                    <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-                      <span className="sf-web-badge sf-web-badge-warn">
-                        {inv.status}
-                      </span>
+                      <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+                        <span className="sf-web-badge sf-web-badge-warn">
+                          {inv.status}
+                        </span>
 
-                      <a href={portalHref("officer", `investigations/${inv.id}`)} className="sf-web-pill-btn">
-                        <span>Inspect & Record Findings</span>
-                        <div className="sf-web-pill-arrow">
-                          <ArrowRight style={{ width: 15, height: 15 }} />
-                        </div>
-                      </a>
+                        <a href={portalHref("officer", `investigations/${inv.complaintId || inv.id}`)} className="sf-web-pill-btn">
+                          <span>Inspect & Record Findings</span>
+                          <div className="sf-web-pill-arrow">
+                            <ArrowRight style={{ width: 15, height: 15 }} />
+                          </div>
+                        </a>
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
             </section>
           </>
         )}
@@ -365,35 +447,45 @@ function OfficerWebView({
             <div className="sf-web-section-head">
               <div>
                 <h3>Assigned Field Cases Docket</h3>
-                <p>Enforcement cases assigned to your badge in Dhule District</p>
+                <p>Enforcement cases assigned to your badge in {officerUser?.district || "Dhule"} District</p>
               </div>
               <a href={portalHref("officer", "scan")}>+ Launch Field Scanner &rarr;</a>
             </div>
 
-            <div style={{ display: "grid", gap: 16 }}>
-              {sampleInvestigations.map((inv) => (
-                <div key={inv.id} className="sf-web-card" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 16 }}>
-                  <div>
-                    <span style={{ fontSize: "11px", fontWeight: 800, color: "#D35400" }}>{inv.id} · Grievance: {inv.complaint}</span>
-                    <h4 style={{ margin: "3px 0", fontSize: "18px", fontWeight: 800, color: "#201E1A" }}>{inv.product}</h4>
-                    <span style={{ fontSize: "12px", color: "#7A6F5D" }}>{inv.district} · Assigned on {inv.assigned}</span>
-                  </div>
+            {loadingCases ? (
+              <div style={{ padding: "30px", textAlign: "center", color: "#7A6F5D" }}>
+                Loading assigned cases...
+              </div>
+            ) : liveInvestigations.length === 0 ? (
+              <div className="sf-web-card" style={{ padding: "30px", textAlign: "center", color: "#7A6F5D" }}>
+                No active dockets assigned in your jurisdiction.
+              </div>
+            ) : (
+              <div style={{ display: "grid", gap: 16 }}>
+                {liveInvestigations.map((inv) => (
+                  <div key={inv.id} className="sf-web-card" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 16 }}>
+                    <div>
+                      <span style={{ fontSize: "11px", fontWeight: 800, color: "#D35400" }}>{inv.id} · Grievance: {inv.complaint}</span>
+                      <h4 style={{ margin: "3px 0", fontSize: "18px", fontWeight: 800, color: "#201E1A" }}>{inv.product}</h4>
+                      <span style={{ fontSize: "12px", color: "#7A6F5D" }}>{inv.district} · Assigned on {inv.assigned}</span>
+                    </div>
 
-                  <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-                    <span className="sf-web-badge sf-web-badge-warn">
-                      {inv.status}
-                    </span>
+                    <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+                      <span className="sf-web-badge sf-web-badge-warn">
+                        {inv.status}
+                      </span>
 
-                    <a href={portalHref("officer", `investigations/${inv.id}`)} className="sf-web-pill-btn">
-                      <span>Inspect Case</span>
-                      <div className="sf-web-pill-arrow">
-                        <ArrowRight style={{ width: 15, height: 15 }} />
-                      </div>
-                    </a>
+                      <a href={portalHref("officer", `investigations/${inv.complaintId || inv.id}`)} className="sf-web-pill-btn">
+                        <span>Inspect Case</span>
+                        <div className="sf-web-pill-arrow">
+                          <ArrowRight style={{ width: 15, height: 15 }} />
+                        </div>
+                      </a>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
@@ -479,15 +571,15 @@ function OfficerWebView({
             <div className="sf-web-card" style={{ display: "flex", flexDirection: "column", gap: 18 }}>
               <div className="sf-demo-field">
                 <label>Officer Name</label>
-                <input type="text" readOnly value="Inspector Meera Iyer" />
+                <input type="text" readOnly value={officerUser?.name || "Inspector Rajesh Patil"} />
               </div>
               <div className="sf-demo-field">
                 <label>Badge Number</label>
-                <input type="text" readOnly value="OFF-DHU-4921" />
+                <input type="text" readOnly value={officerUser?.badgeNumber || "OFF-DHL-101"} />
               </div>
               <div className="sf-demo-field">
                 <label>District Jurisdiction</label>
-                <input type="text" readOnly value="DHULE / MAHARASHTRA" />
+                <input type="text" readOnly value={`${officerUser?.district || "DHULE"} / MAHARASHTRA`} />
               </div>
 
               <div className="sf-demo-toggle-line">
