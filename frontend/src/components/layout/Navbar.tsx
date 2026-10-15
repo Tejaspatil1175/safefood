@@ -13,12 +13,12 @@ export function Navbar({ onOpenDownload }: NavbarProps) {
   return (
     <div className="site-header-wrap">
       <header className="site-header content-width">
-        <a href="#" className="brand" aria-label="SafeFood home">
+        <a href="#" className="brand" aria-label="TrustLabel home">
           <span className="brand-shield">
             <ShieldCheck />
           </span>
           <span className="brand-title">
-            Safe<span className="text-primary">Food</span>
+            Trust<span className="text-primary">Label</span>
           </span>
           <span className="brand-pill">AI 2.0</span>
         </a>
@@ -34,7 +34,7 @@ export function Navbar({ onOpenDownload }: NavbarProps) {
             Ecosystem
           </a>
           <a href="#comparison" className="nav-pill-link" onClick={() => setMobileMenu(false)}>
-            Why SafeFood
+            Why TrustLabel
           </a>
           <a href="#stories" className="nav-pill-link" onClick={() => setMobileMenu(false)}>
             Stories

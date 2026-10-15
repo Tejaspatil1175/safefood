@@ -58,7 +58,7 @@ const howSteps = [
   {
     num: "01",
     title: "Scan Package or Barcode",
-    desc: "Point your smartphone at any packaged food label. SafeFood instantly captures front, back, nutritional tables, and tiny legal print.",
+    desc: "Point your smartphone at any packaged food label. TrustLabel instantly captures front, back, nutritional tables, and tiny legal print.",
     tag: "Instant Camera OCR"
   },
   {
@@ -129,19 +129,19 @@ const comparisonData = [
 
 const testimonials = [
   {
-    quote: "SafeFood saved my son from a severe peanut allergic reaction. The snack label concealed peanut flour in tiny 3pt print, but SafeFood flashed an immediate alert.",
+    quote: "TrustLabel saved my son from a severe peanut allergic reaction. The snack label concealed peanut flour in tiny 3pt print, but TrustLabel flashed an immediate alert.",
     author: "Dr. Ananya Sharma",
     role: "Pediatrician & Mother, Mumbai",
     scans: "140+ scans"
   },
   {
-    quote: "As a supermarket store manager, we use the SafeFood portal to audit batches from new FMCG suppliers. It has helped us keep fake and misbranded goods off our shelves.",
+    quote: "As a supermarket store manager, we use the TrustLabel portal to audit batches from new FMCG suppliers. It has helped us keep fake and misbranded goods off our shelves.",
     author: "Rajesh Varma",
     role: "Retail Inventory Lead, Bengaluru",
     scans: "1,200+ scans"
   },
   {
-    quote: "The speed and OCR accuracy of SafeFood are unmatched. It validates license numbers and legal declarations faster than manual field inspections.",
+    quote: "The speed and OCR accuracy of TrustLabel are unmatched. It validates license numbers and legal declarations faster than manual field inspections.",
     author: "Pooja Deshmukh",
     role: "Food Safety & Quality Auditor, Pune",
     scans: "850+ scans"
@@ -150,20 +150,20 @@ const testimonials = [
 
 const faqs = [
   {
-    q: "How does SafeFood detect fake or counterfeit food packets?",
-    a: "SafeFood inspects multiple packaging indicators including barcode parity, batch numbering format, mandatory manufacturer credentials, and official license databases to flag counterfeit duplicates and misbranded products."
+    q: "How does TrustLabel detect fake or counterfeit food packets?",
+    a: "TrustLabel inspects multiple packaging indicators including barcode parity, batch numbering format, mandatory manufacturer credentials, and official license databases to flag counterfeit duplicates and misbranded products."
   },
   {
-    q: "Can SafeFood alert me about specific allergens my family has?",
-    a: "Yes! You can configure allergen profiles (such as gluten, lactose, peanuts, soy, or shellfish). Whenever a scanned product contains that allergen or derived synonyms, SafeFood warns you with an unmistakable red alert."
+    q: "Can TrustLabel alert me about specific allergens my family has?",
+    a: "Yes! You can configure allergen profiles (such as gluten, lactose, peanuts, soy, or shellfish). Whenever a scanned product contains that allergen or derived synonyms, TrustLabel warns you with an unmistakable red alert."
   },
   {
-    q: "How can retailers and enforcement officers use the SafeFood Portal?",
+    q: "How can retailers and enforcement officers use the TrustLabel Portal?",
     a: "We have dedicated web portals for enforcement officers to conduct field batch audits and log violations, as well as retail inventory consoles for high-throughput shelf monitoring. You can access them via the Sign In portal."
   },
   {
-    q: "Is the SafeFood consumer app free to use?",
-    a: "Yes! The core SafeFood scanning app is free for families and consumers to scan everyday groceries and ensure what they eat is genuine, safe, and legal."
+    q: "Is the TrustLabel consumer app free to use?",
+    a: "Yes! The core TrustLabel scanning app is free for families and consumers to scan everyday groceries and ensure what they eat is genuine, safe, and legal."
   }
 ];
 
@@ -187,7 +187,7 @@ export default function LandingPage() {
           <div className="hero-copy">
             <div className="eyebrow-pill"><CheckCircle2 /> AI-Powered Food Safety</div>
             <h1>Is Your Food Pack<br className="desktop-break" /> Genuine, Safe & Legal?<br />Find Out <span>Instantly.</span></h1>
-            <p className="hero-description">SafeFood uses advanced AI to scan packaged foods instantly, checking for hidden details, illegal tiny fonts, missing Govt mandatory info, and fake products, along with new features like allergens, nutrition, and licenses.</p>
+            <p className="hero-description">TrustLabel uses advanced AI to scan packaged foods instantly, checking for hidden details, illegal tiny fonts, missing Govt mandatory info, and fake products, along with new features like allergens, nutrition, and licenses.</p>
             <div className="hero-actions">
               <Button variant="hero" onClick={() => open("download")}>Get the Free App <span className="button-divider" /><Apple /><Play className="play-store" /></Button>
               <Button variant="heroOutline" onClick={() => open("how")}><Play className="text-primary" />See How It Works</Button>
@@ -195,7 +195,7 @@ export default function LandingPage() {
             <div className="trust-row">{trust.map(({ icon: Icon, label }, i) => <div className="trust-item" key={i}><span className={`trust-icon trust-icon-${i}`}><Icon /></span><p>{label}</p></div>)}</div>
           </div>
           <div className="hero-visual">
-            <img src={phones} width={1200} height={1024} alt="SafeFood scanning a packaged snack and displaying a food safety report on two phones" />
+            <img src={phones} width={1200} height={1024} alt="TrustLabel scanning a packaged snack and displaying a food safety report on two phones" />
             <span className="scan-badge badge-expiry"><CheckCircle2 />MRP & Expiry</span>
             <span className="scan-badge badge-warning"><TriangleAlert /> <span>Missing<br />Manufacturer</span></span>
             <span className="scan-badge badge-allergens"><CheckCircle2 />Allergens Found</span>
@@ -209,7 +209,7 @@ export default function LandingPage() {
       {/* KEY FEATURES SECTION */}
       <section id="features" className="features-section">
         <div className="content-width">
-          <div className="section-heading"><span>KEY FEATURES</span><h2>Smarter Scans. Safer Food.</h2><p>From barcode to batch details — SafeFood checks it all.</p></div>
+          <div className="section-heading"><span>KEY FEATURES</span><h2>Smarter Scans. Safer Food.</h2><p>From barcode to batch details — TrustLabel checks it all.</p></div>
           <div className="feature-grid">{features.map(({ icon: Icon, title, text }) => <article className="feature-item" key={title}><span className="feature-icon"><Icon /></span><h3>{title}</h3><p>{text}</p></article>)}</div>
           <div className="availability"><span className="available-label"><Smartphone />Available on</span><Button variant="store" onClick={() => open("download")}><Apple /><span><small>Download on the</small>App Store</span></Button><Button variant="store" onClick={() => open("download")}><Play className="text-primary" /><span><small>GET IT ON</small>Google Play</span></Button><span className="availability-divider" /><Button variant="outline" className="web-button" onClick={() => open("web")}><Monitor />Explore Web App</Button></div>
         </div>
@@ -360,7 +360,7 @@ export default function LandingPage() {
           <div className="section-heading">
             <span>THE SAFEST CHOICE</span>
             <h2>Why Traditional Label Reading Fails</h2>
-            <p>See the breakthrough difference SafeFood AI brings to everyday food transparency.</p>
+            <p>See the breakthrough difference TrustLabel AI brings to everyday food transparency.</p>
           </div>
 
           <div className="comparison-table-wrap">
@@ -368,7 +368,7 @@ export default function LandingPage() {
               <div className="comp-row comp-header">
                 <div>Food Safety Aspect</div>
                 <div>Manual Reading With Naked Eye</div>
-                <div className="comp-col-highlight">SafeFood AI Scan</div>
+                <div className="comp-col-highlight">TrustLabel AI Scan</div>
               </div>
               {comparisonData.map((row, i) => (
                 <div className="comp-row" key={i}>
@@ -434,7 +434,7 @@ export default function LandingPage() {
           <div className="section-heading">
             <span>FREQUENTLY ASKED QUESTIONS</span>
             <h2>Everything You Need to Know</h2>
-            <p>Answers to common questions about SafeFood AI scanning and compliance.</p>
+            <p>Answers to common questions about TrustLabel AI scanning and compliance.</p>
           </div>
 
           <div className="faq-list">
@@ -465,7 +465,7 @@ export default function LandingPage() {
           <div className="cta-banner-card">
             <div className="cta-banner-copy">
               <h2>Ready to scan before you eat?</h2>
-              <p>Download the free SafeFood app or launch the role portal for your supermarket or inspection team.</p>
+              <p>Download the free TrustLabel app or launch the role portal for your supermarket or inspection team.</p>
               <div className="cta-banner-actions">
                 <Button variant="download" onClick={() => open("download")}>
                   Download App <ArrowRight style={{ width: 15, height: 15 }} />

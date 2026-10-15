@@ -17,7 +17,7 @@ export function Footer({ onOpenPanel }: FooterProps) {
                 <ShieldCheck />
               </span>
               <span className="brand-title">
-                Safe<span className="text-primary">Food</span>
+                Trust<span className="text-primary">Label</span>
               </span>
               <span className="brand-pill">AI 2.0</span>
             </div>
@@ -36,7 +36,7 @@ export function Footer({ onOpenPanel }: FooterProps) {
               <li><a href="#how-it-works">How It Works</a></li>
               <li><a href="#features">Key Features</a></li>
               <li><a href="#roles">Food Ecosystem</a></li>
-              <li><a href="#comparison">Why SafeFood</a></li>
+              <li><a href="#comparison">Why TrustLabel</a></li>
               <li><a href="#stories">Success Stories</a></li>
               <li><a href="#faq">FAQ</a></li>
             </ul>
