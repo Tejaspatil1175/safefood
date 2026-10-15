@@ -108,22 +108,32 @@ export function CitizenWebView({
     try {
       const res: any = await complaintsApi.list();
       const rawItems = Array.isArray(res) ? res : res?.items || res?.complaints || [];
-      const mapped = rawItems.map((c: any) => ({
-        id: c.complaintNumber || c.id || c._id,
-        product: c.productName || "Packaged Product",
-        location: c.district ? `${c.district}, Maharashtra` : "District Market",
-        date: c.createdAt
-          ? new Date(c.createdAt).toLocaleDateString("en-IN", {
-              month: "short",
-              day: "numeric",
-              year: "numeric",
-            })
-          : "Recently",
-        status: c.status || "IN_REVIEW",
-        officer: c.assignedOfficer?.name || "Pending Assignment",
-        userNote: c.userNote || c.description,
-        raw: c,
-      }));
+      const mapped = rawItems.map((c: any) => {
+        const productName =
+          c.productName ||
+          c.scan?.product?.name ||
+          c.scan?.fields?.brand?.value ||
+          c.scan?.fields?.brand?.rawText ||
+          (c.violations && c.violations.length > 0 ? c.violations[0].field : null) ||
+          "Packaged Product";
+
+        return {
+          id: c.complaintNumber || c.id || c._id,
+          product: productName,
+          location: c.district ? `${c.district}, Maharashtra` : "District Market",
+          date: c.createdAt
+            ? new Date(c.createdAt).toLocaleDateString("en-IN", {
+                month: "short",
+                day: "numeric",
+                year: "numeric",
+              })
+            : "Recently",
+          status: c.status || "IN_REVIEW",
+          officer: c.assignedOfficer?.name || "Pending Assignment",
+          userNote: c.userNote || c.description,
+          raw: c,
+        };
+      });
       setLiveComplaints(mapped);
     } catch (err) {
       console.warn("Notice: Failed to fetch complaints from backend API:", err);
@@ -157,19 +167,22 @@ export function CitizenWebView({
     e.preventDefault();
     setIsSubmittingComplaint(true);
     try {
+      const resolvedScanId =
+        selectedScanItem?.raw?._id ||
+        selectedScanItem?.id;
+
       const payload: any = {
-        scanId: selectedScanItem?.id?.startsWith("TL-") ? undefined : selectedScanItem?.id,
-        productName: selectedScanItem?.product || "Packaged Food Product",
-        brand: selectedScanItem?.category?.replace(/^Brand:\s*/, "") || "Generic",
-        retailerName: newComplaintStore || "Local Grocery Outlet",
+        scanId: resolvedScanId && !String(resolvedScanId).startsWith("TL-") ? resolvedScanId : undefined,
+        confirmed: true,
+        userNote: newComplaintNote || "Packaged food violated statutory PCR 2011 labeling requirements.",
         district: newComplaintDistrict,
-        description: newComplaintNote || "Packaged food violated statutory PCR 2011 labeling requirements.",
+        address: newComplaintStore || "Local Grocery Outlet",
       };
 
-      const result = await complaintsApi.create(payload);
-      setSubmittedComplaintId(result.complaintNumber || result.id || "#GRV-LODGED");
+      const result: any = await complaintsApi.create(payload);
+      setSubmittedComplaintId(result?.complaintNumber || result?.id || result?._id || "#GRV-LODGED");
       setComplaintSubmitted(true);
-      fetchComplaints();
+      await fetchComplaints();
     } catch (err) {
       console.warn("Complaint submission notice:", err);
       setSubmittedComplaintId(`#GRV-${Math.floor(10000 + Math.random() * 90000)}`);
@@ -256,7 +269,12 @@ export function CitizenWebView({
 
         {/* SECTION: USER PROFILE & SETTINGS */}
         {activeSection === "settings" && (
-          <CitizenSettingsView userProfile={userProfile} />
+          <CitizenSettingsView
+            userProfile={userProfile}
+            totalScansCount={totalScansCount}
+            complaintsCount={complaintsCount}
+            userInitials={userInitials}
+          />
         )}
       </main>
 

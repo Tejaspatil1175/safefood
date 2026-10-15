@@ -290,11 +290,11 @@ export function CitizenScanner({ onScanComplete }: CitizenScannerProps) {
   };
 
   return (
-    <div ref={scannerTopRef} style={{ maxWidth: 1040, margin: "0 auto", paddingTop: 32, paddingBottom: 48 }}>
+    <div ref={scannerTopRef} style={{ width: "100%", maxWidth: 1240, margin: "0 auto", paddingTop: 28, paddingBottom: 48 }}>
       {/* Editorial Header */}
-      <div className="sf-web-section-head" style={{ marginBottom: 24 }}>
+      <div className="sf-web-section-head" style={{ marginBottom: 28 }}>
         <div>
-          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
             <span
               style={{
                 fontSize: 11,
@@ -304,21 +304,21 @@ export function CitizenScanner({ onScanComplete }: CitizenScannerProps) {
                 color: "#D35400",
                 display: "inline-flex",
                 alignItems: "center",
-                gap: 4,
+                gap: 5,
               }}
             >
               <Sparkles style={{ width: 13, height: 13 }} />
               TrustLabel™ Optical Metrology Engine
             </span>
           </div>
-          <h3 style={{ margin: 0, fontSize: 24, fontWeight: 800, color: "#201E1A" }}>
+          <h3 style={{ margin: 0, fontSize: 26, fontWeight: 900, color: "#201E1A", letterSpacing: "-0.02em" }}>
             Packaged Food Compliance Scanner
           </h3>
-          <p style={{ margin: "4px 0 0", fontSize: 14, color: "#7A6F5D" }}>
+          <p style={{ margin: "6px 0 0", fontSize: 14, color: "#7A6F5D", lineHeight: 1.5 }}>
             Instant optical inspection under Legal Metrology (Packaged Commodities) Rules 2011 & FSSAI regulations.
           </p>
         </div>
-        <Link to={portalHref("user", "dashboard")} className="sf-web-pill-secondary" style={{ fontSize: 12, padding: "6px 14px" }}>
+        <Link to={portalHref("user", "dashboard")} className="sf-web-pill-secondary" style={{ fontSize: 12, padding: "8px 16px" }}>
           &larr; Back to Dashboard
         </Link>
       </div>
@@ -332,9 +332,9 @@ export function CitizenScanner({ onScanComplete }: CitizenScannerProps) {
       />
 
       {/* Main Scanner Container */}
-      <div style={{ display: "grid", gridTemplateColumns: scanResult ? "1fr 1fr" : "1fr", gap: 24, transition: "all 0.3s ease" }}>
+      <div style={{ display: "grid", gridTemplateColumns: scanResult ? "minmax(320px, 1fr) minmax(380px, 1.25fr)" : "1fr", gap: 28, transition: "all 0.3s ease" }}>
         {/* Left Column: Upload / Viewfinder / Scan Result Visualizer */}
-        <div className="sf-web-card" style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+        <div className="sf-web-card" style={{ display: "flex", flexDirection: "column", gap: 20, padding: 28 }}>
           {!previewUrl && !isScanning && !scanResult && (
             <div
               onDragOver={(e) => {
@@ -549,7 +549,7 @@ export function CitizenScanner({ onScanComplete }: CitizenScannerProps) {
 
         {/* Right Column: Rule 6 Declaration Checklist & Legal Metrology Findings (Shown after scan) */}
         {scanResult && (
-          <div className="sf-web-card" style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+          <div className="sf-web-card" style={{ display: "flex", flexDirection: "column", gap: 18, padding: 28 }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "1px solid #E8DEC8", paddingBottom: 12 }}>
               <div>
                 <h4 style={{ margin: 0, fontSize: "17px", fontWeight: 800, color: "#201E1A" }}>

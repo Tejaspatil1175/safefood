@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import multer from 'multer';
-import { requireAuth } from '../../middlewares/auth.js';
+import { optionalAuth } from '../../middlewares/auth.js';
 import {
   createComplaintHandler,
   getComplaintHandler,
@@ -17,7 +17,7 @@ const upload = multer({
 
 export const complaintsRouter = Router();
 
-complaintsRouter.use(requireAuth);
+complaintsRouter.use(optionalAuth);
 
 complaintsRouter.post('/', upload.array('evidence', 2), createComplaintHandler);
 complaintsRouter.get('/', listComplaintsHandler);

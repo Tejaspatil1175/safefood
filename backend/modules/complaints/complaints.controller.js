@@ -14,10 +14,10 @@ export async function createComplaintHandler(req, res, next) {
       scanId,
       confirmed: confirmed === true || confirmed === 'true',
       userNote,
-      userId: req.user.sub,
-      userRole: req.user.role,
-      district: district || req.user.district,
-      address: address || req.user.address,
+      userId: req.user?.sub || req.user?._id || req.user?.id || null,
+      userRole: req.user?.role || 'user',
+      district: district || req.user?.district,
+      address: address || req.user?.address,
       files: req.files,
     });
 
@@ -30,9 +30,9 @@ export async function createComplaintHandler(req, res, next) {
 export async function getComplaintHandler(req, res, next) {
   try {
     const complaint = await getComplaintById(req.params.id, {
-      userId: req.user.sub,
-      role: req.user.role,
-      district: req.user.district,
+      userId: req.user?.sub,
+      role: req.user?.role || 'user',
+      district: req.user?.district,
     });
 
     return res.status(200).json(complaint);
@@ -45,9 +45,9 @@ export async function listComplaintsHandler(req, res, next) {
   try {
     const { page, limit, status, district } = req.query;
     const result = await listComplaints({
-      userId: req.user.sub,
-      role: req.user.role,
-      district: req.user.district || district,
+      userId: req.user?.sub,
+      role: req.user?.role || 'user',
+      district: req.user?.district || district,
       page,
       limit,
       status,

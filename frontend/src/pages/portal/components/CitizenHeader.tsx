@@ -9,7 +9,7 @@ interface CitizenHeaderProps {
   complaintsCount: number;
   userProfile: any;
   userInitials: string;
-  switchRole: (role: SafeFoodRole) => void;
+  switchRole?: (role: SafeFoodRole) => void;
 }
 
 export function CitizenHeader({
@@ -18,7 +18,6 @@ export function CitizenHeader({
   complaintsCount,
   userProfile,
   userInitials,
-  switchRole,
 }: CitizenHeaderProps) {
   return (
     <header className="sf-web-header">
@@ -35,10 +34,11 @@ export function CitizenHeader({
           </Link>
           <Link
             to={portalHref("user", "scan")}
-            className={`sf-web-nav-link ${
+            className={`sf-web-nav-link sf-web-nav-link-scan ${
               activeSection === "scan" ? "sf-web-nav-link-active" : ""
             }`}
           >
+            <span className="sf-nav-pulse-dot" />
             Live Scan
           </Link>
           <Link
@@ -47,7 +47,8 @@ export function CitizenHeader({
               activeSection === "history" ? "sf-web-nav-link-active" : ""
             }`}
           >
-            Scan History ({totalScansCount})
+            <span>Scan History</span>
+            <span className="sf-nav-count-badge">{totalScansCount}</span>
           </Link>
           <Link
             to={portalHref("user", "complaints")}
@@ -57,7 +58,10 @@ export function CitizenHeader({
                 : ""
             }`}
           >
-            Grievances ({complaintsCount})
+            <span>Grievances</span>
+            <span className={`sf-nav-count-badge ${complaintsCount > 0 ? "sf-nav-count-badge-alert" : ""}`}>
+              {complaintsCount}
+            </span>
           </Link>
         </nav>
 
@@ -76,39 +80,22 @@ export function CitizenHeader({
           </div>
         </Link>
 
-        {/* Right Navigation & User Controls */}
+        {/* Right User Controls */}
         <div className="sf-web-header-right">
-          <nav className="sf-web-nav-links" aria-label="Right Navigation">
-            <Link
-              to={portalHref("user", "settings")}
-              className={`sf-web-nav-link ${
-                activeSection === "settings" ? "sf-web-nav-link-active" : ""
-              }`}
-            >
-              Profile
-            </Link>
-          </nav>
-
-          <select
-            className="sf-web-role-picker"
-            value="user"
-            onChange={(e) => switchRole(e.target.value as SafeFoodRole)}
-            aria-label="Switch persona"
+          <Link
+            to={portalHref("user", "settings")}
+            className="sf-web-user-chip"
+            style={{ textDecoration: "none" }}
+            title="View Account Profile & Settings"
           >
-            <option value="user">🌿 Citizen View</option>
-            <option value="officer">🛡️ Officer Inspection</option>
-            <option value="admin">🏢 Regulatory Oversight</option>
-          </select>
-
-          <div className="sf-web-user-chip">
             <div className="sf-web-user-avatar">{userInitials}</div>
             <div className="sf-web-user-meta">
               <strong>{userProfile?.name || "Citizen Account"}</strong>
               <span>{userProfile?.district || "Maharashtra"}, MH</span>
             </div>
-          </div>
+          </Link>
 
-          <Link to="/login" className="sf-web-signout-btn" title="Sign out">
+          <Link to="/login" className="sf-web-signout-btn" title="Sign out" aria-label="Sign out">
             <LogOut style={{ width: 14, height: 14 }} />
           </Link>
         </div>
