@@ -22,8 +22,8 @@ export const apiLimiter = rateLimit({
 // Stricter rate limiter for scan upload and OCR processing
 export const scanLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: isTest ? 0 : 40,
-  skip: () => isTest,
+  max: isTest || isDev ? 10000 : 40,
+  skip: () => isTest || isDev,
   standardHeaders: true,
   legacyHeaders: false,
   message: {
@@ -37,8 +37,8 @@ export const scanLimiter = rateLimit({
 // Stricter rate limiter for auth requests
 export const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: isTest ? 0 : 25,
-  skip: () => isTest,
+  max: isTest || isDev ? 10000 : 25,
+  skip: () => isTest || isDev,
   standardHeaders: true,
   legacyHeaders: false,
   message: {
