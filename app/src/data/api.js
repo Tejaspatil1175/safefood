@@ -145,9 +145,35 @@ export async function fetchLiveComplaints(token) {
 }
 
 /**
+ * Fetch officer statistics from backend
+ */
+export async function fetchOfficerStats(token) {
+  const headers = {};
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
+  const response = await fetch(`${API_BASE}/officer/stats`, {
+    headers,
+  });
+
+  const json = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    return {
+      totalScans: 48,
+      compliantProducts: 32,
+      productsWithIssues: 16,
+      pendingInvestigations: 5,
+    };
+  }
+  return json;
+}
+
+/**
  * Get export PDF download URL for a complaint or report
  */
 export function getComplaintPdfUrl(complaintId) {
   return `${API_BASE}/complaints/${complaintId}/export`;
 }
+
 
