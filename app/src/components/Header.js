@@ -5,41 +5,46 @@ import { theme } from '../theme/theme';
 
 export function Header({ role, onToggleRole }) {
   return (
-    <View style={styles.header}>
-      <View style={styles.userInfo}>
-        <View style={styles.avatarCircle}>
-          <Text style={styles.avatarText}>{role === 'user' ? 'CP' : 'RP'}</Text>
-        </View>
-        <View>
-          <Text style={styles.greetingSub}>
-            {role === 'user' ? 'Good morning, Citizen' : 'Enforcement Division'}
-          </Text>
-          <Text style={styles.greetingName}>
-            {role === 'user' ? 'Tejas Patil' : 'Insp. Rajesh Patil'}
-          </Text>
-        </View>
-      </View>
+    <View style={styles.headerContainer}>
+      {/* Sleek separator strip between status bar and content */}
+      <View style={styles.statusBarSeparator} />
 
-      <View style={styles.headerRight}>
-        {/* Persona Switch Pill */}
-        <TouchableOpacity
-          style={styles.roleSwitchBtn}
-          onPress={onToggleRole}
-          activeOpacity={0.8}
-        >
-          <MaterialCommunityIcons
-            name={role === 'user' ? 'shield-account' : 'account'}
-            size={14}
-            color={theme.colors.limeDark}
-          />
-          <Text style={styles.roleSwitchText}>
-            {role === 'user' ? 'Officer Mode' : 'Citizen Mode'}
-          </Text>
-        </TouchableOpacity>
+      <View style={styles.header}>
+        <View style={styles.userInfo}>
+          <View style={styles.avatarCircle}>
+            <Text style={styles.avatarText}>{role === 'user' ? 'CP' : 'RP'}</Text>
+          </View>
+          <View>
+            <Text style={styles.greetingSub}>
+              {role === 'user' ? 'Good morning, Citizen' : 'Enforcement Division'}
+            </Text>
+            <Text style={styles.greetingName}>
+              {role === 'user' ? 'Tejas Patil' : 'Insp. Rajesh Patil'}
+            </Text>
+          </View>
+        </View>
 
-        <TouchableOpacity style={styles.iconCircleBtn} activeOpacity={0.8}>
-          <Ionicons name="notifications-outline" size={19} color={theme.colors.navy} />
-        </TouchableOpacity>
+        <View style={styles.headerRight}>
+          {/* Persona Switch Pill */}
+          <TouchableOpacity
+            style={styles.roleSwitchBtn}
+            onPress={onToggleRole}
+            activeOpacity={0.8}
+          >
+            <MaterialCommunityIcons
+              name={role === 'user' ? 'shield-account' : 'account'}
+              size={14}
+              color={theme.colors.limeDark}
+            />
+            <Text style={styles.roleSwitchText}>
+              {role === 'user' ? 'Officer Mode' : 'Citizen Mode'}
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.iconCircleBtn} activeOpacity={0.8}>
+            <Ionicons name="notifications-outline" size={19} color={theme.colors.navy} />
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
@@ -47,12 +52,23 @@ export function Header({ role, onToggleRole }) {
 
 const STATUSBAR_HEIGHT =
   Platform.OS === 'android'
-    ? (StatusBar.currentHeight || 28) + 26
+    ? (StatusBar.currentHeight || 28) + 12
     : Platform.OS === 'ios'
-    ? 30
-    : 24;
+    ? 24
+    : 16;
 
 const styles = StyleSheet.create({
+  headerContainer: {
+    backgroundColor: theme.colors.bg,
+    paddingTop: STATUSBAR_HEIGHT,
+  },
+  statusBarSeparator: {
+    height: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.08)',
+    marginHorizontal: 20,
+    marginBottom: 10,
+    borderRadius: 1,
+  },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
