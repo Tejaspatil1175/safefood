@@ -160,46 +160,21 @@ export async function loginWithPassword({ email, password }) {
   const cleanEmail = email.toLowerCase().trim();
   let user = await User.findOne({ email: cleanEmail });
 
-  // If user does not exist in the database yet, auto-provision user so ANY credential or email can log in smoothly
   if (!user) {
-    const assignedRole = cleanEmail.includes('officer')
-      ? USER_ROLES.OFFICER
-      : cleanEmail.includes('admin')
-      ? USER_ROLES.SUPERADMIN
-      : USER_ROLES.CITIZEN;
+    throw new UnauthorizedError('Invalid email or password. Please check your credentials or register.');
+  }
 
-    const derivedName = cleanEmail
-      .split('@')[0]
-      .replace(/[._-]/g, ' ')
-      .replace(/\b\w/g, (c) => c.toUpperCase());
+  if (!user.passwordHash) {
+    throw new UnauthorizedError('No password set for this account. Please log in with your original method or reset password.');
+  }
 
-    const passwordHash = hashPassword(password);
-
-    user = await User.create({
-      email: cleanEmail,
-      passwordHash,
-      name: derivedName || 'SafeFood User',
-      role: assignedRole,
-      district: 'DHULE',
-      state: 'Maharashtra',
-    });
-  } else if (!user.passwordHash) {
-    // User exists (e.g. via OAuth), set password hash
-    user.passwordHash = hashPassword(password);
-    await user.save();
-  } else {
-    // Verify password, or if demo default password is used, accept
-    const isMatch = verifyPassword(password, user.passwordHash);
-    if (!isMatch && password !== 'password123') {
-      // Also allow updating password if credentials are provided
-      user.passwordHash = hashPassword(password);
-      await user.save();
-    }
+  const isMatch = verifyPassword(password, user.passwordHash);
+  if (!isMatch) {
+    throw new UnauthorizedError('Invalid email or password.');
   }
 
   if (user.isActive === false) {
-    user.isActive = true;
-    await user.save();
+    throw new UnauthorizedError('Account is disabled. Please contact the administrator.');
   }
 
   const tokens = issueTokens(user);

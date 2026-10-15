@@ -311,9 +311,11 @@ export const scansApi = {
     if (params?.limit) query.set('limit', String(params.limit));
     if (params?.verdict) query.set('verdict', params.verdict);
     const qs = query.toString();
-    return request<{ scans: ScanItemResult[]; pagination: { total: number; page: number; limit: number; pages: number } }>(
-      `/scans${qs ? `?${qs}` : ''}`
-    );
+    return request<{
+      items: ScanItemResult[];
+      scans?: ScanItemResult[];
+      pagination: { total: number; page: number; limit: number; pages: number };
+    }>(`/scans${qs ? `?${qs}` : ''}`);
   },
 
   getById: (id: string) => request<ScanItemResult>(`/scans/${id}`),

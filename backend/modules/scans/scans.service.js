@@ -232,8 +232,9 @@ export async function orchestrateScan({
 
   // 8. Persist scan
   let scanDoc = null;
+  const resolvedUserId = user?.sub || user?._id || user?.id || null;
   const scanData = {
-    user: user?._id || user?.id || null,
+    user: resolvedUserId,
     barcode: detectedBarcode || null,
     ruleSetVersion: ruleSetVersion || ruleSet.version || 'pcr-2011.v1',
     verdict: finalVerdict,
@@ -365,9 +366,9 @@ export async function listScans({
 
   if (role !== 'admin') {
     if (userId) {
-      query.user = userId;
+      // Show scans submitted by this user as well as guest scans
+      query.$or = [{ user: userId }, { user: null }, { user: { $exists: false } }];
     } else {
-      // Anonymous users only see anonymous scans
       query.user = null;
     }
   } else if (userId) {

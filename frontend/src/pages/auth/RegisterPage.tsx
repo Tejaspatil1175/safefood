@@ -1,39 +1,27 @@
+import React, { useState } from "react";
 import "./Auth.css";
-import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
-import {
-  CheckCircle2,
-  ShieldCheck,
-  User,
-  ShieldAlert,
-  ArrowRight,
-  Info,
-} from "lucide-react";
+import { ShieldCheck, ArrowRight, ChevronDown } from "lucide-react";
 import { SafeFoodRole } from "@/lib/safefood-demo";
-
-
-const DISTRICTS = [
-  "DHULE",
-  "PUNE",
-  "MUMBAI",
-  "NAGPUR",
-  "NASHIK",
-  "THANE",
-  "AURANGABAD",
-  "BENGALURU URBAN",
-  "DELHI NCR",
-];
-
 import { authApi } from "@/lib/api";
 
+const DISTRICTS = [
+  { value: "DHULE", label: "Dhule District (HQ)" },
+  { value: "PUNE", label: "Pune Division" },
+  { value: "MUMBAI", label: "Mumbai Metropolitan" },
+  { value: "NAGPUR", label: "Nagpur Zone" },
+  { value: "NASHIK", label: "Nashik Region" },
+  { value: "THANE", label: "Thane District" },
+  { value: "AURANGABAD", label: "Chhatrapati Sambhajinagar" },
+  { value: "BENGALURU URBAN", label: "Bengaluru Urban" },
+  { value: "DELHI NCR", label: "Delhi NCR Region" },
+];
+
 export default function RegisterPage() {
-  const navigate = useNavigate();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [district, setDistrict] = useState("DHULE");
   const [role, setRole] = useState<SafeFoodRole>("user");
   const [password, setPassword] = useState("");
-  const [badgeNumber, setBadgeNumber] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -43,8 +31,10 @@ export default function RegisterPage() {
       setError("Please fill in all required fields.");
       return;
     }
+
     setLoading(true);
     setError(null);
+
     try {
       await authApi.register({
         name,
@@ -55,175 +45,127 @@ export default function RegisterPage() {
       });
       window.location.href = `/app/${role}/dashboard`;
     } catch (err: any) {
-      setError(err?.message || "Registration failed. Please check inputs.");
+      setError(err?.response?.data?.message || err?.message || "Registration failed. Try again.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="sf-demo sf-demo-public">
-      {/* Left Branding Aside */}
-      <aside className="sf-demo-aside">
-        <Link to="/" className="sf-demo-brand" aria-label="SafeFood Home">
-          <span className="sf-demo-brand-mark">
+    <div className="sf-auth-page">
+      <div className="sf-auth-card sf-auth-card-wide">
+        <div className="sf-auth-header">
+          <a href="/" className="sf-auth-logo" aria-label="SafeFood Home">
             <ShieldCheck />
-          </span>
-          <span>SafeFood</span>
-        </Link>
-
-        <div className="sf-demo-aside-copy">
-          <div className="sf-demo-kicker">
-            <ShieldCheck />
-            <span>JOIN THE SAFE FOOD MOVEMENT</span>
-          </div>
-          <h1>Empowering citizens and officers for safer food standards.</h1>
-          <p>
-            Create an account to report non-compliant packaged goods, inspect food declarations against statutory rules, or enforce legal metrology standards.
+          </a>
+          <h1 className="sf-auth-title">Create SafeFood Account</h1>
+          <p className="sf-auth-subtitle">
+            Register to access automated Legal Metrology audits, OCR scanning, and portal dashboards.
           </p>
-
-          <ul className="sf-demo-points">
-            <li>
-              <CheckCircle2 />
-              <span>Full compliance checks for Legal Metrology (PCR 2011)</span>
-            </li>
-            <li>
-              <CheckCircle2 />
-              <span>Direct grievance escalation to district safety officers</span>
-            </li>
-            <li>
-              <CheckCircle2 />
-              <span>Tamper-evident statutory audit records & exports</span>
-            </li>
-          </ul>
         </div>
 
-        <div className="sf-demo-aside-foot">
-          SafeFood Regulatory Audit Platform · Demonstration Workspace
-        </div>
-      </aside>
+        <form onSubmit={handleSubmit} className="sf-auth-form">
+          {error && <div className="sf-auth-error sf-auth-grid-full">{error}</div>}
 
-      {/* Right Registration Form */}
-      <main className="sf-demo-auth-pane">
-        <div className="sf-demo-auth-form">
-          <Link to="/" className="sf-demo-brand sf-demo-mobile-brand">
-            <span className="sf-demo-brand-mark">
-              <ShieldCheck />
-            </span>
-            <span>SafeFood</span>
-          </Link>
-
-          <h2>Create your SafeFood account</h2>
-          <p className="sf-demo-subtitle">
-            Register as a citizen consumer or register an enforcement officer account.
-          </p>
-
-          <div className="sf-demo-demo-note">
-            <Info />
-            <div>
-              <strong>Instant demo setup.</strong> Submitting this registration form instantly configures your demo workspace profile.
+          <div className="sf-auth-grid-2">
+            {/* Full Name */}
+            <div className="sf-auth-field">
+              <label htmlFor="reg-name">Full Name</label>
+              <input
+                id="reg-name"
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="e.g. Aarav Sharma"
+                required
+              />
             </div>
-          </div>
 
-          <form onSubmit={handleSubmit}>
-            <div className="sf-demo-form-fields">
-              <div className="sf-demo-field">
-                <label htmlFor="reg-name">Full name</label>
-                <input
-                  id="reg-name"
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="e.g. Ramesh Patil"
-                  required
-                />
-              </div>
+            {/* Email Address */}
+            <div className="sf-auth-field">
+              <label htmlFor="reg-email">Email Address</label>
+              <input
+                id="reg-email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="name@example.com"
+                required
+              />
+            </div>
 
-              <div className="sf-demo-field">
-                <label htmlFor="reg-email">Email address</label>
-                <input
-                  id="reg-email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="name@example.com"
-                  required
-                />
-              </div>
-
-              <div className="sf-demo-field">
-                <label htmlFor="reg-role">Account role</label>
+            {/* Account Role Dropdown */}
+            <div className="sf-auth-field">
+              <label htmlFor="reg-role">Account Role</label>
+              <div className="sf-auth-select-wrap">
                 <select
                   id="reg-role"
+                  className="sf-auth-select"
                   value={role}
                   onChange={(e) => setRole(e.target.value as SafeFoodRole)}
                 >
-                  <option value="user">Citizen / Consumer Account</option>
+                  <option value="user">Citizen / Consumer</option>
                   <option value="officer">Food Safety Enforcement Officer</option>
+                  <option value="admin">District / Supermarket Administrator</option>
                 </select>
+                <ChevronDown className="sf-auth-select-icon" />
               </div>
+            </div>
 
-              {role === "officer" && (
-                <div className="sf-demo-field">
-                  <label htmlFor="reg-badge">Officer Badge Number</label>
-                  <input
-                    id="reg-badge"
-                    type="text"
-                    value={badgeNumber}
-                    onChange={(e) => setBadgeNumber(e.target.value)}
-                    placeholder="e.g. OFF-DHU-4921"
-                  />
-                </div>
-              )}
-
-              <div className="sf-demo-field">
-                <label htmlFor="reg-district">Assigned District</label>
+            {/* Assigned District Dropdown */}
+            <div className="sf-auth-field">
+              <label htmlFor="reg-district">Assigned District / Jurisdiction</label>
+              <div className="sf-auth-select-wrap">
                 <select
                   id="reg-district"
+                  className="sf-auth-select"
                   value={district}
                   onChange={(e) => setDistrict(e.target.value)}
                 >
                   {DISTRICTS.map((d) => (
-                    <option key={d} value={d}>
-                      {d}
+                    <option key={d.value} value={d.value}>
+                      {d.label}
                     </option>
                   ))}
                 </select>
+                <ChevronDown className="sf-auth-select-icon" />
               </div>
-
-              <div className="sf-demo-field">
-                <label htmlFor="reg-password">Password</label>
-                <input
-                  id="reg-password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Create a password"
-                  required
-                />
-              </div>
-
-              {error && <div className="sf-demo-form-error">{error}</div>}
-
-              <button type="submit" className="sf-demo-primary-action">
-                Create Account & Enter Workspace <ArrowRight style={{ display: "inline", width: 14, height: 14, marginLeft: 6, verticalAlign: "middle" }} />
-              </button>
             </div>
-          </form>
 
-          <div className="sf-demo-auth-bottom">
-            <span>
-              Already have an account?{" "}
-              <Link to="/login" className="sf-demo-text-link">
-                Sign in here
-              </Link>
-            </span>
-            <Link to="/" className="sf-demo-text-link">
-              &larr; Back to home
-            </Link>
+            {/* Password (Full Width) */}
+            <div className="sf-auth-field sf-auth-grid-full">
+              <label htmlFor="reg-password">Password</label>
+              <input
+                id="reg-password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Create a secure password (min 6 characters)"
+                required
+              />
+            </div>
+          </div>
+
+          <button type="submit" className="sf-auth-btn" disabled={loading}>
+            <span>{loading ? "Creating Account..." : "Complete Registration & Enter Portal"}</span>
+            <ArrowRight style={{ width: 16, height: 16 }} />
+          </button>
+        </form>
+
+        <div className="sf-auth-footer">
+          <div>
+            Already have an account?{" "}
+            <a href="/login" className="sf-auth-link">
+              Sign in
+            </a>
+          </div>
+          <div>
+            <a href="/" className="sf-auth-back-link">
+              &larr; Back to Home
+            </a>
           </div>
         </div>
-      </main>
+      </div>
     </div>
   );
 }
