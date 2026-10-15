@@ -58,6 +58,7 @@ import {
 import { CitizenScanner } from "@/components/CitizenScanner";
 import { CitizenWebView } from "./components/CitizenWebView";
 import { AdminWebView } from "./components/AdminWebView";
+import { AppFloatingFooter } from "./components/AppFloatingFooter";
 import {
   healthApi,
   rulesApi,
@@ -602,6 +603,9 @@ function OfficerWebView({
           </div>
         )}
       </main>
+
+      {/* Floating Bottom Navigation Tabbar */}
+      <AppFloatingFooter role="officer" activeSection={activeSection} />
     </div>
   );
 }

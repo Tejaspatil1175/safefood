@@ -1,0 +1,446 @@
+/* ==========================================================================
+   SafeFood Modern Mobile-App Color Grading & Floating Bottom Bar
+   Aesthetics from Reference Design:
+   - Soft off-white / light cream canvas (#F4F6F0 / #F8F9F5)
+   - Deep navy / midnight slate headers (#0F1E36 / #172B4D)
+   - Vibrant electric lime / spring green accents (#65A30D, #84CC16, #4D7C0F)
+   - Ultra-smooth pill cards, soft micro-shadows, subtle rounded corners (24px - 32px)
+   - Fixed floating bottom app bar with centered elevated action button (QR/Scanner)
+   ========================================================================== */
+
+:root {
+  --sf-app-bg: #F5F7F2;
+  --sf-app-card-bg: #FFFFFF;
+  --sf-app-navy: #0F1E36;
+  --sf-app-navy-sub: #4A5B73;
+  --sf-app-lime: #70B814;
+  --sf-app-lime-glow: rgba(112, 184, 20, 0.28);
+  --sf-app-lime-dark: #58960E;
+  --sf-app-border: #E5E9E0;
+  --sf-app-radius-lg: 28px;
+  --sf-app-radius-md: 20px;
+  --sf-app-radius-sm: 14px;
+  --sf-app-shadow: 0 10px 30px -8px rgba(15, 30, 54, 0.07);
+}
+
+/* Base App Frame & Responsive Wrapper */
+.sf-app-shell {
+  min-height: 100vh;
+  background-color: var(--sf-app-bg);
+  background-image:
+    radial-gradient(circle at 10% 10%, rgba(112, 184, 20, 0.08) 0%, transparent 45%),
+    radial-gradient(circle at 90% 90%, rgba(15, 30, 54, 0.05) 0%, transparent 50%);
+  color: var(--sf-app-navy);
+  font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  position: relative;
+  padding-bottom: 110px; /* space for floating bottom tabbar */
+  box-sizing: border-box;
+}
+
+/* Centered Mobile Frame on Desktop for Authentic App Feel */
+.sf-app-container {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 16px 20px;
+  position: relative;
+  box-sizing: border-box;
+}
+
+@media (min-width: 900px) {
+  .sf-app-container {
+    max-width: 540px;
+    padding-top: 24px;
+  }
+}
+
+/* App Header Bar (User Avatar, Greeting, Notification bell) */
+.sf-app-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.sf-app-user-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sf-app-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #E2E8F0;
+  color: var(--sf-app-navy);
+  font-weight: 800;
+  font-size: 15px;
+  display: grid;
+  place-items: center;
+  border: 2px solid #FFFFFF;
+  box-shadow: 0 4px 14px rgba(15, 30, 54, 0.08);
+}
+
+.sf-app-greeting-title {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 700;
+  color: #64748B;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.sf-app-greeting-name {
+  margin: 2px 0 0;
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--sf-app-navy);
+}
+
+.sf-app-bell-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  border: 1px solid var(--sf-app-border);
+  display: grid;
+  place-items: center;
+  color: var(--sf-app-navy);
+  cursor: pointer;
+  box-shadow: var(--sf-app-shadow);
+  transition: transform 0.15s ease, background 0.15s;
+  text-decoration: none;
+}
+
+.sf-app-bell-btn:hover {
+  transform: translateY(-2px);
+  background: #F8FAFC;
+}
+
+/* Big Hero Banner (like "Charge up. Roll out.") */
+.sf-app-hero-card {
+  background: #FFFFFF;
+  border-radius: var(--sf-app-radius-lg);
+  padding: 24px;
+  border: 1px solid var(--sf-app-border);
+  box-shadow: var(--sf-app-shadow);
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.sf-app-hero-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: rgba(112, 184, 20, 0.14);
+  color: var(--sf-app-lime-dark);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 12px;
+}
+
+.sf-app-hero-title {
+  font-size: 28px;
+  font-weight: 900;
+  line-height: 1.15;
+  color: var(--sf-app-navy);
+  margin: 0 0 8px;
+  letter-spacing: -0.02em;
+}
+
+.sf-app-hero-title span {
+  display: inline-block;
+  background: linear-gradient(135deg, #70B814 0%, #58960E 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.sf-app-hero-desc {
+  font-size: 13px;
+  color: var(--sf-app-navy-sub);
+  line-height: 1.5;
+  margin: 0 0 20px;
+  max-width: 90%;
+}
+
+/* Hero pill button (lime button with slider / arrow) */
+.sf-app-lime-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 14px 20px;
+  background: linear-gradient(135deg, #70B814 0%, #5EA30E 100%);
+  color: #FFFFFF;
+  border-radius: 9999px;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 800;
+  box-shadow: 0 8px 24px var(--sf-app-lime-glow);
+  transition: transform 0.2s, box-shadow 0.2s;
+  border: none;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.sf-app-lime-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px var(--sf-app-lime-glow);
+}
+
+.sf-app-lime-btn .btn-arrow-pill {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+  display: grid;
+  place-items: center;
+}
+
+/* Quick Action Scan Banner (e.g. "Scan to unlock") */
+.sf-app-quick-scan {
+  background: linear-gradient(135deg, #70B814 0%, #5EA30E 100%);
+  border-radius: var(--sf-app-radius-md);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #FFFFFF;
+  text-decoration: none;
+  margin-bottom: 24px;
+  box-shadow: 0 10px 24px var(--sf-app-lime-glow);
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.sf-app-quick-scan:hover {
+  transform: scale(1.02);
+}
+
+.sf-app-quick-scan-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.sf-app-scan-icon-sq {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.22);
+  display: grid;
+  place-items: center;
+}
+
+.sf-app-quick-scan-title {
+  font-size: 15px;
+  font-weight: 800;
+  margin: 0;
+}
+
+.sf-app-quick-scan-sub {
+  font-size: 12px;
+  opacity: 0.9;
+  margin: 2px 0 0;
+}
+
+/* Stat Grid Pill Cards */
+.sf-app-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.sf-app-stat-pill {
+  background: #FFFFFF;
+  border-radius: var(--sf-app-radius-md);
+  padding: 16px;
+  border: 1px solid var(--sf-app-border);
+  box-shadow: var(--sf-app-shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sf-app-stat-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #64748B;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.sf-app-stat-val {
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--sf-app-navy);
+}
+
+.sf-app-stat-sub {
+  font-size: 11px;
+  font-weight: 600;
+  color: #10B981;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Feed / List Cards Section */
+.sf-app-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.sf-app-section-title {
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--sf-app-navy);
+  margin: 0;
+}
+
+.sf-app-section-link {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--sf-app-lime-dark);
+  text-decoration: none;
+}
+
+.sf-app-feed-card {
+  background: #FFFFFF;
+  border-radius: var(--sf-app-radius-md);
+  padding: 16px;
+  border: 1px solid var(--sf-app-border);
+  box-shadow: var(--sf-app-shadow);
+  margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.sf-app-feed-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(112, 184, 20, 0.4);
+}
+
+.sf-app-feed-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sf-app-badge-lime {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 9px;
+  border-radius: 9999px;
+  background: rgba(112, 184, 20, 0.15);
+  color: var(--sf-app-lime-dark);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.sf-app-badge-warn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 9px;
+  border-radius: 9999px;
+  background: #FEF3C7;
+  color: #D97706;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.sf-app-badge-red {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 9px;
+  border-radius: 9999px;
+  background: #FEE2E2;
+  color: #DC2626;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+/* ==========================================================================
+   FLOATING BOTTOM TABBAR (Like Reference: Home, History, Scan (center), Cases/Wallet, Profile)
+   ========================================================================== */
+.sf-app-tabbar-wrap {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  display: flex;
+  justify-content: center;
+  padding: 0 16px 16px;
+  pointer-events: none;
+}
+
+.sf-app-tabbar {
+  pointer-events: auto;
+  width: 100%;
+  max-width: 480px;
+  height: 68px;
+  background: #FFFFFF;
+  border-radius: 34px;
+  border: 1px solid var(--sf-app-border);
+  box-shadow: 0 16px 40px -10px rgba(15, 30, 54, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0 12px;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.sf-app-tab-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  color: #94A3B8;
+  text-decoration: none;
+  font-size: 10px;
+  font-weight: 700;
+  transition: color 0.15s ease;
+  min-width: 52px;
+}
+
+.sf-app-tab-btn:hover,
+.sf-app-tab-btn-active {
+  color: var(--sf-app-lime-dark);
+}
+
+/* Center Elevated Green Scan Button */
+.sf-app-center-scan-btn {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #70B814 0%, #58960E 100%);
+  display: grid;
+  place-items: center;
+  color: #FFFFFF;
+  box-shadow: 0 8px 22px var(--sf-app-lime-glow);
+  margin-top: -24px;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s;
+  text-decoration: none;
+  border: 4px solid #FFFFFF;
+}
+
+.sf-app-center-scan-btn:hover {
+  transform: scale(1.08) translateY(-2px);
+  box-shadow: 0 12px 28px var(--sf-app-lime-glow);
+}
