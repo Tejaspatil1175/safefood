@@ -1,24 +1,24 @@
 export const theme = {
   colors: {
-    bg: '#EAF3DE',          // Fresh Grab-style soft pastel pistachio/lime-tinted background
-    bgSoft: '#F2F8EA',      // Secondary surface
+    bg: '#DCEAC8',          // Deeper, richer pastel lime/pistachio green
+    bgSoft: '#E6F2D5',      // Secondary surface
     card: '#FFFFFF',
-    cardAlt: '#F5FAF0',
-    navy: '#0F2417',        // Deep forest emerald dark text
-    navySub: '#2D4B39',
-    muted: '#5C7A67',       // Soft botanical green-slate
-    border: '#D5E6C1',      // Delicate organic green border
+    cardAlt: '#EFF8E5',
+    navy: '#0C2014',        // Deep forest emerald dark text
+    navySub: '#223E2E',
+    muted: '#4E6C58',       // Rich botanical green-slate
+    border: '#C6DCB0',      // Balanced organic green border
     lime: '#00B14F',        // Grab signature vibrant green
     limeDark: '#00873D',
-    limeLight: '#DFF4E4',
-    limePill: '#D8F3DC',
-    limeBorder: '#B7E4C7',
+    limeLight: '#D2EED9',
+    limePill: '#C9ECCF',
+    limeBorder: '#A7DBB9',
     red: '#E02424',
     redLight: '#FDE8E8',
     amber: '#D97706',
     amberLight: '#FEF3C7',
     emerald: '#059669',
-    divider: '#E4EED7',
+    divider: '#D3E6BF',
   },
   radius: {
     hero: 28,
