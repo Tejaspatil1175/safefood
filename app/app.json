@@ -1,24 +1,57 @@
 {
   "expo": {
-    "name": "app",
-    "slug": "app",
+    "name": "TrustLabel",
+    "slug": "safefood-trustlabel",
     "version": "1.0.0",
     "orientation": "portrait",
+    "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#E2EFD0"
+    },
     "assetBundlePatterns": [
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.safefood.trustlabel"
     },
     "android": {
+      "package": "com.safefood.trustlabel",
       "adaptiveIcon": {
-        "backgroundColor": "#1e1e2e"
-      }
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#0C2014"
+      },
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.READ_MEDIA_IMAGES"
+      ]
     },
     "web": {
-      "bundler": "metro"
+      "bundler": "metro",
+      "favicon": "./assets/icon.png"
     },
-    "plugins": []
+    "plugins": [
+      "expo-font",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow TrustLabel to access your camera to audit packaged commodity labels."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow TrustLabel to access your photos to verify product packaging."
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "5e701ed3-5741-497e-a0fd-6dc9eaead38d"
+      }
+    }
   }
 }
